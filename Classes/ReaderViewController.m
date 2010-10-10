@@ -128,7 +128,7 @@
 
 	if (fileURL == nil) // Open the bundled PDF if a file URL to an 'Open In...' PDF was not provided
 	{
-		fileURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"Reader.pdf" ofType:nil]];
+		fileURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"Document.pdf" ofType:nil]];
 
 		page = [[NSUserDefaults standardUserDefaults] integerForKey:@"OnPage"];
 	}

@@ -19,13 +19,14 @@
 		450A674111D286CB00014BF5 /* ReaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 450A674011D286CB00014BF5 /* ReaderViewController.m */; };
 		45133CC01236C45E008BE209 /* Icon-Info.png in Resources */ = {isa = PBXBuildFile; fileRef = 45133CBF1236C45E008BE209 /* Icon-Info.png */; };
 		4514CE431235269700728CE2 /* UIViewFader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4514CE421235269700728CE2 /* UIViewFader.m */; };
+		4534A869125F658F001F3415 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 4534A868125F658F001F3415 /* LICENSE */; };
 		4541A9D8122EA716001A5E60 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4541A9D7122EA716001A5E60 /* Localizable.strings */; };
-		45A4AD5312395BE6005D5625 /* Reader.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 45A4AD5212395BE6005D5625 /* Reader.pdf */; };
+		45A4AD5312395BE6005D5625 /* Document.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 45A4AD5212395BE6005D5625 /* Document.pdf */; };
 		45B550DB12326A5500DAE92E /* CGPDFDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 45B550DA12326A5500DAE92E /* CGPDFDocument.m */; };
 		45BF2DEA12329FA500544AC1 /* Icon-PDF.png in Resources */ = {isa = PBXBuildFile; fileRef = 45BF2DE912329FA500544AC1 /* Icon-PDF.png */; };
 		45DDE5E2122EDAE300292B47 /* PDFViewTiled.m in Sources */ = {isa = PBXBuildFile; fileRef = 45DDE5E1122EDAE300292B47 /* PDFViewTiled.m */; };
 		45DDE5F3122EE23700292B47 /* PDFTiledLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 45DDE5F2122EE23700292B47 /* PDFTiledLayer.m */; };
-		45EFD9761236D8EA00AAE9B3 /* Reader.txt in Resources */ = {isa = PBXBuildFile; fileRef = 45EFD9751236D8EA00AAE9B3 /* Reader.txt */; };
+		45EFD9761236D8EA00AAE9B3 /* README in Resources */ = {isa = PBXBuildFile; fileRef = 45EFD9751236D8EA00AAE9B3 /* README */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,8 +47,9 @@
 		45133CBF1236C45E008BE209 /* Icon-Info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Info.png"; path = "Graphics/Icon-Info.png"; sourceTree = "<group>"; };
 		4514CE411235269700728CE2 /* UIViewFader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIViewFader.h; path = Sources/UIViewFader.h; sourceTree = "<group>"; };
 		4514CE421235269700728CE2 /* UIViewFader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIViewFader.m; path = Sources/UIViewFader.m; sourceTree = "<group>"; };
+		4534A868125F658F001F3415 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		4541A9D5122EA686001A5E60 /* en */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		45A4AD5212395BE6005D5625 /* Reader.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Reader.pdf; path = Resources/Reader.pdf; sourceTree = "<group>"; };
+		45A4AD5212395BE6005D5625 /* Document.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Document.pdf; path = Resources/Document.pdf; sourceTree = "<group>"; };
 		45B550D912326A5500DAE92E /* CGPDFDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CGPDFDocument.h; path = Sources/CGPDFDocument.h; sourceTree = "<group>"; };
 		45B550DA12326A5500DAE92E /* CGPDFDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CGPDFDocument.m; path = Sources/CGPDFDocument.m; sourceTree = "<group>"; };
 		45BF2DE912329FA500544AC1 /* Icon-PDF.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-PDF.png"; path = "Graphics/Icon-PDF.png"; sourceTree = "<group>"; };
@@ -55,7 +57,7 @@
 		45DDE5E1122EDAE300292B47 /* PDFViewTiled.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PDFViewTiled.m; path = Classes/PDFViewTiled.m; sourceTree = "<group>"; };
 		45DDE5F1122EE23700292B47 /* PDFTiledLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PDFTiledLayer.h; path = Classes/PDFTiledLayer.h; sourceTree = "<group>"; };
 		45DDE5F2122EE23700292B47 /* PDFTiledLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PDFTiledLayer.m; path = Classes/PDFTiledLayer.m; sourceTree = "<group>"; };
-		45EFD9751236D8EA00AAE9B3 /* Reader.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Reader.txt; path = Resources/Reader.txt; sourceTree = "<group>"; };
+		45EFD9751236D8EA00AAE9B3 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Reader-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Reader-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -123,8 +125,9 @@
 			isa = PBXGroup;
 			children = (
 				4541A9D7122EA716001A5E60 /* Localizable.strings */,
-				45A4AD5212395BE6005D5625 /* Reader.pdf */,
-				45EFD9751236D8EA00AAE9B3 /* Reader.txt */,
+				45A4AD5212395BE6005D5625 /* Document.pdf */,
+				45EFD9751236D8EA00AAE9B3 /* README */,
+				4534A868125F658F001F3415 /* LICENSE */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -191,7 +194,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				ORGANIZATIONNAME = "Julius Oklamcak";
+				ORGANIZATIONNAME = example.com;
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Reader" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -223,8 +226,9 @@
 				4541A9D8122EA716001A5E60 /* Localizable.strings in Resources */,
 				45BF2DEA12329FA500544AC1 /* Icon-PDF.png in Resources */,
 				45133CC01236C45E008BE209 /* Icon-Info.png in Resources */,
-				45EFD9761236D8EA00AAE9B3 /* Reader.txt in Resources */,
-				45A4AD5312395BE6005D5625 /* Reader.pdf in Resources */,
+				45EFD9761236D8EA00AAE9B3 /* README in Resources */,
+				45A4AD5312395BE6005D5625 /* Document.pdf in Resources */,
+				4534A869125F658F001F3415 /* LICENSE in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -294,7 +298,7 @@
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_MODEL_TUNING = "";
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_VERSION = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 3.2;
@@ -311,7 +315,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_MODEL_TUNING = "";
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_VERSION = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 3.2;

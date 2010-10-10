@@ -267,39 +267,46 @@
 	}
 
 	CGContextSetRGBFillColor(context, 1.0f, 1.0f, 1.0f, 1.0f);
-
 	CGContextFillRect(context, CGContextGetClipBoundingBox(context));
 
 	if (drawPDFPageRef != NULL) // Render the page into the context
 	{
-		CGFloat boundsWidth = self.bounds.size.width;
 		CGFloat boundsHeight = self.bounds.size.height;
 
-		CGRect cropBoxRect = CGPDFPageGetBoxRect(drawPDFPageRef, kCGPDFCropBox);
-		CGRect mediaBoxRect = CGPDFPageGetBoxRect(drawPDFPageRef, kCGPDFMediaBox);
-		CGRect effectiveRect = CGRectIntersection(cropBoxRect, mediaBoxRect);
+		if (CGPDFPageGetRotationAngle(drawPDFPageRef) == 0)
+		{
+			CGFloat boundsWidth = self.bounds.size.width;
 
-//		NSInteger rotate = CGPDFPageGetRotationAngle(drawPDFPageRef);
+			CGRect cropBoxRect = CGPDFPageGetBoxRect(drawPDFPageRef, kCGPDFCropBox);
+			CGRect mediaBoxRect = CGPDFPageGetBoxRect(drawPDFPageRef, kCGPDFMediaBox);
+			CGRect effectiveRect = CGRectIntersection(cropBoxRect, mediaBoxRect);
 
-		CGFloat effectiveWidth = effectiveRect.size.width;
-		CGFloat effectiveHeight = effectiveRect.size.height;
+			CGFloat effectiveWidth = effectiveRect.size.width;
+			CGFloat effectiveHeight = effectiveRect.size.height;
 
-		CGFloat widthScale = (boundsWidth / effectiveWidth);
-		CGFloat heightScale = (boundsHeight / effectiveHeight);
+			CGFloat widthScale = (boundsWidth / effectiveWidth);
+			CGFloat heightScale = (boundsHeight / effectiveHeight);
 
-		CGFloat scale = (widthScale < heightScale) ? widthScale : heightScale;
+			CGFloat scale = (widthScale < heightScale) ? widthScale : heightScale;
 
-		CGFloat x_offset = ((boundsWidth - (effectiveWidth * scale)) / 2.0f);
-		CGFloat y_offset = ((boundsHeight - (effectiveHeight * scale)) / 2.0f);
+			CGFloat x_offset = ((boundsWidth - (effectiveWidth * scale)) / 2.0f);
+			CGFloat y_offset = ((boundsHeight - (effectiveHeight * scale)) / 2.0f);
 
-		y_offset = (boundsHeight - y_offset); // Co-ordinate system adjust
+			y_offset = (boundsHeight - y_offset); // Co-ordinate system adjust
 
-		CGFloat x_translate = floorf(x_offset - effectiveRect.origin.x);
-		CGFloat y_translate = floorf(y_offset + effectiveRect.origin.y);
+			CGFloat x_translate = (x_offset - effectiveRect.origin.x);
+			CGFloat y_translate = (y_offset + effectiveRect.origin.y);
 
-		CGContextTranslateCTM(context, x_translate, y_translate);
+			CGContextTranslateCTM(context, x_translate, y_translate);
 
-		CGContextScaleCTM(context, scale, -scale); // Mirror Y
+			CGContextScaleCTM(context, scale, -scale); // Mirror Y
+		}
+		else // Use CGPDFPageGetDrawingTransform for pages with rotation (AKA kludge)
+		{
+			CGContextTranslateCTM(context, 0.0f, boundsHeight); CGContextScaleCTM(context, 1.0f, -1.0f);
+
+			CGContextConcatCTM(context, CGPDFPageGetDrawingTransform(drawPDFPageRef, kCGPDFCropBox, self.bounds, 0, true));
+		}
 
 		CGContextDrawPDFPage(context, drawPDFPageRef);
 	}
