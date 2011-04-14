@@ -1,9 +1,9 @@
 //
-//	UIViewFader.m
+//	UtilityViewFader.m
 //	Reader
 //
 //	Created by Julius Oklamcak on 2010-09-04.
-//	Copyright © 2010 Julius Oklamcak. All rights reserved.
+//	Copyright © 2010-2011 Julius Oklamcak. All rights reserved.
 //
 //	This work is being made available under a Creative Commons Attribution license:
 //		«http://creativecommons.org/licenses/by/3.0/»
@@ -12,15 +12,15 @@
 //	the original author is attributed.
 //
 
-#import "UIViewFader.h"
+#import "UtilityViewFader.h"
 
-@implementation UIViewFader
+@implementation UtilityViewFader
 
 #pragma mark Properties
 
-//@synthesize ...;
+//@synthesize ;
 
-#pragma mark UIViewFader Instance methods
+#pragma mark UtilityViewFader instance methods
 
 - (id)initWithView:(UIView *)view
 {

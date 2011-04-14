@@ -1,9 +1,9 @@
 //
-//	UIViewFader.h
+//	UtilityViewFader.h
 //	Reader
 //
 //	Created by Julius Oklamcak on 2010-09-04.
-//	Copyright © 2010 Julius Oklamcak. All rights reserved.
+//	Copyright © 2010-2011 Julius Oklamcak. All rights reserved.
 //
 //	This work is being made available under a Creative Commons Attribution license:
 //		«http://creativecommons.org/licenses/by/3.0/»
@@ -14,7 +14,7 @@
 
 #import<UIKit/UIKit.h>
 
-@interface UIViewFader : NSObject
+@interface UtilityViewFader : NSObject
 {
 @private // Instance variables
 

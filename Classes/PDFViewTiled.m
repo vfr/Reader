@@ -3,7 +3,7 @@
 //	Reader
 //
 //	Created by Julius Oklamcak on 2010-09-01.
-//	Copyright © 2010 Julius Oklamcak. All rights reserved.
+//	Copyright © 2010-2011 Julius Oklamcak. All rights reserved.
 //
 //	This work is being made available under a Creative Commons Attribution license:
 //		«http://creativecommons.org/licenses/by/3.0/»
@@ -20,33 +20,37 @@
 
 #pragma mark Properties
 
-@synthesize page;
-@synthesize pages;
+@synthesize pageCount = _pageCount;
+@synthesize currentPage = _currentPage;
 
-#pragma mark PDFViewTiled Class methods
+#pragma mark PDFViewTiled class methods
 
 + (Class)layerClass
 {
 	return [PDFTiledLayer class];
 }
 
-#pragma mark PDFViewTiled Instance methods
+#pragma mark PDFViewTiled instance methods
 
-/*
 - (id)initWithFrame:(CGRect)frame
 {
 	if ((self = [super initWithFrame:frame]))
 	{
-		// ...UIView initialization code...
+		self.autoresizesSubviews = NO;
+		self.userInteractionEnabled = NO;
+		self.contentMode = UIViewContentModeScaleAspectFit; // For proper view rotation handling
+		self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight; // N.B.
+		self.autoresizingMask |= UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+		self.autoresizingMask |= UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+		self.backgroundColor = [UIColor clearColor];
 	}
 
 	return self;
 }
-*/
 
-- (id)initWithURL:(NSURL *)fileURL onPage:(NSInteger)onPage password:(NSString *)password frame:(CGRect)frame
+- (id)initWithURL:(NSURL *)fileURL page:(NSInteger)page password:(NSString *)password frame:(CGRect)frame
 {
-	if (self = [self initWithFrame:frame])
+	if ((self = [self initWithFrame:frame]))
 	{
 		if (fileURL != nil) // Check for non-nil file URL
 		{
@@ -56,22 +60,23 @@
 
 			_PDFDocRef = CGPDFDocumentCreateX((CFURLRef)_fileURL, _password);
 
-			if (_PDFDocRef != NULL) // Check for non-NULL CGPDFDocRef
+			if (_PDFDocRef != NULL) // Check for non-NULL CGPDFDocumentRef
 			{
-				if (onPage < 1) onPage = 1; // Check the lower page bounds
+				if (page < 1) page = 1; // Check the lower page bounds
 
 				NSInteger count = CGPDFDocumentGetNumberOfPages(_PDFDocRef);
 
-				if (onPage > count) onPage = count; // Check the upper page bounds
+				if (page > count) page = count; // Check the upper page bounds
 
-				_PDFPageRef = CGPDFDocumentGetPage(_PDFDocRef, onPage);
+				_PDFPageRef = CGPDFDocumentGetPage(_PDFDocRef, page);
 
 				if (_PDFPageRef != NULL) // Check for non-NULL CGPDFPageRef
 				{
 					CGPDFPageRetain(_PDFPageRef); // Retain the PDF page
 
-					page = onPage; // Set the current page number
-					pages = count; // Set the total page count
+					_currentPage = page; // Set the current page number
+
+					_pageCount = count; // Set the total page count
 				}
 				else // Error out with a diagnostic
 				{
@@ -82,7 +87,7 @@
 			}
 			else // Error out with a diagnostic
 			{
-				NSAssert(NO, @"CGPDFDocRef == NULL");
+				NSAssert(NO, @"CGPDFDocumentRef == NULL");
 			}
 		}
 		else // Error out with a diagnostic
@@ -94,26 +99,27 @@
 	return self;
 }
 
-- (BOOL)changeFileURL:(NSURL *)fileURL onPage:(NSInteger)onPage password:(NSString *)password
+- (BOOL)changeFileURL:(NSURL *)fileURL page:(NSInteger)page password:(NSString *)password
 {
-	BOOL status = NO;
+	BOOL status = NO; // Default flag
 
 	if (fileURL != nil) // Check for non-nil file URL
 	{
 		CGPDFPageRef newPDFPageRef = NULL;
+
 		CGPDFDocumentRef newPDFDocRef = NULL;
 
 		newPDFDocRef = CGPDFDocumentCreateX((CFURLRef)fileURL, password);
 
-		if (newPDFDocRef != NULL) // Check for non-NULL CGPDFDocRef
+		if (newPDFDocRef != NULL) // Check for non-NULL CGPDFDocumentRef
 		{
-			if (onPage < 1) onPage = 1; // Check the lower page bounds
+			if (page < 1) page = 1; // Check the lower page bounds
 
 			NSInteger count = CGPDFDocumentGetNumberOfPages(newPDFDocRef);
 
-			if (onPage > count) onPage = count; // Check the upper page bounds
+			if (page > count) page = count; // Check the upper page bounds
 
-			newPDFPageRef = CGPDFDocumentGetPage(newPDFDocRef, onPage);
+			newPDFPageRef = CGPDFDocumentGetPage(newPDFDocRef, page);
 
 			if (newPDFPageRef != NULL) // Check for non-NULL CGPDFPageRef
 			{
@@ -130,13 +136,15 @@
 					[self.layer setNeedsDisplay]; // Flag the layer for redraw
 				}
 
+				[_password release]; _password = [password copy]; // Keep a copy
+
 				[_fileURL release]; _fileURL = [fileURL copy]; // Keep a copy
-				[_password release]; _password = [password copy]; // Ditto
 
-				page = onPage; // Set the current page number
-				pages = count; // Set the total page count
+				_currentPage = page; // Set the current page number
 
-				status = YES; // Happy happy joy joy
+				_pageCount = count; // Set the total page count
+
+				status = YES; // Happiness is success
 			}
 			else // Error out with a diagnostic
 			{
@@ -147,7 +155,7 @@
 		}
 		else // Error out with a diagnostic
 		{
-			NSAssert(NO, @"CGPDFDocRef == NULL");
+			NSAssert(NO, @"CGPDFDocumentRef == NULL");
 		}
 	}
 	else // Error out with a diagnostic
@@ -158,19 +166,19 @@
 	return status;
 }
 
-- (void)gotoPage:(NSInteger)newPage
+- (void)gotoPage:(NSInteger)page
 {
 	if (_PDFDocRef != NULL)
 	{
-		if (newPage < 1) // Check lower page bounds
-			newPage = 1;
+		if (page < 1) // Check lower page bounds
+			page = 1;
 		else
-			if (newPage > pages) // Check upper page bounds
-				newPage = pages;
+			if (page > _pageCount) // Check upper page bounds
+				page = _pageCount;
 
-		if (newPage != page) // Only if page numbers differ
+		if (page != _currentPage) // Only if page numbers differ
 		{
-			page = 0; // Clear the current page number
+			_currentPage = 0; // Clear the current page number
 
 			@synchronized(self) // Block CATiledLayer thread
 			{
@@ -180,19 +188,19 @@
 
 				_PDFDocRef = CGPDFDocumentCreateX((CFURLRef)_fileURL, _password);
 
-				if (_PDFDocRef != NULL) // Check for non-NULL CGPDFDocRef
+				if (_PDFDocRef != NULL) // Check for non-NULL CGPDFDocumentRef
 				{
-					_PDFPageRef = CGPDFDocumentGetPage(_PDFDocRef, newPage);
+					_PDFPageRef = CGPDFDocumentGetPage(_PDFDocRef, page);
 
 					if (_PDFPageRef != NULL) // Check for non-NULL CGPDFPageRef
 					{
 						CGPDFPageRetain(_PDFPageRef); // Retain the PDF page
 
-//						self.layer.contents = nil; // Clear CATiledLayer tile cache
+						//self.layer.contents = nil; // Clear CATiledLayer tile cache
 
 						[self.layer setNeedsDisplay]; // Flag the layer for redraw
 
-						page = newPage; // Set the current page number
+						_currentPage = page; // Set the current page number
 					}
 					else // Error out with a diagnostic
 					{
@@ -203,18 +211,49 @@
 				}
 				else // Error out with a diagnostic
 				{
-					NSAssert(NO, @"CGPDFDocRef == NULL");
+					NSAssert(NO, @"CGPDFDocumentRef == NULL");
 				}
 			}
 		}
 	}
 }
 
+- (CGSize)currentPageSize
+{
+	CGSize pageSize = CGSizeZero; // Error default size
+
+	if (_PDFDocRef != NULL) // Check for non-NULL CGPDFDocumentRef
+	{
+		CGRect cropBoxRect = CGPDFPageGetBoxRect(_PDFPageRef, kCGPDFCropBox);
+		CGRect mediaBoxRect = CGPDFPageGetBoxRect(_PDFPageRef, kCGPDFMediaBox);
+		CGRect effectiveRect = CGRectIntersection(cropBoxRect, mediaBoxRect);
+
+		NSInteger degrees = CGPDFPageGetRotationAngle(_PDFPageRef);
+
+		if (degrees == 0) // Check for page rotation
+		{
+			pageSize = effectiveRect.size;
+		}
+		else // Rotate the effective rect so many degrees
+		{
+			CGFloat radians = (degrees * M_PI / 180.0);
+
+			CGAffineTransform rotation = CGAffineTransformMakeRotation(radians);
+
+			CGRect rotatedRect = CGRectApplyAffineTransform(effectiveRect, rotation);
+
+			pageSize = rotatedRect.size;
+		}
+	}
+
+	return pageSize;
+}
+
 - (void)decrementPage
 {
 	if (_PDFDocRef != NULL)
 	{
-		[self gotoPage:(page - 1)];
+		[self gotoPage:(_currentPage - 1)];
 	}
 }
 
@@ -222,51 +261,41 @@
 {
 	if (_PDFDocRef != NULL)
 	{
-		[self gotoPage:(page + 1)];
+		[self gotoPage:(_currentPage + 1)];
 	}
-}
-
-- (void)willRotate
-{
-	self.layer.hidden = YES;
-
-	self.layer.contents = nil;
-}
-
-- (void)didRotate
-{
-	[self.layer setNeedsDisplay];
-
-	self.layer.hidden = NO;
 }
 
 - (void)dealloc
 {
-	[_password release];
+	@synchronized(self) // Block any other threads
+	{
+		CGPDFPageRelease(_PDFPageRef), _PDFPageRef = NULL;
 
-	CGPDFPageRelease(_PDFPageRef);
+		CGPDFDocumentRelease(_PDFDocRef), _PDFDocRef = NULL;
+	}
 
-	CGPDFDocumentRelease(_PDFDocRef);
-
-	[_fileURL release];
+	[_fileURL release]; [_password release];
 
 	[super dealloc];
 }
 
-#pragma mark CATiledLayer Delegate methods
+#pragma mark CATiledLayer delegate methods
 
 - (void)drawLayer:(CATiledLayer *)layer inContext:(CGContextRef)context
 {
 	CGPDFPageRef drawPDFPageRef = NULL;
+
 	CGPDFDocumentRef drawPDFDocRef = NULL;
 
-	@synchronized(self) // Briefly block main thread
+	@synchronized(self) // Block any other threads
 	{
 		drawPDFDocRef = CGPDFDocumentRetain(_PDFDocRef);
+
 		drawPDFPageRef = CGPDFPageRetain(_PDFPageRef);
 	}
 
-	CGContextSetRGBFillColor(context, 1.0f, 1.0f, 1.0f, 1.0f);
+	CGContextSetRGBFillColor(context, 1.0f, 1.0f, 1.0f, 1.0f); // White
+
 	CGContextFillRect(context, CGContextGetClipBoundingBox(context));
 
 	if (drawPDFPageRef != NULL) // Render the page into the context
@@ -275,7 +304,7 @@
 
 		if (CGPDFPageGetRotationAngle(drawPDFPageRef) == 0)
 		{
-			CGFloat boundsWidth = self.bounds.size.width;
+			CGFloat boundsWidth = self.bounds.size.width; // View width
 
 			CGRect cropBoxRect = CGPDFPageGetBoxRect(drawPDFPageRef, kCGPDFCropBox);
 			CGRect mediaBoxRect = CGPDFPageGetBoxRect(drawPDFPageRef, kCGPDFMediaBox);
@@ -312,6 +341,7 @@
 	}
 
 	CGPDFPageRelease(drawPDFPageRef); // Cleanup
+
 	CGPDFDocumentRelease(drawPDFDocRef);
 }
 

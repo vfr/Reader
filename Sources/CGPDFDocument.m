@@ -3,7 +3,7 @@
 //	Reader
 //
 //	Created by Julius Oklamcak on 2010-09-01.
-//	Copyright © 2010 Julius Oklamcak. All rights reserved.
+//	Copyright © 2010-2011 Julius Oklamcak. All rights reserved.
 //
 //	This work is being made available under a Creative Commons Attribution license:
 //		«http://creativecommons.org/licenses/by/3.0/»
@@ -26,7 +26,7 @@ CGPDFDocumentRef CGPDFDocumentCreateX(CFURLRef theURL, NSString *password)
 	{
 		thePDFDocRef = CGPDFDocumentCreateWithURL(theURL);
 
-		if (thePDFDocRef != NULL) // Check for non-NULL CGPDFDocRef
+		if (thePDFDocRef != NULL) // Check for non-NULL CGPDFDocumentRef
 		{
 			if (CGPDFDocumentIsEncrypted(thePDFDocRef) == TRUE) // Encrypted
 			{
@@ -69,18 +69,80 @@ CGPDFDocumentRef CGPDFDocumentCreateX(CFURLRef theURL, NSString *password)
 }
 
 //
+//	CGSize CGPDFDocumentPageSize(CFURLRef, NSString *, NSInteger) function
+//
+
+CGSize CGPDFDocumentPageSize(CFURLRef theURL, NSString *password, NSInteger page)
+{
+	CGSize pageSize = CGSizeZero; // Default size on error
+
+	CGPDFDocumentRef thePDFDocRef = CGPDFDocumentCreateX(theURL, password);
+
+	if (thePDFDocRef != NULL) // Check for non-NULL CGPDFDocumentRef
+	{
+		if (page < 1) page = 1; // Check the lower page bounds
+
+		NSInteger pages = CGPDFDocumentGetNumberOfPages(thePDFDocRef);
+
+		if (page > pages) page = pages; // Check the upper page bounds
+
+		CGPDFPageRef thePDFPageRef = CGPDFDocumentGetPage(thePDFDocRef, page);
+
+		if (thePDFPageRef != NULL) // Check for non-NULL CGPDFPageRef
+		{
+			CGRect cropBoxRect = CGPDFPageGetBoxRect(thePDFPageRef, kCGPDFCropBox);
+			CGRect mediaBoxRect = CGPDFPageGetBoxRect(thePDFPageRef, kCGPDFMediaBox);
+			CGRect effectiveRect = CGRectIntersection(cropBoxRect, mediaBoxRect);
+
+			NSInteger degrees = CGPDFPageGetRotationAngle(thePDFPageRef);
+
+			if (degrees == 0) // Check for page rotation
+			{
+				pageSize = effectiveRect.size;
+			}
+			else // Rotate the effective rect so many degrees
+			{
+				CGFloat radians = (degrees * M_PI / 180.0);
+
+				CGAffineTransform rotation = CGAffineTransformMakeRotation(radians);
+
+				CGRect rotatedRect = CGRectApplyAffineTransform(effectiveRect, rotation);
+
+				pageSize = rotatedRect.size;
+			}
+		}
+		else // Log an error diagnostic
+		{
+			#ifdef DEBUG
+				NSLog(@"CGPDFDocumentPageSize: thePDFPageRef == NULL");
+			#endif
+		}
+
+		CGPDFDocumentRelease(thePDFDocRef); // Cleanup CGPDFDocumentRef
+	}
+	else // Log an error diagnostic
+	{
+		#ifdef DEBUG
+			NSLog(@"CGPDFDocumentPageSize: thePDFDocRef == NULL");
+		#endif
+	}
+
+	return pageSize;
+}
+
+//
 //	BOOL CGPDFDocumentNeedsPassword(CFURLRef, NSString *) function
 //
 
 BOOL CGPDFDocumentNeedsPassword(CFURLRef theURL, NSString *password)
 {
-	BOOL needPassword = NO;
+	BOOL needPassword = NO; // Default flag
 
 	if (theURL != NULL) // Check for non-NULL CFURLRef
 	{
 		CGPDFDocumentRef thePDFDocRef = CGPDFDocumentCreateWithURL(theURL);
 
-		if (thePDFDocRef != NULL) // Check for non-NULL CGPDFDocRef
+		if (thePDFDocRef != NULL) // Check for non-NULL CGPDFDocumentRef
 		{
 			if (CGPDFDocumentIsEncrypted(thePDFDocRef) == TRUE) // Encrypted
 			{
@@ -106,7 +168,7 @@ BOOL CGPDFDocumentNeedsPassword(CFURLRef theURL, NSString *password)
 				}
 			}
 
-			CGPDFDocumentRelease(thePDFDocRef); // Cleanup CGPDFDocRef
+			CGPDFDocumentRelease(thePDFDocRef); // Cleanup CGPDFDocumentRef
 		}
 	}
 	else // Log an error diagnostic

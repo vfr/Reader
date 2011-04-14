@@ -3,7 +3,7 @@
 //	Reader
 //
 //	Created by Julius Oklamcak on 2010-09-01.
-//	Copyright © 2010 Julius Oklamcak. All rights reserved.
+//	Copyright © 2010-2011 Julius Oklamcak. All rights reserved.
 //
 //	This work is being made available under a Creative Commons Attribution license:
 //		«http://creativecommons.org/licenses/by/3.0/»
@@ -20,23 +20,26 @@
 
 	NSURL *_fileURL;
 	NSString *_password;
+
+	NSInteger _pageCount;
+	NSInteger _currentPage;
+
 	CGPDFDocumentRef _PDFDocRef;
 	CGPDFPageRef _PDFPageRef;
 }
 
-@property (nonatomic, readonly) NSInteger page;
-@property (nonatomic, readonly) NSInteger pages;
+@property (nonatomic, assign, readonly) NSInteger pageCount;
+@property (nonatomic, assign, readonly) NSInteger currentPage;
 
-- (id)initWithURL:(NSURL *)fileURL onPage:(NSInteger)onPage password:(NSString *)password frame:(CGRect)frame;
+- (id)initWithURL:(NSURL *)fileURL page:(NSInteger)page password:(NSString *)password frame:(CGRect)frame;
 
-- (BOOL)changeFileURL:(NSURL *)fileURL onPage:(NSInteger)onPage password:(NSString *)password;
+- (BOOL)changeFileURL:(NSURL *)fileURL page:(NSInteger)page password:(NSString *)password;
 
-- (void)gotoPage:(NSInteger)newPage;
+- (void)gotoPage:(NSInteger)page;
+
+- (CGSize)currentPageSize;
 
 - (void)decrementPage;
 - (void)incrementPage;
-
-- (void)willRotate;
-- (void)didRotate;
 
 @end

@@ -3,7 +3,7 @@
 //	Reader
 //
 //	Created by Julius Oklamcak on 2010-09-01.
-//	Copyright © 2010 Julius Oklamcak. All rights reserved.
+//	Copyright © 2010-2011 Julius Oklamcak. All rights reserved.
 //
 //	This work is being made available under a Creative Commons Attribution license:
 //		«http://creativecommons.org/licenses/by/3.0/»
@@ -20,5 +20,7 @@
 //
 
 CGPDFDocumentRef CGPDFDocumentCreateX(CFURLRef theURL, NSString *password);
+
+CGSize CGPDFDocumentPageSize(CFURLRef theURL, NSString *password, NSInteger page);
 
 BOOL CGPDFDocumentNeedsPassword(CFURLRef theURL, NSString *password);

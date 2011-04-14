@@ -3,7 +3,7 @@
 //	Reader
 //
 //	Created by Julius Oklamcak on 2010-09-01.
-//	Copyright © 2010 Julius Oklamcak. All rights reserved.
+//	Copyright © 2010-2011 Julius Oklamcak. All rights reserved.
 //
 //	This work is being made available under a Creative Commons Attribution license:
 //		«http://creativecommons.org/licenses/by/3.0/»
@@ -14,24 +14,24 @@
 
 #import <UIKit/UIKit.h>
 
-@class PDFViewTiled, UIViewFader;
+@class PDFViewTiled, UtilityViewFader;
 
 @interface ReaderViewController : UIViewController <UIScrollViewDelegate, UIGestureRecognizerDelegate>
 {
 @private // Instance variables
 
-	UIView *theNavbar;
-	UIViewFader *navbarFader;
-	UISlider *theSlider;
-
 	UIToolbar *theToolbar;
-	UIViewFader *toolbarFader;
+	UtilityViewFader *toolbarFader;
 	UILabel *theLabel;
+
+	UIView *thePagebar;
+	UtilityViewFader *pagebarFader;
+	UISlider *theSlider;
 
 	UIScrollView *theScrollView;
 	PDFViewTiled *thePDFView;
 }
 
-@property (nonatomic, retain) NSURL *openURL;
+@property (nonatomic, retain, readwrite) NSURL *openURL;
 
 @end

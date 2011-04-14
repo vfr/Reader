@@ -8,9 +8,9 @@
 	<string>en</string>
 	<key>CFBundleIconFiles</key>
 	<array>
-		<string>Icon-114.png</string>
-		<string>Icon-072.png</string>
-		<string>Icon-057.png</string>
+		<string>AppIcon-114.png</string>
+		<string>AppIcon-072.png</string>
+		<string>AppIcon-057.png</string>
 	</array>
 	<key>CFBundleDisplayName</key>
 	<string>${PRODUCT_NAME}</string>
@@ -25,7 +25,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1.0.1</string>
+	<string>1.1.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIPrerenderedIcon</key>
@@ -56,7 +56,7 @@
 			</array>
 			<key>CFBundleTypeIconFiles</key>
 			<array>
-				<string>Icon-PDF.png</string>
+				<string>AppIcon-PDF.png</string>
 			</array>
 		</dict>
 	</array>
