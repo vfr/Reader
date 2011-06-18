@@ -127,12 +127,14 @@
 
 	thePDFView = [[PDFViewTiled alloc] initWithURL:fileURL page:page password:nil frame:theScrollView.bounds];
 
-	[theScrollView addSubview:thePDFView];
+	[theScrollView addSubview:thePDFView]; // Add the PDF view to the scroll view
 
 	theToolbar = [UIToolbar new]; // Create the application toolbar
 
 	theToolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	theToolbar.barStyle = UIBarStyleBlack; theToolbar.translucent = YES;
+
+	NSMutableArray *buttonArray = [NSMutableArray new]; // Toolbar button item array
 
 	UIButton *infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight]; [infoButton sizeToFit];
 
@@ -140,17 +142,26 @@
 
 	UIBarButtonItem *barInfoButton = [[UIBarButtonItem alloc] initWithCustomView:infoButton]; // Use the UIButton view
 
-	UIBarButtonItem *flexiSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:NULL];
+	[buttonArray addObject:barInfoButton]; [barInfoButton release]; // Add the info button to the button item array
 
-	theToolbar.items = [NSArray arrayWithObjects:flexiSpace, barInfoButton, nil];
+	Class printInteractionController = NSClassFromString(@"UIPrintInteractionController"); // Only in iOS 4.2 and up
 
-	[barInfoButton release]; [flexiSpace release]; // Cleanup
+	if ((printInteractionController != nil) && [printInteractionController isPrintingAvailable]) // Check for printing support
+	{
+		UIBarButtonItem *flexiSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:NULL];
+
+		UIBarButtonItem *printButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Icon-Print.png"] style:UIBarButtonItemStylePlain target:self action:@selector(printButtonTapped:)];
+
+		[buttonArray addObject:flexiSpace]; [buttonArray addObject:printButton]; [flexiSpace release]; [printButton release]; // Add print button
+	}
+
+	theToolbar.items = buttonArray; [buttonArray release];
 
 	[self.view addSubview:theToolbar]; [theToolbar sizeToFit];
 
 	frame = theToolbar.bounds;
 	frame.origin.y += 4.0f; frame.size.height -= 8.0f;
-	frame.origin.x += 8.0f; frame.size.width -= 48.0f;
+	frame.origin.x += 48.0f; frame.size.width -= 96.0f;
 
 	theLabel = [[UILabel alloc] initWithFrame:frame];
 
@@ -282,6 +293,11 @@
 //	NSLog(@"ReaderViewController.m -willRotateToInterfaceOrientation: [%d]", toInterfaceOrientation);
 //	NSLog(@" -> self.view.bounds = %@", NSStringFromCGRect(self.view.bounds));
 #endif
+
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) // iPad only
+	{
+		if (printInteraction != nil) [printInteraction dismissAnimated:NO];
+	}
 }
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration
@@ -485,6 +501,50 @@
 							delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK button text") otherButtonTitles:nil];
 
 	[theAlert show]; [theAlert release];
+}
+
+- (void)printButtonTapped:(UIBarButtonItem *)item
+{
+	Class printInteractionController = NSClassFromString(@"UIPrintInteractionController");
+
+	if ((printInteractionController != nil) && [printInteractionController isPrintingAvailable])
+	{
+		NSURL *fileURL = thePDFView.fileURL; // Document file URL
+
+		printInteraction = [printInteractionController sharedPrintController];
+
+		if ([printInteractionController canPrintURL:fileURL] == YES) // Check
+		{
+			if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) // iPad only
+			{
+				[toolbarFader stopFadeOutTimer]; // Stop toolbar fade timer
+			}
+
+			UIPrintInfo *printInfo = [NSClassFromString(@"UIPrintInfo") printInfo];
+
+			printInfo.duplex = UIPrintInfoDuplexLongEdge;
+			printInfo.outputType = UIPrintInfoOutputGeneral;
+			printInfo.jobName = [fileURL lastPathComponent];
+
+			printInteraction.printInfo = printInfo;
+			printInteraction.printingItem = fileURL;
+			printInteraction.showsPageRange = YES;
+
+			[printInteraction presentFromBarButtonItem:item animated:YES completionHandler:
+				^(UIPrintInteractionController *pic, BOOL completed, NSError *error)
+				{
+					#ifdef DEBUG
+						if ((completed == NO) && (error != nil)) NSLog(@"%s %@", __FUNCTION__, error);
+					#endif
+
+					if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) // iPad only
+					{
+						[toolbarFader startFadeOutTimer]; // Start toolbar fade timer
+					}
+				}
+			];
+		}
+	}
 }
 
 #pragma mark UISlider action methods

@@ -148,7 +148,7 @@ Properties
 
 currentPage
 
-The PDF view object’s current page number value (read-only).
+The PDF view object's current page number value (read-only).
 
 @property (nonatomic, assign, readonly) NSInteger currentPage
 
@@ -157,7 +157,7 @@ change method calls. Contains 0 if -initWithURL: failed.
 
 pageCount
 
-The PDF view object’s number of pages in PDF value (read-only).
+The PDF view object's number of pages in PDF value (read-only).
 
 @property (nonatomic, assign, readonly) NSInteger pageCount
 
@@ -180,6 +180,10 @@ HISTORY
 							property settings (contentMode and autoresizingMask)
 							and UIScrollView contentSize updates to fix device
 							rotation handling once and for all.
+
+2011-05-22: Version 1.2.0 - Added printing support (iOS 4.2 and newer only).
+
+2011-06-06: Version 1.2.1 - Bug fix in -drawLayer:inContext: in PDFViewTiled.m
 
 CONTACT INFO
 

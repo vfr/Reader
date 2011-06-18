@@ -28,6 +28,7 @@
 	CGPDFPageRef _PDFPageRef;
 }
 
+@property (nonatomic, retain, readonly) NSURL *fileURL;
 @property (nonatomic, assign, readonly) NSInteger pageCount;
 @property (nonatomic, assign, readonly) NSInteger currentPage;
 

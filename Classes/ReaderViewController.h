@@ -30,6 +30,8 @@
 
 	UIScrollView *theScrollView;
 	PDFViewTiled *thePDFView;
+
+	UIPrintInteractionController *printInteraction;
 }
 
 @property (nonatomic, retain, readwrite) NSURL *openURL;

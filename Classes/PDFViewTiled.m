@@ -20,6 +20,7 @@
 
 #pragma mark Properties
 
+@synthesize fileURL = _fileURL;
 @synthesize pageCount = _pageCount;
 @synthesize currentPage = _currentPage;
 
@@ -323,8 +324,8 @@
 
 			y_offset = (boundsHeight - y_offset); // Co-ordinate system adjust
 
-			CGFloat x_translate = (x_offset - effectiveRect.origin.x);
-			CGFloat y_translate = (y_offset + effectiveRect.origin.y);
+			CGFloat x_translate = (x_offset - (effectiveRect.origin.x * scale));
+			CGFloat y_translate = (y_offset + (effectiveRect.origin.y * scale));
 
 			CGContextTranslateCTM(context, x_translate, y_translate);
 
