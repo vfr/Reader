@@ -1,9 +1,9 @@
 //
-//	PDFTiledLayer.m
-//	Reader
+//	ReaderContentTile.m
+//	Reader v2.0.0
 //
-//	Created by Julius Oklamcak on 2010-09-01.
-//	Copyright © 2010-2011 Julius Oklamcak. All rights reserved.
+//	Created by Julius Oklamcak on 2011-07-01.
+//	Copyright © 2011 Julius Oklamcak. All rights reserved.
 //
 //	This work is being made available under a Creative Commons Attribution license:
 //		«http://creativecommons.org/licenses/by/3.0/»
@@ -12,47 +12,53 @@
 //	the original author is attributed.
 //
 
-#import "PDFTiledLayer.h"
+#import "ReaderConstants.h"
+#import "ReaderContentTile.h"
 
-@implementation PDFTiledLayer
+@implementation ReaderContentTile
 
 #pragma mark Constants
 
-#define ZOOM_LEVELS 5
+#define LEVELS_OF_DETAIL 4
+#define LEVELS_OF_DETAIL_BIAS 3
 
 #pragma mark Properties
 
 //@synthesize ;
 
-#pragma mark PDFTiledLayer class methods
+#pragma mark ReaderContentTile class methods
 
 + (CFTimeInterval)fadeDuration
 {
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
 	return 0.0; // No fading wanted
 }
 
-#pragma mark PDFTiledLayer instance methods
+#pragma mark ReaderContentTile instance methods
 
 - (id)init
 {
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
 	if ((self = [super init]))
 	{
-		self.levelsOfDetail = ZOOM_LEVELS;
+		self.levelsOfDetail = LEVELS_OF_DETAIL;
 
-		self.levelsOfDetailBias = (ZOOM_LEVELS - 1);
+		self.levelsOfDetailBias = LEVELS_OF_DETAIL_BIAS;
 
-		CGFloat screenScale; // Points to pixels
+		UIScreen *mainScreen = [UIScreen mainScreen]; // Screen
 
-		UIScreen *mainScreen = [UIScreen mainScreen];
+		CGFloat screenScale = [mainScreen scale]; // Screen scale
 
-		if ([mainScreen respondsToSelector:@selector(scale)])
-			screenScale = [mainScreen scale];
-		else
-			screenScale = 1.0f;
-
-		CGRect screenBounds = [mainScreen bounds]; // Is in points
+		CGRect screenBounds = [mainScreen bounds]; // Screen bounds
 
 		CGFloat w_pixels = (screenBounds.size.width * screenScale);
+
 		CGFloat h_pixels = (screenBounds.size.height * screenScale);
 
 		CGFloat max = (w_pixels < h_pixels) ? h_pixels : w_pixels;
@@ -63,6 +69,15 @@
 	}
 
 	return self;
+}
+
+- (void)dealloc
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	[super dealloc];
 }
 
 @end

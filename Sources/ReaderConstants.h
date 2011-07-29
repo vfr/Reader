@@ -1,5 +1,5 @@
 //
-//	ReaderAppDelegate.h
+//	ReaderConstants.h
 //	Reader v2.0.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
@@ -12,19 +12,12 @@
 //	the original author is attributed.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-#import "ReaderDemoController.h"
+#define READER_STANDALONE FALSE
+#define READER_ENABLE_MAIL TRUE
+#define READER_ENABLE_PRINT TRUE
+#define READER_DISABLE_IDLE FALSE
+#define READER_SHOW_SHADOW FALSE
 
-@interface ReaderAppDelegate : NSObject <UIApplicationDelegate>
-{
-@private // Instance variables
-
-	UIWindow *mainWindow; // Main App Window
-
-	UINavigationController *navigationController;
-
-	ReaderDemoController *readerDemoController;
-}
-
-@end
+extern NSString *const kReaderCopyrightNotice;

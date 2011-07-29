@@ -1,9 +1,9 @@
 //
 //	ReaderAppDelegate.m
-//	Reader
+//	Reader v2.0.0
 //
-//	Created by Julius Oklamcak on 2010-09-01.
-//	Copyright © 2010-2011 Julius Oklamcak. All rights reserved.
+//	Created by Julius Oklamcak on 2011-07-01.
+//	Copyright © 2011 Julius Oklamcak. All rights reserved.
 //
 //	This work is being made available under a Creative Commons Attribution license:
 //		«http://creativecommons.org/licenses/by/3.0/»
@@ -13,7 +13,6 @@
 //
 
 #import "ReaderAppDelegate.h"
-#import "ReaderViewController.h"
 
 @implementation ReaderAppDelegate
 
@@ -21,40 +20,12 @@
 
 //@synthesize ;
 
-#pragma mark Miscellaneous methods
-
-- (NSURL *)moveFileFromInboxToDocuments:(NSURL *)theURL
-{
-	NSURL *newURL = theURL;
-
-	if ([theURL isFileURL] == YES) // Handle only file URLs
-	{
-		NSString *inboxFilePath = [theURL path]; // Convert the file URL to a file path string
-		NSString *inboxPath = [inboxFilePath stringByDeletingLastPathComponent]; // ~/Documents/Inbox
-		NSString *documentsPath = [inboxPath stringByDeletingLastPathComponent]; // ~/Documents
-
-		NSString *documentFile = [inboxFilePath lastPathComponent]; // Get the actual file name
-		NSString *documentFilePath = [documentsPath stringByAppendingPathComponent:documentFile];
-
-		NSFileManager *fileManager = [[NSFileManager new] autorelease];
-
-		if ([fileManager moveItemAtPath:inboxFilePath toPath:documentFilePath error:nil] == YES)
-		{
-			[fileManager removeItemAtPath:inboxPath error:nil]; // Delete the whole Inbox
-
-			newURL = [NSURL fileURLWithPath:documentFilePath]; // Create a new file URL
-		}
-	}
-
-	return newURL;
-}
-
 #pragma mark UIApplicationDelegate methods
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
-#ifdef DEBUG
-	NSLog(@"ReaderAppDelegate.m -handleOpenURL:");
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
 #endif
 
 	return NO;
@@ -62,24 +33,23 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-#ifdef DEBUG
-	NSLog(@"ReaderAppDelegate.m -didFinishLaunchingWithOptions:");
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
 #endif
 
 	mainWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 
-	mainWindow.backgroundColor = [UIColor whiteColor]; // White prevents redraw flicker
+//	[[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
 
-	mainViewController = [[ReaderViewController alloc] initWithNibName:nil bundle:nil];
+	readerDemoController = [[ReaderDemoController alloc] initWithNibName:nil bundle:nil]; // Demo controller
 
-	if (launchOptions != nil) // Check for launch options and handle the URL key
-	{
-		NSURL *theURL = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
+	navigationController = [[UINavigationController alloc] initWithRootViewController:readerDemoController];
 
-		if (theURL != nil) mainViewController.openURL = [self moveFileFromInboxToDocuments:theURL];
-	}
+	mainWindow.backgroundColor = [UIColor scrollViewTexturedBackgroundColor]; // Window background color
 
-	[mainWindow addSubview:mainViewController.view];
+	navigationController.navigationBar.barStyle = UIBarStyleBlack; navigationController.navigationBar.translucent = YES;
+
+	mainWindow.rootViewController = navigationController; // Set the root view controller
 
 	[mainWindow makeKeyAndVisible];
 
@@ -88,8 +58,8 @@
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-#ifdef DEBUG
-	NSLog(@"ReaderAppDelegate.m -applicationWillResignActive:");
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
 #endif
 
 	// Sent when the application is about to move from active to inactive state. This can occur for certain types of
@@ -100,8 +70,8 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-#ifdef DEBUG
-	NSLog(@"ReaderAppDelegate.m -applicationDidEnterBackground:");
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
 #endif
 
 	// Use this method to release shared resources, save user data, invalidate timers, and store enough
@@ -111,8 +81,8 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-#ifdef DEBUG
-	NSLog(@"ReaderAppDelegate.m -applicationWillEnterForeground:");
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
 #endif
 
 	// Called as part of transition from the background to the inactive state: here you can undo many
@@ -121,8 +91,8 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-#ifdef DEBUG
-	NSLog(@"ReaderAppDelegate.m -applicationDidBecomeActive:");
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
 #endif
 
 	// Restart any tasks that were paused (or not yet started) while the application was inactive.
@@ -131,8 +101,8 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-#ifdef DEBUG
-	NSLog(@"ReaderAppDelegate.m -applicationWillTerminate:");
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
 #endif
 
 	// Called when the application is about to terminate.
@@ -141,8 +111,8 @@
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
 {
-#ifdef DEBUG
-	NSLog(@"ReaderAppDelegate.m -applicationDidReceiveMemoryWarning:");
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
 #endif
 
 	// Free up as much memory as possible by purging cached data objects that can be recreated
@@ -151,13 +121,15 @@
 
 - (void)dealloc
 {
-#ifdef DEBUG
-	NSLog(@"ReaderAppDelegate.m -dealloc");
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	[mainViewController release];
+	[navigationController release], navigationController = nil;
 
-	[mainWindow release];
+	[readerDemoController release], readerDemoController = nil;
+
+	[mainWindow release], mainWindow = nil;
 
 	[super dealloc];
 }

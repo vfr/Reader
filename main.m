@@ -1,6 +1,6 @@
 //
-//	ReaderAppDelegate.h
-//	Reader v2.0.0
+//	main.m
+//	Reader
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -14,17 +14,10 @@
 
 #import <UIKit/UIKit.h>
 
-#import "ReaderDemoController.h"
-
-@interface ReaderAppDelegate : NSObject <UIApplicationDelegate>
+int main(int argc, char *argv[])
 {
-@private // Instance variables
-
-	UIWindow *mainWindow; // Main App Window
-
-	UINavigationController *navigationController;
-
-	ReaderDemoController *readerDemoController;
+	NSAutoreleasePool *pool = [NSAutoreleasePool new];
+	int retVal = UIApplicationMain(argc, argv, nil, @"ReaderAppDelegate");
+	[pool release];
+	return retVal;
 }
-
-@end

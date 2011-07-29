@@ -1,5 +1,5 @@
 //
-//	ReaderAppDelegate.h
+//	ReaderContentPage.h
 //	Reader v2.0.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
@@ -14,17 +14,23 @@
 
 #import <UIKit/UIKit.h>
 
-#import "ReaderDemoController.h"
-
-@interface ReaderAppDelegate : NSObject <UIApplicationDelegate>
+@interface ReaderContentPage : UIView
 {
 @private // Instance variables
 
-	UIWindow *mainWindow; // Main App Window
+	NSURL *_fileURL;
 
-	UINavigationController *navigationController;
+	NSString *_password;
 
-	ReaderDemoController *readerDemoController;
+	CGPDFDocumentRef _PDFDocRef;
+
+	CGPDFPageRef _PDFPageRef;
+
+	CGSize _pageSize;
 }
+
+@property (nonatomic, assign, readonly) CGSize pageSize;
+
+- (id)initWithURL:(NSURL *)fileURL page:(NSInteger)page password:(NSString *)phrase;
 
 @end

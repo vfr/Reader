@@ -1,5 +1,5 @@
 //
-//	ReaderAppDelegate.h
+//	ReaderDemoController.h
 //	Reader v2.0.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
@@ -14,17 +14,11 @@
 
 #import <UIKit/UIKit.h>
 
-#import "ReaderDemoController.h"
+#import "ReaderViewController.h"
 
-@interface ReaderAppDelegate : NSObject <UIApplicationDelegate>
+@interface ReaderDemoController : UIViewController <ReaderViewControllerDelegate>
 {
 @private // Instance variables
-
-	UIWindow *mainWindow; // Main App Window
-
-	UINavigationController *navigationController;
-
-	ReaderDemoController *readerDemoController;
 }
 
 @end

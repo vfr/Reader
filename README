@@ -1,189 +1,119 @@
-
-Basic PDF Reader/Viewer for iOS
+Basic PDF Reader/Viewer V2.0 for iOS
 
 INTRODUCTION
 
-I've written this rudimentary PDF reader/viewer app for fellow iOS
+I've written this basic PDF reader/viewer app for fellow iOS
 developers struggling with wrangling PDF files onto iOS device
-screens. This project consists of two separate parts:
+screens. Version 2.0 is a complete rethink and rewrite of the
+original 1.x code. Please see my contact info below if you find
+any bugs or have questions about the code.
 
-The core PDF view class and its support code:
+The code is universal and does not require any XIBs (as all UI
+elements are code generated, allowing for greatest flexibility).
+It runs on iPad, iPhone and iPod touch with iOS 4.0 and up. Also
+supported are the Retina displays on iPhone 4 and iPod touch 4th
+generation and is ready to be fully internationalized. The idea
+was to provide a complete project template that you could start
+building from, or, just pull the required files into an existing
+project to enable PDF reading/viewing in your app.
 
-	PDFViewTiled.h, PDFViewTiled.m
-	PDFTiledLayer.h, PDFTiledLayer.m
-	CGPDFDocument.h, CGPDFDocument.m
+After launching the sample app, tap on the left hand side of the
+screen to go back a page. Tap on the right hand side to go to the
+next page. You can also swipe left and right to change pages. Tap
+on the screen to fade in the toolbar and page slider. Double-tap
+with one finger (or pinch out) to zoom in. Double tap with two
+fingers (or pinch in) to zoom out.
 
-The app classes and support files to show the use of the above code:
+This implementation has been tested with large PDF files (over
+250MB in size and over 2800 pages in length) and with PDF files of
+all flavors (from text only documents to graphics heavy magazines).
+It also works rather well on older devices (such as the iPod touch
+2nd generation and iPhone 3G) and uses the dual-core processor
+(via CATiledLayer multi-threading) in the iPad 2.
 
-	Reader-Info.plist, Reader_Prefix.pch
-	ReaderAppDelegate.h, ReaderAppDelegate.m
-	ReaderViewController.h, ReaderViewController.m
-	UtilityViewFader.h, UtilityViewFader.m, main.m
-	Localizable.strings, AppIcon-*.png
+NOTES
 
-The app is universal: It runs on iPad, iPhone and iPod touch, iOS 3.2
-and up. It also supports the Retina displays on iPhone 4 and iPod touch
-4th generation and is ready to be fully internationalized. The intention
-was to provide a complete project template to start building from. Though
-not tested, the PDFViewTiled class should work on iOS 3.1. The app handles
-file sharing and PDF "Open In..." from other apps (Mail, Dropbox, etc.)
-and all device orientations. It also remembers the last page number
-that the bundled PDF was on.
+Version 2.0 of the PDF reader/viewer code was developed and tested
+under Xcode 3.2.6, LLVM 1.7, iOS 4.3.5 and iOS 4.2.1 - if you come
+across any issues with other versions of the tools, or iOS, please
+let me know.
 
-After launching the app, tap on the left hand side of the screen to go
-back a page. Tap on the right hand side to go to the next page. You can
-also swipe left and right when fully zoomed out to change pages. Tap on
-the bottom of the screen to fade in the page slider to quickly move around
-a document. Tap on the top of the screen to fade in the toolbar. Double-tap
-with one finger (or pinch out) to zoom in. Double tap with two fingers
-(or pinch in) to zoom out.
+The overall PDF reader/viewer functionality is encapsulated in the
+ReaderViewController class. You initialize a ReaderDocument object
+with the file path to the PDF document (or unarchive an existing
+ReaderDocument object) and then initialize a ReaderViewController
+with this ReaderDocument object. The ReaderViewController class
+uses the ReaderDocument object to store information about the
+document and to keep track of document properties (the current
+page number for example).
 
-This implementation has been tested with large PDF files (over 250 MB
-and over 2800 pages) and with PDF files of all flavors (from text only
-to graphics heavy magazines). It also works rather well on older devices
-(such as iPod touch 2nd generation and iPhone 3G). To get an idea of its
-responsiveness, build and run the app with "The Odyssey" from Planet PDF,
-then quickly tap on the right hand side of the screen of your iDevice.
+An initialized ReaderViewController can then be presented modally,
+pushed onto a UINavigationController stack, or used as a root view
+controller. Please note that since ReaderViewController implements
+its own toolbar, you have to hide the UINavigationController's
+navigation bar before pushing it and then show the navigation
+bar after popping it. The ReaderDemoController class shows how
+this is done with a bundled PDF file.
 
-N.B. Version 1.0 does not support iOS 4 multitasking nor fancy eye-candy
-(page curls or animations). This is "left as an exercise for the student".
+Required Files
+--------------
 
-DOCUMENTATION
+The following source files are required to incorporate the PDF
+reader/viewer into one of your projects:
 
-PDFViewTiled Class Reference
+	ReaderDocument.h/.m
+	ReaderConstants.h/.m
+	ReaderViewController.h/.m
+	ReaderMainToolbar.h/.m
+	ReaderMainPagebar.h/.m
+	ReaderContentView.h/.m
+	ReaderContentPage.h/.m
+	ReaderContentTile.h/.m
+	ReaderScrollView.h/.m
+	CGPDFDocument.h/.m
 
-Inherits from UIView : UIResponder : NSObject
+	Localizable.strings
 
-Declared in PDFViewTiled.h
+Required iOS Frameworks
+-----------------------
 
-Overview
+To incorporate the PDF reader/viewer into one of your projects,
+the following iOS frameworks are required by the code:
 
-The PDFViewTiled class implements a custom CATiledLayer-backed UIView
-for showing PDF files. It supports password protected PDF files, changing
-page numbers and the changing the PDF file being shown.
+	UIKit, Foundation, CoreGraphics, QuartzCore and MessageUI.
 
-Instance Methods
+Compile Time Options
+--------------------
 
--initWithURL:
+In ReaderConstants.h the following #define options are available:
 
-Initializes and returns a newly allocated PDF view object with the
-specified file URL to a PDF, page number in the PDF, optional PDF
-password and UIView frame rectangle.
+READER_STANDALONE - If FALSE, a "Done" button is added to the toolbar
+and the -dismissReaderViewController: delegate method is messaged when
+it is tapped.
 
-- (id)initWithURL:(NSURL *)fileURL page:(NSInteger)page password:(NSString *)password frame:(CGRect)frame
+READER_ENABLE_MAIL - If TRUE, an email button is added to the toolbar
+(if the device is properly configured for email support).
 
- fileURL	- The file URL to the PDF file that should be shown in the view.
- page		- The initial page number to open the PDF at. The value is bounds checked.
- password	- An optional password to open the PDF with. Pass nil when no password.
- frame		- The frame rectangle for the view (see UIView Class Reference).
+READER_ENABLE_PRINT - If TRUE, a print button is added to the toolbar
+(if printing is supported and available on the device).
 
-Returns an initialized PDF view object or nil if the object's UIView could
-not be created. If an error occurs during PDF file open (missing file, wrong
-password), a valid object will still be returned but the currentPage and
-pageCount properties will be 0. In this case, -changeFileURL: could be
-used to update the PDF view object with valid parameters.
+READER_DISABLE_IDLE - If TRUE, the iOS idle timer is disabled while
+viewing a document (beware of battery drain).
 
--changeFileURL:
+READER_SHOW_SHADOW - If TRUE, a shadow is shown around each page
+and the page content is inset by a couple of extra points.
 
-Updates an existing PDF view object with a new PDF file URL, page
-number and password.
+ReaderDocument Object Archiving
+-------------------------------
 
-- (BOOL)changeFileURL:(NSURL *)fileURL page:(NSInteger)page password:(NSString *)password
-
- fileURL	- The file URL to the PDF file that should be shown in the view.
- page		- The initial page number to open the PDF at. The value is bounds checked.
- password	- An optional password to open the PDF with. Pass nil when no password.
-
-Use this method to change the PDF file being shown in an existing
-PDF view object. Returns YES on success, NO on failure. Failure is
-non-destructive; the previous PDF file will continue to be shown in
-the PDF view object on failure. This method updates the currentPage
-and pageCount properties on success.
-
--gotoPage:
-
-Changes the page being shown in the PDF view object.
-
-- (void)gotoPage:(NSInteger)page
-
- page		- The new page number to be shown.
-
-Call this method to change the PDF page being shown in the PDF view
-object. If a number greater than the total number of pages is passed,
-then the last page of the PDF will be shown. If a number smaller than
-1 is passed, then the first page will be shown. This method updates
-the currentPage property with the new bounds checked page number.
-
--currentPageSize
-
-Returns the current page size.
-
-- (CGSize)currentPageSize
-
-Call this method to get the native size (width and height) of the page
-currently being shown in the PDF view. Takes any PDF page rotation into
-account.
-
--decrementPage
-
-Shows the previous PDF page in the PDF view object.
-
-- (void)decrementPage
-
-Call this method to show the previous PDF page in relation to the current
-page in the PDF view object. This method updates the currentPage property
-with the new (bounds checked) page number.
-
--incrementPage
-
-Shows the next PDF page in the PDF view object.
-
-- (void)incrementPage
-
-Call this method to show the next PDF page in relation to the current
-page in the PDF view object. This method updates the currentPage property
-with the new (bounds checked) page number.
-
-Properties
-
-currentPage
-
-The PDF view object's current page number value (read-only).
-
-@property (nonatomic, assign, readonly) NSInteger currentPage
-
-Contains the current page number and is updated in response to page
-change method calls. Contains 0 if -initWithURL: failed.
-
-pageCount
-
-The PDF view object's number of pages in PDF value (read-only).
-
-@property (nonatomic, assign, readonly) NSInteger pageCount
-
-Contains the total number of pages in the current PDF file.
-Contains 0 if -initWithURL: failed.
+To change where the property list for ReaderDocument objects is stored
+(~/Documents by default), please see the +archiveFilePath: method in
+the ReaderDocument.m source file. Do note that the ReaderDocument
+object data model is Core Data compatible.
 
 HISTORY
 
-2010-09-01: Version 0.0.1 - Initial start of project and code crafting.
-
-2010-09-09: Version 1.0.0 - First release into the wild for use and abuse.
-
-2010-10-08: Version 1.0.1 - Fixed PDFs with rotation handling bug and project
-							build with GCC 4.2 instead of LLVM (SDK 4.1 bug).
-
-2010-11-06: Version 1.0.2 - Added -currentPageSize method to PDFViewTiled.
-							Added a CGPDFDocumentPageSize function as well.
-
-2011-03-15: Version 1.1.0 - Finally (!!!) found the right combination of UIView
-							property settings (contentMode and autoresizingMask)
-							and UIScrollView contentSize updates to fix device
-							rotation handling once and for all.
-
-2011-05-22: Version 1.2.0 - Added printing support (iOS 4.2 and newer only).
-
-2011-06-06: Version 1.2.1 - Bug fix in -drawLayer:inContext: in PDFViewTiled.m
+2011-07-29: Version 2.0.0 - Released v2.0 into the wild for general use.
 
 CONTACT INFO
 

@@ -1,9 +1,9 @@
 //
-//	main.m
-//	Reader
+//	ReaderConstants.m
+//	Reader v2.0.0
 //
-//	Created by Julius Oklamcak on 2010-09-01.
-//	Copyright © 2010-2011 Julius Oklamcak. All rights reserved.
+//	Created by Julius Oklamcak on 2011-07-01.
+//	Copyright © 2011 Julius Oklamcak. All rights reserved.
 //
 //	This work is being made available under a Creative Commons Attribution license:
 //		«http://creativecommons.org/licenses/by/3.0/»
@@ -12,12 +12,6 @@
 //	the original author is attributed.
 //
 
-#import <UIKit/UIKit.h>
+#import "ReaderConstants.h"
 
-int main(int argc, char *argv[])
-{
-	NSAutoreleasePool *pool = [NSAutoreleasePool new];
-	int retVal = UIApplicationMain(argc, argv, nil, @"ReaderAppDelegate");
-	[pool release];
-	return retVal;
-}
+NSString *const kReaderCopyrightNotice = @"Reader v2.0 • Copyright © 2011 Julius Oklamcak. All rights reserved.";
