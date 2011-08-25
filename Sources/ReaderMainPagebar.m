@@ -1,6 +1,6 @@
 //
 //	ReaderMainPagebar.m
-//	Reader v2.0.0
+//	Reader v2.1.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -37,6 +37,17 @@
 #ifdef DEBUGX
 	NSLog(@"%s", __FUNCTION__);
 #endif
+
+	return [self initWithFrame:frame document:nil];
+}
+
+- (id)initWithFrame:(CGRect)frame document:(ReaderDocument *)object
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	assert(object != nil); // Validate
 
 	if ((self = [super initWithFrame:frame]))
 	{
@@ -95,6 +106,12 @@
 		[thePageSlider addTarget:self action:@selector(pageSliderTouchUp:) forControlEvents:UIControlEventTouchUpInside];
 
 		[self addSubview:thePageSlider];
+
+		document = [object retain]; // Retain the document object
+
+		thePageSlider.maximumValue = [document.pageCount integerValue];
+
+		[self updatePageNumberDisplay]; // Update page display
 	}
 
 	return self;
@@ -115,21 +132,6 @@
 	[document release], document = nil;
 
 	[super dealloc];
-}
-
-- (void)setReaderDocument:(ReaderDocument *)object
-{
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
-	[document release], document = nil; // Release first
-
-	document = [object retain]; // Retain the document object
-
-	thePageSlider.maximumValue = [document.pageCount integerValue];
-
-	[self updatePageNumberDisplay]; // Update page display
 }
 
 - (void)updatePageNumberText:(NSInteger)pageNumber
@@ -153,9 +155,11 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	[self updatePageNumberText:[document.pageNumber integerValue]]; // Update text
+	NSInteger page = [document.pageNumber integerValue];
 
-	thePageSlider.value = [document.pageNumber integerValue]; // Update slider
+	[self updatePageNumberText:page]; // Update text
+
+	thePageSlider.value = page; // Update slider
 }
 
 - (void)hidePagebar

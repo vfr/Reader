@@ -1,6 +1,6 @@
 //
 //	ReaderMainToolbar.m
-//	Reader v2.0.0
+//	Reader v2.1.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -36,6 +36,15 @@
 #pragma mark ReaderMainToolbar instance methods
 
 - (id)initWithFrame:(CGRect)frame
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	return [self initWithFrame:frame title:nil];
+}
+
+- (id)initWithFrame:(CGRect)frame title:(NSString *)title
 {
 #ifdef DEBUGX
 	NSLog(@"%s", __FUNCTION__);
@@ -96,6 +105,7 @@
 
 		theTitleLabel = [[UILabel alloc] initWithFrame:titleRect];
 
+		theTitleLabel.text = title; // Toolbar title
 		theTitleLabel.textAlignment = UITextAlignmentCenter;
 		theTitleLabel.font = [UIFont systemFontOfSize:20.0f];
 		theTitleLabel.textColor = [UIColor colorWithWhite:1.0f alpha:1.0f];
@@ -128,7 +138,7 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	[theTitleLabel setText:title];
+	theTitleLabel.text = title;
 }
 
 - (void)hideToolbar

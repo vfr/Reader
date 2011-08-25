@@ -1,6 +1,6 @@
 //
 //	ReaderContentView.h
-//	Reader v2.0.0
+//	Reader v2.1.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -29,21 +29,21 @@
 {
 @private // Instance variables
 
-	UIView *theContainerView;
+	ReaderScrollView *theScrollView;
 
 	ReaderContentPage *theContentView;
 
-	ReaderScrollView *theScrollView;
-
-	CGFloat minimumZoomScale;
-	CGFloat maximumZoomScale;
+	UIView *theContainerView;
 }
 
 @property (nonatomic, assign, readwrite) id <ReaderContentViewDelegate> delegate;
 
 - (id)initWithFrame:(CGRect)frame fileURL:(NSURL *)fileURL page:(NSUInteger)page password:(NSString *)phrase;
 
+- (id)singleTap:(UITapGestureRecognizer *)recognizer;
+
 - (void)zoomIncrement;
 - (void)zoomDecrement;
+- (void)zoomReset;
 
 @end

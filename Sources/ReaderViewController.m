@@ -1,6 +1,6 @@
 //
 //	ReaderViewController.m
-//	Reader v2.0.0
+//	Reader v2.1.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -57,7 +57,9 @@
 		NSInteger maxPage = [document.pageCount integerValue];
 		NSInteger minPage = 1;
 
-		if (maxPage <= PAGING_VIEWS)
+		if ((page < minPage) || (page > maxPage)) return;
+
+		if (maxPage <= PAGING_VIEWS) // Few pages
 		{
 			minValue = minPage;
 			maxValue = maxPage;
@@ -96,7 +98,9 @@
 			}
 			else // Reposition the existing content view
 			{
-				contentView.frame = viewRect; [unusedViews removeObjectForKey:key];
+				contentView.frame = viewRect; [contentView zoomReset];
+
+				[unusedViews removeObjectForKey:key];
 			}
 
 			viewRect.origin.x += viewRect.size.width;
@@ -169,20 +173,25 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	assert(object != nil); // Ensure that the ReaderDocument object is not nil
+	id reader = nil; // ReaderViewController object
 
-	if ((self = [super initWithNibName:nil bundle:nil])) // Designated initializer
+	if ((object != nil) && ([object isKindOfClass:[ReaderDocument class]]))
 	{
-		NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+		if ((self = [super initWithNibName:nil bundle:nil])) // Designated initializer
+		{
+			NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 
-		[notificationCenter addObserver:self selector:@selector(saveReaderDocument:) name:UIApplicationWillTerminateNotification object:nil];
+			[notificationCenter addObserver:self selector:@selector(saveReaderDocument:) name:UIApplicationWillTerminateNotification object:nil];
 
-		[notificationCenter addObserver:self selector:@selector(saveReaderDocument:) name:UIApplicationWillResignActiveNotification object:nil];
+			[notificationCenter addObserver:self selector:@selector(saveReaderDocument:) name:UIApplicationWillResignActiveNotification object:nil];
 
-		document = [object retain]; // Retain the supplied ReaderDocument object for our use
+			document = [object retain]; // Retain the supplied ReaderDocument object for our use
+
+			reader = self; // Return an initialized ReaderViewController object
+		}
 	}
 
-	return self;
+	return reader;
 }
 
 /*
@@ -206,7 +215,9 @@
 
 	assert(delegate != nil); assert(document != nil);
 
-	self.view.backgroundColor = [UIColor clearColor]; // Transparent
+	assert(self.splitViewController == nil); // Not supported (sorry)
+
+	self.view.backgroundColor = [UIColor scrollViewTexturedBackgroundColor];
 
 	CGRect viewRect = self.view.bounds; // View controller's view bounds
 
@@ -226,16 +237,14 @@
 
 	[self.view addSubview:theScrollView];
 
+	NSString *toolbarTitle = (self.title == nil) ? [document.fileName stringByDeletingPathExtension] : self.title;
+
 	CGRect toolbarRect = viewRect;
 	toolbarRect.size.height = TOOLBAR_HEIGHT;
 
-	mainToolbar = [[ReaderMainToolbar alloc] initWithFrame:toolbarRect]; // At top
+	mainToolbar = [[ReaderMainToolbar alloc] initWithFrame:toolbarRect title:toolbarTitle]; // At top
 
 	mainToolbar.delegate = self;
-
-	NSString *toolbarTitle = (self.title == nil) ? [document.fileName stringByDeletingPathExtension] : self.title;
-
-	[mainToolbar setToolbarTitle:toolbarTitle];
 
 	[self.view addSubview:mainToolbar];
 
@@ -243,11 +252,9 @@
 	pagebarRect.size.height = TOOLBAR_HEIGHT;
 	pagebarRect.origin.y = (viewRect.size.height - TOOLBAR_HEIGHT);
 
-	mainPagebar = [[ReaderMainPagebar alloc] initWithFrame:pagebarRect]; // At bottom
+	mainPagebar = [[ReaderMainPagebar alloc] initWithFrame:pagebarRect document:document]; // At bottom
 
 	mainPagebar.delegate = self;
-
-	[mainPagebar setReaderDocument:document];
 
 	[self.view addSubview:mainPagebar];
 
@@ -266,7 +273,7 @@
 	[self.view addGestureRecognizer:doubleTapOne]; [doubleTapOne release];
 	[self.view addGestureRecognizer:doubleTapTwo]; [doubleTapTwo release];
 
-	contentViews = [NSMutableDictionary new];
+	contentViews = [NSMutableDictionary new]; lastHideTime = [NSDate new];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -466,7 +473,7 @@
 		}
 	];
 
-	if (page != 0) [self showDocumentPage:page]; // Show page
+	if (page != 0) [self showDocumentPage:page]; // Show the page
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
@@ -513,7 +520,7 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	if ([touch.view isKindOfClass:[UIScrollView class]]) return YES;
+	if ([touch.view isMemberOfClass:[ReaderScrollView class]]) return YES;
 
 	return NO;
 }
@@ -526,7 +533,7 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	if (theScrollView.tag == 0)
+	if (theScrollView.tag == 0) // Scroll view did end
 	{
 		NSInteger page = [document.pageNumber integerValue];
 		NSInteger maxPage = [document.pageCount integerValue];
@@ -551,7 +558,7 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	if (theScrollView.tag == 0)
+	if (theScrollView.tag == 0) // Scroll view did end
 	{
 		NSInteger page = [document.pageNumber integerValue];
 		NSInteger maxPage = [document.pageCount integerValue];
@@ -584,13 +591,40 @@
 
 		CGRect areaRect = CGRectInset(viewRect, PAGING_AREA_WIDTH, 0.0f);
 
-		if (CGRectContainsPoint(areaRect, point)) // Tap is inside this area
+		if (CGRectContainsPoint(areaRect, point)) // Single tap is inside the area
 		{
-			if ([lastHideTime timeIntervalSinceNow] < -0.8) // Delay since hide
+			NSInteger page = [document.pageNumber integerValue]; // Current page #
+
+			NSNumber *key = [NSNumber numberWithInteger:page]; // Page number key
+
+			ReaderContentView *targetView = [contentViews objectForKey:key];
+
+			id target = [targetView singleTap:recognizer]; // Process tap
+
+			if (target != nil) // Handle the returned target object
 			{
-				if ((mainToolbar.hidden == YES) || (mainPagebar.hidden == YES))
+				if ([target isKindOfClass:[NSURL class]]) // Open a URL
 				{
-					[mainToolbar showToolbar]; [mainPagebar showPagebar]; // Show
+					[[UIApplication sharedApplication] openURL:target];
+				}
+				else // Not a URL, so check for other possible object type
+				{
+					if ([target isKindOfClass:[NSNumber class]]) // Goto page
+					{
+						NSInteger value = [target integerValue]; // Number
+
+						[self showDocumentPage:value]; // Show the page
+					}
+				}
+			}
+			else // Nothing active tapped in the target content view
+			{
+				if ([lastHideTime timeIntervalSinceNow] < -0.75) // Delay since hide
+				{
+					if ((mainToolbar.hidden == YES) || (mainPagebar.hidden == YES))
+					{
+						[mainToolbar showToolbar]; [mainPagebar showPagebar]; // Show
+					}
 				}
 			}
 
@@ -632,21 +666,11 @@
 
 		if (CGRectContainsPoint(zoomArea, point)) // Double tap is in the zoom area
 		{
-			__block ReaderContentView *targetView = nil; // Target view of zoom
+			NSInteger page = [document.pageNumber integerValue]; // Current page #
 
-			NSInteger page = [document.pageNumber integerValue]; // Zoom current page
+			NSNumber *key = [NSNumber numberWithInteger:page]; // Page number key
 
-			[contentViews enumerateKeysAndObjectsUsingBlock: // Enumerate content views
-				^(id key, id object, BOOL *stop)
-				{
-					ReaderContentView *contentView = object;
-
-					if (contentView.tag == page) // Found it
-					{
-						targetView = contentView; *stop = YES;
-					}
-				}
-			];
+			ReaderContentView *targetView = [contentViews objectForKey:key];
 
 			switch (recognizer.numberOfTouchesRequired) // Touches count
 			{
@@ -692,6 +716,8 @@
 #endif
 
 	[document saveReaderDocument]; // Save any ReaderDocument object changes
+
+	if (printInteraction != nil) [printInteraction dismissAnimated:NO]; // Dismiss
 
 	[delegate dismissReaderViewController:self]; // Dismiss view controller
 }
@@ -811,7 +837,7 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	[self showDocumentPage:page]; // Show page
+	[self showDocumentPage:page]; // Show the page
 }
 
 #pragma mark Notification methods

@@ -1,10 +1,10 @@
-Basic PDF Reader/Viewer V2.0 for iOS
+Basic PDF Reader/Viewer V2.1 for iOS
 
 INTRODUCTION
 
 I've written this basic PDF reader/viewer app for fellow iOS
 developers struggling with wrangling PDF files onto iOS device
-screens. Version 2.0 is a complete rethink and rewrite of the
+screens. Version 2.x is a complete rethink and rewrite of the
 original 1.x code. Please see my contact info below if you find
 any bugs or have questions about the code.
 
@@ -15,7 +15,7 @@ supported are the Retina displays on iPhone 4 and iPod touch 4th
 generation and is ready to be fully internationalized. The idea
 was to provide a complete project template that you could start
 building from, or, just pull the required files into an existing
-project to enable PDF reading/viewing in your app.
+project to enable PDF reading/viewing in your apps.
 
 After launching the sample app, tap on the left hand side of the
 screen to go back a page. Tap on the right hand side to go to the
@@ -28,12 +28,12 @@ This implementation has been tested with large PDF files (over
 250MB in size and over 2800 pages in length) and with PDF files of
 all flavors (from text only documents to graphics heavy magazines).
 It also works rather well on older devices (such as the iPod touch
-2nd generation and iPhone 3G) and uses the dual-core processor
-(via CATiledLayer multi-threading) in the iPad 2.
+2nd generation and iPhone 3G) and takes advantage of the dual-core
+processor (via CATiledLayer multi-threading) in the iPad 2.
 
 NOTES
 
-Version 2.0 of the PDF reader/viewer code was developed and tested
+Version 2.x of the PDF reader/viewer code was developed and tested
 under Xcode 3.2.6, LLVM 1.7, iOS 4.3.5 and iOS 4.2.1 - if you come
 across any issues with other versions of the tools, or iOS, please
 let me know.
@@ -50,7 +50,7 @@ page number for example).
 An initialized ReaderViewController can then be presented modally,
 pushed onto a UINavigationController stack, or used as a root view
 controller. Please note that since ReaderViewController implements
-its own toolbar, you have to hide the UINavigationController's
+its own toolbar, you need to hide the UINavigationController's
 navigation bar before pushing it and then show the navigation
 bar after popping it. The ReaderDemoController class shows how
 this is done with a bundled PDF file.
@@ -58,21 +58,24 @@ this is done with a bundled PDF file.
 Required Files
 --------------
 
-The following source files are required to incorporate the PDF
+The following files are required to incorporate the PDF
 reader/viewer into one of your projects:
 
-	ReaderDocument.h/.m
-	ReaderConstants.h/.m
-	ReaderViewController.h/.m
-	ReaderMainToolbar.h/.m
-	ReaderMainPagebar.h/.m
-	ReaderContentView.h/.m
-	ReaderContentPage.h/.m
-	ReaderContentTile.h/.m
-	ReaderScrollView.h/.m
-	CGPDFDocument.h/.m
+	ReaderDocument.h, ReaderDocument.m
+	ReaderConstants.h, ReaderConstants.m
+	ReaderViewController.h, ReaderViewController.m
+	ReaderMainToolbar.h, ReaderMainToolbar.m
+	ReaderMainPagebar.h, ReaderMainPagebar.m
+	ReaderContentView.h, ReaderContentView.m
+	ReaderContentPage.h, ReaderContentPage.m
+	ReaderContentTile.h, ReaderContentTile.m
+	ReaderScrollView.h, ReaderScrollView.m
+	CGPDFDocument.h, CGPDFDocument.m
 
-	Localizable.strings
+	Localizable.strings (UTF-16 encoding)
+
+	Reader-Email.png, Reader-Email@2x.png
+	Reader-Print.png, Reader-Print@2x.png
 
 Required iOS Frameworks
 -----------------------
@@ -113,7 +116,15 @@ object data model is Core Data compatible.
 
 HISTORY
 
-2011-07-29: Version 2.0.0 - Released v2.0 into the wild for general use.
+2011-07-29: Version 2.0.0
+
+	- Released v2.0 into the wild for general use.
+
+2011-08-25: Version 2.1.0
+
+	- Assorted code cleanup, optimizations and bug fixes.
+
+	- Added PDF link (URI and page target) support.
 
 CONTACT INFO
 
@@ -122,3 +133,8 @@ Questions, feedback and iOS development work welcome:
 Email: joklamcak(at)gmail(dot)com
 
 Website: http://www.vfr.org/
+
+ACKNOWLEDGEMENTS
+
+The PDF link support code in the ReaderContentPage class is based on
+the links navigation code by Sorin Nistor from http://ipdfdev.com/

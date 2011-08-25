@@ -1,6 +1,6 @@
 //
 //	ReaderContentTile.m
-//	Reader v2.0.0
+//	Reader v2.1.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -12,7 +12,6 @@
 //	the original author is attributed.
 //
 
-#import "ReaderConstants.h"
 #import "ReaderContentTile.h"
 
 @implementation ReaderContentTile

@@ -1,6 +1,6 @@
 //
 //	ReaderConstants.h
-//	Reader v2.0.0
+//	Reader v2.1.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -18,6 +18,6 @@
 #define READER_ENABLE_MAIL TRUE
 #define READER_ENABLE_PRINT TRUE
 #define READER_DISABLE_IDLE FALSE
-#define READER_SHOW_SHADOW FALSE
+#define READER_SHOW_SHADOW TRUE
 
 extern NSString *const kReaderCopyrightNotice;

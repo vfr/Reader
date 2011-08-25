@@ -1,6 +1,6 @@
 //
 //	ReaderDemoController.m
-//	Reader v2.0.0
+//	Reader v2.1.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -63,11 +63,15 @@
 
 	[super viewDidLoad];
 
-	self.view.backgroundColor = [UIColor clearColor]; // Clear background color
+	self.view.backgroundColor = [UIColor clearColor]; // Transparent
 
-	NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+	NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
 
-	self.title = [NSString stringWithFormat:@"Reader v%@", version]; // Show app version
+	NSString *name = [infoDictionary objectForKey:@"CFBundleName"];
+
+	NSString *version = [infoDictionary objectForKey:@"CFBundleVersion"];
+
+	self.title = [NSString stringWithFormat:@"%@ v%@", name, version];
 
 	CGSize viewSize = self.view.bounds.size;
 
@@ -103,7 +107,7 @@
 
 	[self.navigationController setNavigationBarHidden:NO animated:animated];
 
-#endif
+#endif // DEMO_VIEW_CONTROLLER_PUSH
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -127,7 +131,7 @@
 
 	[self.navigationController setNavigationBarHidden:YES animated:animated];
 
-#endif
+#endif // DEMO_VIEW_CONTROLLER_PUSH
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -215,24 +219,27 @@
 		document = [[[ReaderDocument alloc] initWithFilePath:filePath password:nil] autorelease];
 	}
 
-	ReaderViewController *readerViewController = [[ReaderViewController alloc] initWithReaderDocument:document];
+	if (document != nil) // Must have a valid ReaderDocument object in order to proceed
+	{
+		ReaderViewController *readerViewController = [[ReaderViewController alloc] initWithReaderDocument:document];
 
-	readerViewController.delegate = self; // Set the ReaderViewController delegate to self
+		readerViewController.delegate = self; // Set the ReaderViewController delegate to self
 
 #if (DEMO_VIEW_CONTROLLER_PUSH == TRUE)
 
-	[self.navigationController pushViewController:readerViewController animated:YES];
+		[self.navigationController pushViewController:readerViewController animated:YES];
 
-#else // present modal view controller
+#else // present in a modal view controller
 
-	readerViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-	readerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
+		readerViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+		readerViewController.modalPresentationStyle = UIModalPresentationFullScreen;
 
-	[self presentModalViewController:readerViewController animated:YES];
+		[self presentModalViewController:readerViewController animated:YES];
 
-#endif
+#endif // DEMO_VIEW_CONTROLLER_PUSH
 
-	[readerViewController release]; // Release the ReaderViewController
+		[readerViewController release]; // Release the ReaderViewController
+	}
 }
 
 #pragma mark ReaderViewControllerDelegate methods
@@ -247,11 +254,11 @@
 
 	[self.navigationController popViewControllerAnimated:YES];
 
-#else // dismiss modal view controller
+#else // dismiss the modal view controller
 
 	[self dismissModalViewControllerAnimated:YES];
 
-#endif
+#endif // DEMO_VIEW_CONTROLLER_PUSH
 }
 
 @end

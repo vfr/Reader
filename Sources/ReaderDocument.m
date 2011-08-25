@@ -1,6 +1,6 @@
 //
 //	ReaderDocument.m
-//	Reader v2.0.0
+//	Reader v2.1.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -14,6 +14,7 @@
 
 #import "ReaderDocument.h"
 #import "CGPDFDocument.h"
+#import <fcntl.h>
 
 @implementation ReaderDocument
 
@@ -107,6 +108,40 @@
 	return document;
 }
 
++ (BOOL)isPDF:(NSString *)filePath
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	BOOL state = NO;
+
+	if (filePath != nil) // Must have a file path
+	{
+		const char *path = [filePath fileSystemRepresentation];
+
+		int fd = open(path, O_RDONLY); // Open the file
+
+		if (fd > 0) // We have a valid file descriptor
+		{
+			const unsigned char sig[4]; // File signature
+
+			ssize_t len = read(fd, (void *)&sig, sizeof(sig));
+
+			if (len == 4)
+				if (sig[0] == '%')
+					if (sig[1] == 'P')
+						if (sig[2] == 'D')
+							if (sig[3] == 'F')
+								state = YES;
+
+			close(fd); // Close the file
+		}
+	}
+
+	return state;
+}
+
 #pragma mark ReaderDocument instance methods
 
 - (id)initWithFilePath:(NSString *)fullFilePath password:(NSString *)phrase
@@ -115,45 +150,50 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	if ((self = [super init]))
+	id object = nil;
+
+	if ([ReaderDocument isPDF:fullFilePath] == YES) // File must exist
 	{
-		assert(fullFilePath != nil); // Ensure that the full file path is not nil
-
-		_password = [phrase copy]; // Keep a copy of any given document password
-
-		_pageNumber = [[NSNumber numberWithInteger:1] retain]; // Start page 1
-
-		_fileName = [[ReaderDocument relativeFilePath:fullFilePath] retain];
-
-		CFURLRef docURLRef = (CFURLRef)[self fileURL]; // CFURLRef from NSURL
-
-		CGPDFDocumentRef thePDFDocRef = CGPDFDocumentCreateX(docURLRef, _password);
-
-		if (thePDFDocRef != NULL) // Get the number of pages in a document
+		if ((self = [super init])) // First initialize the superclass object
 		{
-			NSInteger pageCount = CGPDFDocumentGetNumberOfPages(thePDFDocRef);
+			_password = [phrase copy]; // Keep a copy of any document password
 
-			_pageCount = [[NSNumber numberWithInteger:pageCount] retain];
+			_pageNumber = [[NSNumber numberWithInteger:1] retain]; // Start page 1
 
-			CGPDFDocumentRelease(thePDFDocRef); // Cleanup
+			_fileName = [[ReaderDocument relativeFilePath:fullFilePath] retain];
+
+			CFURLRef docURLRef = (CFURLRef)[self fileURL]; // CFURLRef from NSURL
+
+			CGPDFDocumentRef thePDFDocRef = CGPDFDocumentCreateX(docURLRef, _password);
+
+			if (thePDFDocRef != NULL) // Get the number of pages in a document
+			{
+				NSInteger pageCount = CGPDFDocumentGetNumberOfPages(thePDFDocRef);
+
+				_pageCount = [[NSNumber numberWithInteger:pageCount] retain];
+
+				CGPDFDocumentRelease(thePDFDocRef); // Cleanup
+			}
+			else // Cupertino, we have a problem with the document...
+			{
+				NSAssert(NO, @"thePDFDocRef == NULL"); //abort();
+			}
+
+			_lastOpen = [[NSDate dateWithTimeIntervalSinceReferenceDate:0.0] retain];
+
+			NSFileManager *fileManager = [[NSFileManager new] autorelease]; // File manager
+
+			NSDictionary *fileAttributes = [fileManager attributesOfItemAtPath:fullFilePath error:NULL];
+
+			_fileDate = [[fileAttributes objectForKey:NSFileModificationDate] retain]; // File date
+
+			_fileSize = [[fileAttributes objectForKey:NSFileSize] retain]; // File size
+
+			object = self; // Return an initialized ReaderDocument object
 		}
-		else // Cupertino, we have a problem with the document...
-		{
-			NSAssert(NO, @"thePDFDocRef == NULL"); //abort();
-		}
-
-		_lastOpen = [[NSDate dateWithTimeIntervalSinceReferenceDate:0.0] retain];
-
-		NSFileManager *fileManager = [[NSFileManager new] autorelease]; // File manager
-
-		NSDictionary *fileAttributes = [fileManager attributesOfItemAtPath:fullFilePath error:NULL];
-
-		_fileDate = [[fileAttributes objectForKey:NSFileModificationDate] retain]; // File date
-
-		_fileSize = [[fileAttributes objectForKey:NSFileSize] retain]; // File size
 	}
 
-	return self;
+	return object;
 }
 
 - (void)dealloc
@@ -168,9 +208,9 @@
 
 	[_fileName release], _fileName = nil;
 
-	[_pageNumber release], _pageNumber = nil;
-
 	[_pageCount release], _pageCount = nil;
+
+	[_pageNumber release], _pageNumber = nil;
 
 	[_fileSize release], _fileSize = nil;
 
@@ -223,7 +263,7 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	[self archiveWithFileName:self.fileName];
+	[self archiveWithFileName:[self fileName]];
 }
 
 #pragma mark NSCoding protocol methods
@@ -253,29 +293,20 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	_fileName = [decoder decodeObjectForKey:@"FileName"];
+	if ((self = [super init])) // Initialize superclass
+	{
+		_fileName = [[decoder decodeObjectForKey:@"FileName"] retain];
 
-	_fileDate = [decoder decodeObjectForKey:@"FileDate"];
+		_fileDate = [[decoder decodeObjectForKey:@"FileDate"] retain];
 
-	_pageCount = [decoder decodeObjectForKey:@"PageCount"];
+		_pageCount = [[decoder decodeObjectForKey:@"PageCount"] retain];
 
-	_pageNumber = [decoder decodeObjectForKey:@"PageNumber"];
+		_pageNumber = [[decoder decodeObjectForKey:@"PageNumber"] retain];
 
-	_fileSize = [decoder decodeObjectForKey:@"FileSize"];
+		_fileSize = [[decoder decodeObjectForKey:@"FileSize"] retain];
 
-	_lastOpen = [decoder decodeObjectForKey:@"LastOpen"];
-
-	[_fileName retain]; // Retain fileName object
-
-	[_fileDate retain]; // Retain fileDate object
-
-	[_pageCount retain]; // Retain pageCount object
-
-	[_pageNumber retain]; // Retain pageNumber object
-
-	[_fileSize retain]; // Retain fileSize object
-
-	[_lastOpen retain]; // Retain lastOpen object
+		_lastOpen = [[decoder decodeObjectForKey:@"LastOpen"] retain];
+	}
 
 	return self;
 }

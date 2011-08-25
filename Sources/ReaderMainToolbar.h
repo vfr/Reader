@@ -1,6 +1,6 @@
 //
 //	ReaderMainToolbar.h
-//	Reader v2.0.0
+//	Reader v2.1.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -34,6 +34,8 @@
 }
 
 @property (nonatomic, assign, readwrite) id <ReaderMainToolbarDelegate> delegate;
+
+- (id)initWithFrame:(CGRect)frame title:(NSString *)title;
 
 - (void)setToolbarTitle:(NSString *)title;
 

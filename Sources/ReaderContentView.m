@@ -1,6 +1,6 @@
 //
 //	ReaderContentView.m
-//	Reader v2.0.0
+//	Reader v2.1.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -52,14 +52,11 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 {
 	CGRect targetRect = CGRectInset(theScrollView.bounds, CONTENT_INSET, CONTENT_INSET);
 
-	CGFloat zoomScale = ZoomScaleThatFits(targetRect.size, theContentView.pageSize);
+	CGFloat zoomScale = ZoomScaleThatFits(targetRect.size, theContentView.bounds.size);
 
-	minimumZoomScale = zoomScale; // Set the minimum and maximum zoom scales
+	theScrollView.minimumZoomScale = zoomScale; // Set the minimum and maximum zoom scales
 
-	maximumZoomScale = (zoomScale * ZOOM_LEVELS); // Zoom levels
-
-	theScrollView.minimumZoomScale = minimumZoomScale;
-	theScrollView.maximumZoomScale = maximumZoomScale;
+	theScrollView.maximumZoomScale = (zoomScale * ZOOM_LEVELS); // Number of zoom levels
 }
 
 - (id)initWithFrame:(CGRect)frame fileURL:(NSURL *)fileURL page:(NSUInteger)page password:(NSString *)phrase
@@ -94,7 +91,7 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 
 		if (theContentView != nil) // Must have a valid and initialized content view
 		{
-			theContainerView = [[UIView alloc] initWithFrame:theContentView.frame];
+			theContainerView = [[UIView alloc] initWithFrame:theContentView.bounds];
 
 			theContainerView.autoresizesSubviews = NO;
 			theContainerView.userInteractionEnabled = NO;
@@ -110,7 +107,7 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 
 #endif // end of READER_SHOW_SHADOW Option
 
-			theScrollView.contentSize = theContentView.pageSize; // Content size same as page size
+			theScrollView.contentSize = theContentView.bounds.size; // Content size same as view size
 			theScrollView.contentOffset = CGPointMake((0.0f - CONTENT_INSET), (0.0f - CONTENT_INSET));
 			theScrollView.contentInset = UIEdgeInsetsMake(CONTENT_INSET, CONTENT_INSET, CONTENT_INSET, CONTENT_INSET);
 
@@ -206,6 +203,15 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 	theContainerView.frame = viewFrame;
 }
 
+- (id)singleTap:(UITapGestureRecognizer *)recognizer
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	return [theContentView singleTap:recognizer];
+}
+
 - (void)zoomIncrement
 {
 #ifdef DEBUGX
@@ -214,13 +220,13 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 
 	CGFloat zoomScale = theScrollView.zoomScale;
 
-	if (zoomScale <= maximumZoomScale)
+	if (zoomScale <= theScrollView.maximumZoomScale)
 	{
 		zoomScale += ZOOM_AMOUNT;
 
-		if (zoomScale > maximumZoomScale)
+		if (zoomScale > theScrollView.maximumZoomScale)
 		{
-			zoomScale = minimumZoomScale;
+			zoomScale = theScrollView.minimumZoomScale;
 		}
 	}
 
@@ -238,19 +244,31 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 
 	CGFloat zoomScale = theScrollView.zoomScale;
 
-	if (zoomScale >= minimumZoomScale)
+	if (zoomScale >= theScrollView.minimumZoomScale)
 	{
 		zoomScale -= ZOOM_AMOUNT;
 
-		if (zoomScale < minimumZoomScale)
+		if (zoomScale < theScrollView.minimumZoomScale)
 		{
-			zoomScale = maximumZoomScale;
+			zoomScale = theScrollView.maximumZoomScale;
 		}
 	}
 
 	if (zoomScale != theScrollView.zoomScale) // Do zoom
 	{
 		[theScrollView setZoomScale:zoomScale animated:YES];
+	}
+}
+
+- (void)zoomReset
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	if (theScrollView.zoomScale > theScrollView.minimumZoomScale)
+	{
+		theScrollView.zoomScale = theScrollView.minimumZoomScale;
 	}
 }
 

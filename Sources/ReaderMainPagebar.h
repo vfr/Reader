@@ -1,6 +1,6 @@
 //
 //	ReaderMainPagebar.h
-//	Reader v2.0.0
+//	Reader v2.1.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -14,8 +14,8 @@
 
 #import <UIKit/UIKit.h>
 
-@class ReaderDocument;
 @class ReaderMainPagebar;
+@class ReaderDocument;
 
 @protocol ReaderMainPagebarDelegate <NSObject>
 
@@ -31,18 +31,18 @@
 
 	ReaderDocument *document;
 
-	UISlider *thePageSlider;
-
 	UIView *pageNumberView;
 
 	UILabel *pageNumberLabel;
+
+	UISlider *thePageSlider;
 
 	NSInteger lastPageTrack;
 }
 
 @property (nonatomic, assign, readwrite) id <ReaderMainPagebarDelegate> delegate;
 
-- (void)setReaderDocument:(ReaderDocument *)object;
+- (id)initWithFrame:(CGRect)frame document:(ReaderDocument *)object;
 
 - (void)updatePageNumberDisplay;
 

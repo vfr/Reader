@@ -1,6 +1,6 @@
 //
 //	CGPDFDocument.m
-//	Reader v2.0.0
+//	Reader v2.1.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -70,72 +70,6 @@ CGPDFDocumentRef CGPDFDocumentCreateX(CFURLRef theURL, NSString *password)
 	}
 
 	return thePDFDocRef;
-}
-
-//
-//	CGSize CGPDFDocumentPageSize(CFURLRef, NSString *, NSInteger) function
-//
-
-CGSize CGPDFDocumentPageSize(CFURLRef theURL, NSString *password, NSInteger page)
-{
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
-	CGSize pageSize = CGSizeZero; // Default size on error
-
-	CGPDFDocumentRef thePDFDocRef = CGPDFDocumentCreateX(theURL, password);
-
-	if (thePDFDocRef != NULL) // Check for non-NULL CGPDFDocumentRef
-	{
-		if (page < 1) page = 1; // Check the lower page bounds
-
-		NSInteger pages = CGPDFDocumentGetNumberOfPages(thePDFDocRef);
-
-		if (page > pages) page = pages; // Check the upper page bounds
-
-		CGPDFPageRef thePDFPageRef = CGPDFDocumentGetPage(thePDFDocRef, page);
-
-		if (thePDFPageRef != NULL) // Check for non-NULL CGPDFPageRef
-		{
-			CGRect cropBoxRect = CGPDFPageGetBoxRect(thePDFPageRef, kCGPDFCropBox);
-			CGRect mediaBoxRect = CGPDFPageGetBoxRect(thePDFPageRef, kCGPDFMediaBox);
-			CGRect effectiveRect = CGRectIntersection(cropBoxRect, mediaBoxRect);
-
-			NSInteger degrees = CGPDFPageGetRotationAngle(thePDFPageRef);
-
-			if (degrees == 0) // Check for page rotation
-			{
-				pageSize = effectiveRect.size;
-			}
-			else // Rotate the effective rect so many degrees
-			{
-				CGFloat radians = (degrees * M_PI / 180.0);
-
-				CGAffineTransform rotation = CGAffineTransformMakeRotation(radians);
-
-				CGRect rotatedRect = CGRectApplyAffineTransform(effectiveRect, rotation);
-
-				pageSize = rotatedRect.size;
-			}
-		}
-		else // Log an error diagnostic
-		{
-			#ifdef DEBUG
-				NSLog(@"CGPDFDocumentPageSize: thePDFPageRef == NULL");
-			#endif
-		}
-
-		CGPDFDocumentRelease(thePDFDocRef); // Cleanup CGPDFDocumentRef
-	}
-	else // Log an error diagnostic
-	{
-		#ifdef DEBUG
-			NSLog(@"CGPDFDocumentPageSize: thePDFDocRef == NULL");
-		#endif
-	}
-
-	return pageSize;
 }
 
 //

@@ -1,6 +1,6 @@
 //
 //	CGPDFDocument.h
-//	Reader v2.0.0
+//	Reader v2.1.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -20,7 +20,5 @@
 //
 
 CGPDFDocumentRef CGPDFDocumentCreateX(CFURLRef theURL, NSString *password);
-
-CGSize CGPDFDocumentPageSize(CFURLRef theURL, NSString *password, NSInteger page);
 
 BOOL CGPDFDocumentNeedsPassword(CFURLRef theURL, NSString *password);

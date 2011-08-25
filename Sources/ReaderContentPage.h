@@ -1,6 +1,6 @@
 //
 //	ReaderContentPage.h
-//	Reader v2.0.0
+//	Reader v2.1.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -22,15 +22,38 @@
 
 	NSString *_password;
 
+	NSMutableArray *_links;
+
 	CGPDFDocumentRef _PDFDocRef;
 
 	CGPDFPageRef _PDFPageRef;
 
+	NSInteger _pageRotate;
+
 	CGSize _pageSize;
 }
 
-@property (nonatomic, assign, readonly) CGSize pageSize;
-
 - (id)initWithURL:(NSURL *)fileURL page:(NSInteger)page password:(NSString *)phrase;
+
+- (id)singleTap:(UITapGestureRecognizer *)recognizer;
+
+@end
+
+@interface ReaderDocumentLink : NSObject
+{
+@private // Instance variables
+
+	CGPDFDictionaryRef _dictionary;
+
+	CGRect _rect;
+}
+
+@property (nonatomic, assign, readonly) CGRect rect;
+
+@property (nonatomic, assign, readonly) CGPDFDictionaryRef dictionary;
+
++ (id)withRect:(CGRect)linkRect dictionary:(CGPDFDictionaryRef)linkDictionary;
+
+- (id)initWithRect:(CGRect)linkRect dictionary:(CGPDFDictionaryRef)linkDictionary;
 
 @end
