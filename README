@@ -47,13 +47,14 @@ uses the ReaderDocument object to store information about the
 document and to keep track of document properties (the current
 page number for example).
 
-An initialized ReaderViewController can then be presented modally,
-pushed onto a UINavigationController stack, or used as a root view
-controller. Please note that since ReaderViewController implements
-its own toolbar, you need to hide the UINavigationController's
-navigation bar before pushing it and then show the navigation
-bar after popping it. The ReaderDemoController class shows how
-this is done with a bundled PDF file.
+An initialized ReaderViewController can then be presented
+modally, pushed onto a UINavigationController stack, placed in
+a UITabBarController tab, or be used as a root view controller.
+Please note that since ReaderViewController implements its own
+toolbar, you need to hide the UINavigationController navigation
+bar before pushing it and then show the navigation bar after
+popping it. The ReaderDemoController class shows how this is
+done with a bundled PDF file.
 
 Required Files
 --------------
@@ -125,6 +126,10 @@ HISTORY
 	- Assorted code cleanup, optimizations and bug fixes.
 
 	- Added PDF link (URI and page target) support.
+
+2011-08-27: Version 2.1.1
+
+	- Fixed rotation handling when in a UITabBarController.
 
 CONTACT INFO
 

@@ -1,6 +1,6 @@
 //
 //	ReaderContentPage.m
-//	Reader v2.1.0
+//	Reader v2.1.1
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -550,13 +550,15 @@
 
 	//CGContextFillRect(context, CGContextGetClipBoundingBox(context)); // Fill
 
-	if (drawPDFPageRef != NULL) // Go ahead and draw the PDF page into the context
+	if (drawPDFPageRef != NULL) // Go ahead and render the PDF page into the context
 	{
 		CGContextTranslateCTM(context, 0.0f, self.bounds.size.height); CGContextScaleCTM(context, 1.0f, -1.0f);
 
 		CGContextConcatCTM(context, CGPDFPageGetDrawingTransform(drawPDFPageRef, kCGPDFCropBox, self.bounds, 0, true));
 
-		CGContextDrawPDFPage(context, drawPDFPageRef); // Draw the PDF page into the context
+		CGContextSetRenderingIntent(context, kCGRenderingIntentDefault); CGContextSetInterpolationQuality(context, kCGInterpolationDefault);
+
+		CGContextDrawPDFPage(context, drawPDFPageRef); // Render the PDF page into the context
 	}
 
 	CGPDFPageRelease(drawPDFPageRef); CGPDFDocumentRelease(drawPDFDocRef); // Cleanup

@@ -1,6 +1,6 @@
 //
 //	ReaderViewController.m
-//	Reader v2.1.0
+//	Reader v2.1.1
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -34,6 +34,10 @@
 
 - (void)updateScrollViewContentSize
 {
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
 	NSInteger count = [document.pageCount integerValue];
 
 	if (count > PAGING_VIEWS) count = PAGING_VIEWS; // Limit
@@ -43,6 +47,48 @@
 	CGFloat contentWidth = (theScrollView.bounds.size.width * count);
 
 	theScrollView.contentSize = CGSizeMake(contentWidth, contentHeight);
+}
+
+- (void)updateScrollViewContentViews
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	[self updateScrollViewContentSize]; // Update the content size
+
+	NSMutableIndexSet *pageSet = [[NSMutableIndexSet new] autorelease];
+
+	[contentViews enumerateKeysAndObjectsUsingBlock: // Enumerate content views
+		^(id key, id object, BOOL *stop)
+		{
+			ReaderContentView *contentView = object;
+
+			[pageSet addIndex:contentView.tag];
+		}
+	];
+
+	__block CGRect viewRect = CGRectZero; viewRect.size = theScrollView.bounds.size;
+
+	__block CGPoint contentOffset = CGPointZero; NSInteger page = [document.pageNumber integerValue];
+
+	[pageSet enumerateIndexesUsingBlock: // Enumerate page number set
+		^(NSUInteger number, BOOL *stop)
+		{
+			NSNumber *key = [NSNumber numberWithInteger:number]; // # key
+
+			ReaderContentView *contentView = [contentViews objectForKey:key];
+
+			contentView.frame = viewRect; if (page == number) contentOffset = viewRect.origin;
+
+			viewRect.origin.x += viewRect.size.width; // Next view frame position
+		}
+	];
+
+	if (CGPointEqualToPoint(theScrollView.contentOffset, contentOffset) == false)
+	{
+		theScrollView.contentOffset = contentOffset; // Update content offset
+	}
 }
 
 - (void)showDocumentPage:(NSInteger)page
@@ -283,6 +329,16 @@
 #endif
 
 	[super viewWillAppear:animated];
+
+	if (CGSizeEqualToSize(lastAppearSize, CGSizeZero) == false)
+	{
+		if (CGSizeEqualToSize(lastAppearSize, self.view.bounds.size) == false)
+		{
+			[self updateScrollViewContentViews]; // Update content views
+		}
+
+		lastAppearSize = CGSizeZero; // Reset view size tracking
+	}
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -313,6 +369,8 @@
 
 	[super viewWillDisappear:animated];
 
+	lastAppearSize = self.view.bounds.size; // Track view size
+
 #if (READER_DISABLE_IDLE == TRUE) // Option
 
 	[UIApplication sharedApplication].idleTimerDisabled = NO;
@@ -339,7 +397,7 @@
 
 	[theScrollView release], theScrollView = nil; [contentViews release], contentViews = nil;
 
-	[lastHideTime release], lastHideTime = nil; currentPage = 0;
+	[lastHideTime release], lastHideTime = nil; lastAppearSize = CGSizeZero; currentPage = 0;
 
 	[super viewDidUnload];
 }
@@ -372,40 +430,9 @@
 
 	if (isVisible == NO) return; // iOS present modal WTF bodge
 
-	[self updateScrollViewContentSize]; // Update the content size
+	[self updateScrollViewContentViews]; // Update content views
 
-	NSMutableIndexSet *pageSet = [[NSMutableIndexSet new] autorelease];
-
-	[contentViews enumerateKeysAndObjectsUsingBlock: // Enumerate content views
-		^(id key, id object, BOOL *stop)
-		{
-			ReaderContentView *contentView = object;
-
-			[pageSet addIndex:contentView.tag];
-		}
-	];
-
-	__block CGRect viewRect = CGRectZero; viewRect.size = theScrollView.bounds.size;
-
-	__block CGPoint contentOffset = CGPointZero; NSInteger page = [document.pageNumber integerValue];
-
-	[pageSet enumerateIndexesUsingBlock: // Enumerate page number set
-		^(NSUInteger number, BOOL *stop)
-		{
-			NSNumber *key = [NSNumber numberWithInteger:number]; // # key
-
-			ReaderContentView *contentView = [contentViews objectForKey:key];
-
-			contentView.frame = viewRect; if (page == number) contentOffset = viewRect.origin;
-
-			viewRect.origin.x += viewRect.size.width; // Next view frame position
-		}
-	];
-
-	if (CGPointEqualToPoint(theScrollView.contentOffset, contentOffset) == false)
-	{
-		theScrollView.contentOffset = contentOffset; // Update content offset
-	}
+	lastAppearSize = CGSizeZero; // Reset view size tracking
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation

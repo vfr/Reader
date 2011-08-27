@@ -1,6 +1,6 @@
 //
 //	ReaderViewController.h
-//	Reader v2.0.0
+//	Reader v2.1.1
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -50,6 +50,8 @@
 	UIPrintInteractionController *printInteraction;
 
 	NSInteger currentPage;
+
+	CGSize lastAppearSize;
 
 	NSDate *lastHideTime;
 
