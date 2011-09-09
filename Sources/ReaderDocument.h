@@ -1,6 +1,6 @@
 //
 //	ReaderDocument.h
-//	Reader v2.1.0
+//	Reader v2.2.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -17,6 +17,8 @@
 @interface ReaderDocument : NSObject <NSCoding>
 {
 @private // Instance variables
+
+	NSString *_guid;
 
 	NSDate *_fileDate;
 
@@ -35,6 +37,7 @@
 	NSURL *_fileURL;
 }
 
+@property (nonatomic, retain, readonly) NSString *guid;
 @property (nonatomic, retain, readonly) NSDate *fileDate;
 @property (nonatomic, retain, readwrite) NSDate *lastOpen;
 @property (nonatomic, retain, readonly) NSNumber *fileSize;

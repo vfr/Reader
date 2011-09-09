@@ -1,0 +1,208 @@
+//
+//	ReaderThumbRender.m
+//	Reader v2.2.0
+//
+//	Created by Julius Oklamcak on 2011-09-01.
+//	Copyright © 2011 Julius Oklamcak. All rights reserved.
+//
+//	This work is being made available under a Creative Commons Attribution license:
+//		«http://creativecommons.org/licenses/by/3.0/»
+//	You are free to use this work and any derivatives of this work in personal and/or
+//	commercial products and projects as long as the above copyright is maintained and
+//	the original author is attributed.
+//
+
+#import "ReaderThumbRender.h"
+#import "ReaderThumbCache.h"
+#import "ReaderThumbView.h"
+#import "CGPDFDocument.h"
+
+#import <ImageIO/ImageIO.h>
+
+@implementation ReaderThumbRender
+
+//#pragma mark Properties
+
+//@synthesize ;
+
+#pragma mark ReaderThumbRender instance methods
+
+- (id)initWithRequest:(ReaderThumbRequest *)object
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	if ((self = [super initWithGUID:object.guid]))
+	{
+		request = [object retain];
+	}
+
+	return self;
+}
+
+- (void)dealloc
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	request.thumbView.operation = nil;
+
+	[request release], request = nil;
+
+	[super dealloc];
+}
+
+- (void)cancel
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	[[ReaderThumbCache sharedInstance] removeNullForKey:request.cacheKey];
+
+	[super cancel];
+}
+
+- (NSURL *)thumbFileURL
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	NSString *cachePath = [ReaderThumbCache thumbCachePathForGUID:request.guid];
+
+	NSString *fileName = [NSString stringWithFormat:@"%@.png", request.thumbName];
+
+	return [NSURL fileURLWithPath:[cachePath stringByAppendingPathComponent:fileName]];
+}
+
+- (void)main
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	if (self.isCancelled == YES) return;
+
+	[[NSThread currentThread] setName:@"ReaderThumbRender"];
+
+	CFURLRef fileURL = (CFURLRef)request.fileURL; CGImageRef imageRef = NULL;
+
+	NSInteger page = request.thumbPage; NSString *password = request.password;
+
+	CGPDFDocumentRef thePDFDocRef = CGPDFDocumentCreateX(fileURL, password);
+
+	if (thePDFDocRef != NULL) // Check for non-NULL CGPDFDocumentRef
+	{
+		CGPDFPageRef thePDFPageRef = CGPDFDocumentGetPage(thePDFDocRef, page);
+
+		if (thePDFPageRef != NULL) // Check for non-NULL CGPDFPageRef
+		{
+			CGFloat thumb_w = request.thumbSize.width; // Maximum thumb width
+			CGFloat thumb_h = request.thumbSize.height; // Maximum thumb height
+
+			CGRect cropBoxRect = CGPDFPageGetBoxRect(thePDFPageRef, kCGPDFCropBox);
+			CGRect mediaBoxRect = CGPDFPageGetBoxRect(thePDFPageRef, kCGPDFMediaBox);
+			CGRect effectiveRect = CGRectIntersection(cropBoxRect, mediaBoxRect);
+
+			NSInteger pageRotate = CGPDFPageGetRotationAngle(thePDFPageRef); // Angle
+
+			CGFloat page_w = 0.0f; CGFloat page_h = 0.0f; // Rotated page size
+
+			switch (pageRotate) // Page rotation (in degrees)
+			{
+				default: // Default case
+				case 0: case 180: // 0 and 180 degrees
+				{
+					page_w = effectiveRect.size.width;
+					page_h = effectiveRect.size.height;
+					break;
+				}
+
+				case 90: case 270: // 90 and 270 degrees
+				{
+					page_h = effectiveRect.size.width;
+					page_w = effectiveRect.size.height;
+					break;
+				}
+			}
+
+			CGFloat scale_w = (thumb_w / page_w); // Width scale
+			CGFloat scale_h = (thumb_h / page_h); // Height scale
+
+			CGFloat scale = 0.0f; // Page to target thumb size scale
+
+			if (page_h > page_w)
+				scale = (thumb_h > thumb_w) ? scale_w : scale_h; // Portrait
+			else
+				scale = (thumb_h < thumb_w) ? scale_h : scale_w; // Landscape
+
+			NSInteger target_w = (page_w * scale); // Integer target thumb width
+			NSInteger target_h = (page_h * scale); // Integer target thumb height
+
+			if (target_w % 2) target_w--; if (target_h % 2) target_h--; // Even
+
+			target_w *= request.scale; target_h *= request.scale; // Screen scale
+
+			CGColorSpaceRef rgb = CGColorSpaceCreateDeviceRGB(); // RGB color space
+
+			CGBitmapInfo bmi = (kCGBitmapByteOrder32Little | kCGImageAlphaNoneSkipFirst);
+
+			CGContextRef context = CGBitmapContextCreate(NULL, target_w, target_h, 8, 0, rgb, bmi);
+
+			if (context != NULL) // Must have a valid custom CGBitmap context to draw into
+			{
+				CGRect thumbRect = CGRectMake(0.0f, 0.0f, target_w, target_h); // Target thumb rect
+
+				CGContextSetRGBFillColor(context, 1.0f, 1.0f, 1.0f, 1.0f); CGContextFillRect(context, thumbRect);
+
+				CGContextConcatCTM(context, CGPDFPageGetDrawingTransform(thePDFPageRef, kCGPDFCropBox, thumbRect, 0, true));
+
+				CGContextSetRenderingIntent(context, kCGRenderingIntentDefault); CGContextSetInterpolationQuality(context, kCGInterpolationDefault);
+
+				CGContextDrawPDFPage(context, thePDFPageRef); // Render the PDF page into the custom CGBitmap context
+
+				imageRef = CGBitmapContextCreateImage(context); // Create CGImage from the custom CGBitmap context
+
+				CGContextRelease(context); // Release the custom CGBitmap context reference
+			}
+
+			CGColorSpaceRelease(rgb); // Release the device RGB color space reference
+		}
+
+		CGPDFDocumentRelease(thePDFDocRef); // Release CGPDFDocumentRef reference
+	}
+
+	if (imageRef != NULL) // Save thumb as PNG then create UIImage from CGImage and show it
+	{
+		CFURLRef thumbURL = (CFURLRef)[self thumbFileURL]; // Thumb cache path and PNG file name URL
+
+		CGImageDestinationRef thumbRef = CGImageDestinationCreateWithURL(thumbURL, (CFStringRef)@"public.png", 1, NULL);
+
+		if (thumbRef != NULL) // Write the thumb image file out to the thumb cache directory
+		{
+			CGImageDestinationAddImage(thumbRef, imageRef, NULL); // Add the image
+
+			CGImageDestinationFinalize(thumbRef); // Finalize the image file
+
+			CFRelease(thumbRef); // Release CGImageDestination reference
+		}
+
+		UIImage *image = [UIImage imageWithCGImage:imageRef scale:request.scale orientation:0];
+
+		CGImageRelease(imageRef); // Release the CGImage reference from the above thumb render code
+
+		[[ReaderThumbCache sharedInstance] setObject:image forKey:request.cacheKey]; // Update cache
+
+		if (self.isCancelled == NO) // Show the image in the target thumb view on the main thread
+		{
+			ReaderThumbView *thumbView = request.thumbView; // Target thumb view for image show
+
+			dispatch_async(dispatch_get_main_queue(), ^{ [thumbView showImage:image]; });
+		}
+	}
+}
+
+@end

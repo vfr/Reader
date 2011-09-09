@@ -21,7 +21,7 @@
 #define LEVELS_OF_DETAIL 4
 #define LEVELS_OF_DETAIL_BIAS 3
 
-#pragma mark Properties
+//#pragma mark Properties
 
 //@synthesize ;
 

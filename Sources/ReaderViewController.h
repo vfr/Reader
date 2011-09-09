@@ -1,6 +1,6 @@
 //
 //	ReaderViewController.h
-//	Reader v2.1.1
+//	Reader v2.2.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -26,7 +26,7 @@
 
 @protocol ReaderViewControllerDelegate <NSObject>
 
-@required // Delegate protocols
+@optional // Delegate protocols
 
 - (void)dismissReaderViewController:(ReaderViewController *)viewController;
 

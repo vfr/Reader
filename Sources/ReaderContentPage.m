@@ -1,6 +1,6 @@
 //
 //	ReaderContentPage.m
-//	Reader v2.1.1
+//	Reader v2.2.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -18,7 +18,7 @@
 
 @implementation ReaderContentPage
 
-#pragma mark Properties
+//#pragma mark Properties
 
 //@synthesize ;
 
@@ -450,6 +450,7 @@
 
 				switch (_pageRotate) // Page rotation (in degrees)
 				{
+					default: // Default case
 					case 0: case 180: // 0 and 180 degrees
 					{
 						_pageSize.width = effectiveRect.size.width;
@@ -468,7 +469,7 @@
 				NSInteger page_w = _pageSize.width; // Integer width
 				NSInteger page_h = _pageSize.height; // Integer height
 
-				if (page_w % 2) page_w--; if (page_h %2) page_h--; // Even
+				if (page_w % 2) page_w--; if (page_h % 2) page_h--; // Even
 
 				viewRect.size = CGSizeMake(page_w, page_h); // View size
 			}
@@ -546,9 +547,9 @@
 		drawPDFPageRef = CGPDFPageRetain(_PDFPageRef);
 	}
 
-	//CGContextSetRGBFillColor(context, 1.0f, 1.0f, 1.0f, 1.0f); // White
+	CGContextSetRGBFillColor(context, 1.0f, 1.0f, 1.0f, 1.0f); // White
 
-	//CGContextFillRect(context, CGContextGetClipBoundingBox(context)); // Fill
+	CGContextFillRect(context, CGContextGetClipBoundingBox(context)); // Fill
 
 	if (drawPDFPageRef != NULL) // Go ahead and render the PDF page into the context
 	{
@@ -565,6 +566,12 @@
 }
 
 @end
+
+#pragma mark -
+
+//
+//	ReaderDocumentLink class implementation
+//
 
 @implementation ReaderDocumentLink
 

@@ -16,12 +16,15 @@
 		450A670F11D27BCD00014BF5 /* AppIcon-057.png in Resources */ = {isa = PBXBuildFile; fileRef = 450A670C11D27BCD00014BF5 /* AppIcon-057.png */; };
 		450A671011D27BCD00014BF5 /* AppIcon-072.png in Resources */ = {isa = PBXBuildFile; fileRef = 450A670D11D27BCD00014BF5 /* AppIcon-072.png */; };
 		450A671111D27BCD00014BF5 /* AppIcon-114.png in Resources */ = {isa = PBXBuildFile; fileRef = 450A670E11D27BCD00014BF5 /* AppIcon-114.png */; };
+		451D32AA1417C25D00A67E4C /* ReaderThumbRender.m in Sources */ = {isa = PBXBuildFile; fileRef = 451D32A91417C25D00A67E4C /* ReaderThumbRender.m */; };
 		4534A869125F658F001F3415 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 4534A868125F658F001F3415 /* LICENSE */; };
 		4541A9D8122EA716001A5E60 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4541A9D7122EA716001A5E60 /* Localizable.strings */; };
 		456E5A6913DF216D00648175 /* Reader-Email.png in Resources */ = {isa = PBXBuildFile; fileRef = 456E5A6513DF216D00648175 /* Reader-Email.png */; };
 		456E5A6A13DF216D00648175 /* Reader-Email@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 456E5A6613DF216D00648175 /* Reader-Email@2x.png */; };
 		456E5A6B13DF216D00648175 /* Reader-Print.png in Resources */ = {isa = PBXBuildFile; fileRef = 456E5A6713DF216D00648175 /* Reader-Print.png */; };
 		456E5A6C13DF216D00648175 /* Reader-Print@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 456E5A6813DF216D00648175 /* Reader-Print@2x.png */; };
+		458DDF83140D34A900C5DA94 /* ReaderThumbFetch.m in Sources */ = {isa = PBXBuildFile; fileRef = 458DDF82140D34A900C5DA94 /* ReaderThumbFetch.m */; };
+		458DDFD7140D45FA00C5DA94 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 458DDFD6140D45FA00C5DA94 /* ImageIO.framework */; };
 		45A4AD5312395BE6005D5625 /* Document.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 45A4AD5212395BE6005D5625 /* Document.pdf */; };
 		45A981F113E3063600D2714C /* ReaderDemoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A981F013E3063600D2714C /* ReaderDemoController.m */; };
 		45BD5A8F13AE6DEC00D6FE97 /* ReaderConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 45BD5A8C13AE6DEC00D6FE97 /* ReaderConstants.m */; };
@@ -36,7 +39,11 @@
 		45BD5ABE13AE6F0200D6FE97 /* ReaderScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45BD5AA413AE6F0200D6FE97 /* ReaderScrollView.m */; };
 		45BD5AFE13AE721A00D6FE97 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45BD5AFD13AE721A00D6FE97 /* MessageUI.framework */; };
 		45BF2DEA12329FA500544AC1 /* AppIcon-PDF.png in Resources */ = {isa = PBXBuildFile; fileRef = 45BF2DE912329FA500544AC1 /* AppIcon-PDF.png */; };
+		45CED633140BD2720092F460 /* ReaderThumbCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 45CED632140BD2720092F460 /* ReaderThumbCache.m */; };
+		45CED65D140BEF8D0092F460 /* ReaderThumbQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 45CED65C140BEF8D0092F460 /* ReaderThumbQueue.m */; };
+		45CED666140BF19E0092F460 /* ReaderThumbView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45CED665140BF19E0092F460 /* ReaderThumbView.m */; };
 		45EFD9761236D8EA00AAE9B3 /* README in Resources */ = {isa = PBXBuildFile; fileRef = 45EFD9751236D8EA00AAE9B3 /* README */; };
+		45FF783F140C065700CD8933 /* ReaderThumbRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 45FF783E140C065700CD8933 /* ReaderThumbRequest.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,12 +59,17 @@
 		450A670C11D27BCD00014BF5 /* AppIcon-057.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon-057.png"; path = "Graphics/AppIcon-057.png"; sourceTree = "<group>"; };
 		450A670D11D27BCD00014BF5 /* AppIcon-072.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon-072.png"; path = "Graphics/AppIcon-072.png"; sourceTree = "<group>"; };
 		450A670E11D27BCD00014BF5 /* AppIcon-114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon-114.png"; path = "Graphics/AppIcon-114.png"; sourceTree = "<group>"; };
+		451D32A81417C25D00A67E4C /* ReaderThumbRender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReaderThumbRender.h; path = Sources/ReaderThumbRender.h; sourceTree = "<group>"; };
+		451D32A91417C25D00A67E4C /* ReaderThumbRender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReaderThumbRender.m; path = Sources/ReaderThumbRender.m; sourceTree = "<group>"; };
 		4534A868125F658F001F3415 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 8; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; tabWidth = 8; };
 		4541A9D5122EA686001A5E60 /* en */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		456E5A6513DF216D00648175 /* Reader-Email.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Reader-Email.png"; path = "Graphics/Reader-Email.png"; sourceTree = "<group>"; };
 		456E5A6613DF216D00648175 /* Reader-Email@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Reader-Email@2x.png"; path = "Graphics/Reader-Email@2x.png"; sourceTree = "<group>"; };
 		456E5A6713DF216D00648175 /* Reader-Print.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Reader-Print.png"; path = "Graphics/Reader-Print.png"; sourceTree = "<group>"; };
 		456E5A6813DF216D00648175 /* Reader-Print@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Reader-Print@2x.png"; path = "Graphics/Reader-Print@2x.png"; sourceTree = "<group>"; };
+		458DDF81140D34A900C5DA94 /* ReaderThumbFetch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReaderThumbFetch.h; path = Sources/ReaderThumbFetch.h; sourceTree = "<group>"; };
+		458DDF82140D34A900C5DA94 /* ReaderThumbFetch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReaderThumbFetch.m; path = Sources/ReaderThumbFetch.m; sourceTree = "<group>"; };
+		458DDFD6140D45FA00C5DA94 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		45A4AD5212395BE6005D5625 /* Document.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Document.pdf; path = Resources/Document.pdf; sourceTree = "<group>"; };
 		45A981EF13E3063600D2714C /* ReaderDemoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderDemoController.h; sourceTree = "<group>"; };
 		45A981F013E3063600D2714C /* ReaderDemoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReaderDemoController.m; sourceTree = "<group>"; };
@@ -83,7 +95,15 @@
 		45BD5AA413AE6F0200D6FE97 /* ReaderScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReaderScrollView.m; path = Sources/ReaderScrollView.m; sourceTree = "<group>"; };
 		45BD5AFD13AE721A00D6FE97 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		45BF2DE912329FA500544AC1 /* AppIcon-PDF.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon-PDF.png"; path = "Graphics/AppIcon-PDF.png"; sourceTree = "<group>"; };
+		45CED631140BD2720092F460 /* ReaderThumbCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReaderThumbCache.h; path = Sources/ReaderThumbCache.h; sourceTree = "<group>"; };
+		45CED632140BD2720092F460 /* ReaderThumbCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReaderThumbCache.m; path = Sources/ReaderThumbCache.m; sourceTree = "<group>"; };
+		45CED65B140BEF8D0092F460 /* ReaderThumbQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReaderThumbQueue.h; path = Sources/ReaderThumbQueue.h; sourceTree = "<group>"; };
+		45CED65C140BEF8D0092F460 /* ReaderThumbQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReaderThumbQueue.m; path = Sources/ReaderThumbQueue.m; sourceTree = "<group>"; };
+		45CED664140BF19E0092F460 /* ReaderThumbView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReaderThumbView.h; path = Sources/ReaderThumbView.h; sourceTree = "<group>"; };
+		45CED665140BF19E0092F460 /* ReaderThumbView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReaderThumbView.m; path = Sources/ReaderThumbView.m; sourceTree = "<group>"; };
 		45EFD9751236D8EA00AAE9B3 /* README */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 8; lastKnownFileType = text; path = README; sourceTree = "<group>"; tabWidth = 8; };
+		45FF783D140C065700CD8933 /* ReaderThumbRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReaderThumbRequest.h; path = Sources/ReaderThumbRequest.h; sourceTree = "<group>"; };
+		45FF783E140C065700CD8933 /* ReaderThumbRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReaderThumbRequest.m; path = Sources/ReaderThumbRequest.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Reader-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Reader-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -97,6 +117,7 @@
 				288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */,
 				450A670411D27B9D00014BF5 /* QuartzCore.framework in Frameworks */,
 				45BD5AFE13AE721A00D6FE97 /* MessageUI.framework in Frameworks */,
+				458DDFD7140D45FA00C5DA94 /* ImageIO.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,6 +148,7 @@
 			children = (
 				080E96DDFE201D6D7F000001 /* Classes */,
 				45BD5A7C13AE6C3B00D6FE97 /* Sources */,
+				45CED630140BD22A0092F460 /* Support */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				450A66D911D27B5800014BF5 /* Graphics */,
@@ -165,6 +187,7 @@
 				288765FC0DF74451002DB57D /* CoreGraphics.framework */,
 				450A670311D27B9D00014BF5 /* QuartzCore.framework */,
 				45BD5AFD13AE721A00D6FE97 /* MessageUI.framework */,
+				458DDFD6140D45FA00C5DA94 /* ImageIO.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -209,6 +232,25 @@
 				45BD5A9213AE6F0200D6FE97 /* CGPDFDocument.m */,
 			);
 			name = Sources;
+			sourceTree = "<group>";
+		};
+		45CED630140BD22A0092F460 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				45CED631140BD2720092F460 /* ReaderThumbCache.h */,
+				45CED632140BD2720092F460 /* ReaderThumbCache.m */,
+				458DDF81140D34A900C5DA94 /* ReaderThumbFetch.h */,
+				458DDF82140D34A900C5DA94 /* ReaderThumbFetch.m */,
+				451D32A81417C25D00A67E4C /* ReaderThumbRender.h */,
+				451D32A91417C25D00A67E4C /* ReaderThumbRender.m */,
+				45CED65B140BEF8D0092F460 /* ReaderThumbQueue.h */,
+				45CED65C140BEF8D0092F460 /* ReaderThumbQueue.m */,
+				45FF783D140C065700CD8933 /* ReaderThumbRequest.h */,
+				45FF783E140C065700CD8933 /* ReaderThumbRequest.m */,
+				45CED664140BF19E0092F460 /* ReaderThumbView.h */,
+				45CED665140BF19E0092F460 /* ReaderThumbView.m */,
+			);
+			name = Support;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -295,6 +337,12 @@
 				45BD5ABC13AE6F0200D6FE97 /* ReaderMainToolbar.m in Sources */,
 				45BD5ABE13AE6F0200D6FE97 /* ReaderScrollView.m in Sources */,
 				45A981F113E3063600D2714C /* ReaderDemoController.m in Sources */,
+				45CED633140BD2720092F460 /* ReaderThumbCache.m in Sources */,
+				45CED65D140BEF8D0092F460 /* ReaderThumbQueue.m in Sources */,
+				45CED666140BF19E0092F460 /* ReaderThumbView.m in Sources */,
+				45FF783F140C065700CD8933 /* ReaderThumbRequest.m in Sources */,
+				458DDF83140D34A900C5DA94 /* ReaderThumbFetch.m in Sources */,
+				451D32AA1417C25D00A67E4C /* ReaderThumbRender.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -342,7 +390,7 @@
 		458529CE13DDE2DF00EDC79D /* Testing */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_MODEL_TUNING = "";
@@ -373,7 +421,7 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_MODEL_TUNING = "";
@@ -391,7 +439,7 @@
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_MODEL_TUNING = "";

@@ -1,4 +1,4 @@
-Basic PDF Reader/Viewer V2.1 for iOS
+Basic PDF Reader/Viewer V2.2 for iOS
 
 INTRODUCTION
 
@@ -31,6 +31,18 @@ It also works rather well on older devices (such as the iPod touch
 2nd generation and iPhone 3G) and takes advantage of the dual-core
 processor (via CATiledLayer multi-threading) in the iPad 2.
 
+FEATURES
+
+Multithreaded: The UI is always quite smooth and responsive.
+
+Supports:
+
+ - iBooks like document navigation.
+ - Device rotation and all orientations.
+ - Encrypted (password protected) PDFs.
+ - PDF links (URI and goto page).
+ - PDFs with rotated pages.
+
 NOTES
 
 Version 2.x of the PDF reader/viewer code was developed and tested
@@ -39,7 +51,7 @@ across any issues with other versions of the tools, or iOS, please
 let me know.
 
 The overall PDF reader/viewer functionality is encapsulated in the
-ReaderViewController class. You initialize a ReaderDocument object
+ReaderViewController class. First initialize a ReaderDocument object
 with the file path to the PDF document (or unarchive an existing
 ReaderDocument object) and then initialize a ReaderViewController
 with this ReaderDocument object. The ReaderViewController class
@@ -62,21 +74,27 @@ Required Files
 The following files are required to incorporate the PDF
 reader/viewer into one of your projects:
 
-	ReaderDocument.h, ReaderDocument.m
-	ReaderConstants.h, ReaderConstants.m
-	ReaderViewController.h, ReaderViewController.m
-	ReaderMainToolbar.h, ReaderMainToolbar.m
-	ReaderMainPagebar.h, ReaderMainPagebar.m
-	ReaderContentView.h, ReaderContentView.m
-	ReaderContentPage.h, ReaderContentPage.m
-	ReaderContentTile.h, ReaderContentTile.m
-	ReaderScrollView.h, ReaderScrollView.m
-	CGPDFDocument.h, CGPDFDocument.m
+	CGPDFDocument.h		CGPDFDocument.m
+	ReaderDocument.h	ReaderDocument.m
+	ReaderConstants.h	ReaderConstants.m
+	ReaderViewController.h	ReaderViewController.m
+	ReaderMainToolbar.h	ReaderMainToolbar.m
+	ReaderMainPagebar.h	ReaderMainPagebar.m
+	ReaderContentView.h	ReaderContentView.m
+	ReaderContentPage.h	ReaderContentPage.m
+	ReaderContentTile.h	ReaderContentTile.m
+	ReaderScrollView.h	ReaderScrollView.m
+	ReaderThumbCache.h	ReaderThumbCache.m
+	ReaderThumbRequest.h	ReaderThumbRequest.m
+	ReaderThumbQueue.h	ReaderThumbQueue.m
+	ReaderThumbFetch.h	ReaderThumbFetch.m
+	ReaderThumbRender.h	ReaderThumbRender.m
+	ReaderThumbView.h	ReaderThumbView.m
+
+	Reader-Email.png	Reader-Email@2x.png
+	Reader-Print.png	Reader-Print@2x.png
 
 	Localizable.strings (UTF-16 encoding)
-
-	Reader-Email.png, Reader-Email@2x.png
-	Reader-Print.png, Reader-Print@2x.png
 
 Required iOS Frameworks
 -----------------------
@@ -84,7 +102,9 @@ Required iOS Frameworks
 To incorporate the PDF reader/viewer into one of your projects,
 the following iOS frameworks are required by the code:
 
-	UIKit, Foundation, CoreGraphics, QuartzCore and MessageUI.
+	UIKit		Foundation
+	CoreGraphics	QuartzCore
+	ImageIO		MessageUI
 
 Compile Time Options
 --------------------
@@ -111,9 +131,9 @@ ReaderDocument Object Archiving
 -------------------------------
 
 To change where the property list for ReaderDocument objects is stored
-(~/Documents by default), please see the +archiveFilePath: method in
-the ReaderDocument.m source file. Do note that the ReaderDocument
-object data model is Core Data compatible.
+(~/Documents by default), please see the +archiveFilePath: method in the
+ReaderDocument.m source file. Note that the ReaderDocument object data
+model is Core Data compatible.
 
 HISTORY
 
@@ -130,6 +150,12 @@ HISTORY
 2011-08-27: Version 2.1.1
 
 	- Fixed rotation handling when in a UITabBarController.
+
+2011-09-09: Version 2.2.0
+
+	- The page bar now uses small page thumbs instead of a slider.
+
+	- A medium resolution page preview image is now shown first.
 
 CONTACT INFO
 

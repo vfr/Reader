@@ -22,7 +22,7 @@
 
 #define DEMO_VIEW_CONTROLLER_PUSH FALSE
 
-#pragma mark Properties
+//#pragma mark Properties
 
 //@synthesize ;
 

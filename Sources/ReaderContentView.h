@@ -1,6 +1,6 @@
 //
 //	ReaderContentView.h
-//	Reader v2.1.0
+//	Reader v2.2.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -14,8 +14,11 @@
 
 #import <UIKit/UIKit.h>
 
+#import "ReaderThumbView.h"
+
 @class ReaderScrollView;
 @class ReaderContentPage;
+@class ReaderContentThumb;
 
 @protocol ReaderContentViewDelegate <NSObject>
 
@@ -33,6 +36,8 @@
 
 	ReaderContentPage *theContentView;
 
+	ReaderContentThumb *theThumbView;
+
 	UIView *theContainerView;
 }
 
@@ -40,10 +45,25 @@
 
 - (id)initWithFrame:(CGRect)frame fileURL:(NSURL *)fileURL page:(NSUInteger)page password:(NSString *)phrase;
 
+- (void)showPageThumb:(NSURL *)fileURL page:(NSInteger)page password:(NSString *)phrase guid:(NSString *)guid;
+
 - (id)singleTap:(UITapGestureRecognizer *)recognizer;
 
 - (void)zoomIncrement;
 - (void)zoomDecrement;
 - (void)zoomReset;
+
+@end
+
+#pragma mark -
+
+//
+//	ReaderContentThumb class interface
+//
+
+@interface ReaderContentThumb : ReaderThumbView
+{
+@private // Instance variables
+}
 
 @end

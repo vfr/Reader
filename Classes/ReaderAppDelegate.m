@@ -16,7 +16,7 @@
 
 @implementation ReaderAppDelegate
 
-#pragma mark Properties
+//#pragma mark Properties
 
 //@synthesize ;
 

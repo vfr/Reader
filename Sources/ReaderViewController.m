@@ -1,6 +1,6 @@
 //
 //	ReaderViewController.m
-//	Reader v2.1.1
+//	Reader v2.2.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -15,6 +15,8 @@
 #import "ReaderConstants.h"
 #import "ReaderViewController.h"
 #import "ReaderScrollView.h"
+#import "ReaderThumbCache.h"
+#import "ReaderThumbQueue.h"
 
 @implementation ReaderViewController
 
@@ -23,8 +25,9 @@
 #define PAGING_VIEWS 3
 
 #define TOOLBAR_HEIGHT 44.0f
+#define PAGEBAR_HEIGHT 48.0f
 
-#define PAGING_AREA_WIDTH 48.0f
+#define TAP_AREA_SIZE 48.0f
 
 #pragma mark Properties
 
@@ -57,14 +60,12 @@
 
 	[self updateScrollViewContentSize]; // Update the content size
 
-	NSMutableIndexSet *pageSet = [[NSMutableIndexSet new] autorelease];
+	NSMutableIndexSet *pageSet = [NSMutableIndexSet indexSet]; // Page set
 
 	[contentViews enumerateKeysAndObjectsUsingBlock: // Enumerate content views
 		^(id key, id object, BOOL *stop)
 		{
-			ReaderContentView *contentView = object;
-
-			[pageSet addIndex:contentView.tag];
+			ReaderContentView *contentView = object; [pageSet addIndex:contentView.tag];
 		}
 	];
 
@@ -122,9 +123,11 @@
 					{minValue--; maxValue--;}
 		}
 
-		CGRect viewRect = CGRectZero; viewRect.size = theScrollView.bounds.size;
+		NSMutableIndexSet *newPageSet = [NSMutableIndexSet new];
 
-		NSMutableDictionary *unusedViews = [[contentViews mutableCopy] autorelease];
+		NSMutableDictionary *unusedViews = [contentViews mutableCopy];
+
+		CGRect viewRect = CGRectZero; viewRect.size = theScrollView.bounds.size;
 
 		for (NSInteger number = minValue; number <= maxValue; number++)
 		{
@@ -132,7 +135,7 @@
 
 			ReaderContentView *contentView = [contentViews objectForKey:key];
 
-			if (contentView == nil) // Create brand new content view
+			if (contentView == nil) // Create a brand new document content view
 			{
 				NSURL *fileURL = document.fileURL; NSString *phrase = document.password; // Document properties
 
@@ -140,7 +143,7 @@
 
 				[theScrollView addSubview:contentView]; [contentViews setObject:contentView forKey:key];
 
-				contentView.delegate = self; [contentView release];
+				contentView.delegate = self; [contentView release]; [newPageSet addIndex:number];
 			}
 			else // Reposition the existing content view
 			{
@@ -162,6 +165,8 @@
 				[contentView removeFromSuperview];
 			}
 		];
+
+		[unusedViews release], unusedViews = nil; // Release unused views
 
 		CGFloat viewWidthX1 = viewRect.size.width;
 		CGFloat viewWidthX2 = (viewWidthX1 * 2.0f);
@@ -187,10 +192,36 @@
 
 		if ([document.pageNumber integerValue] != page) // Only if different
 		{
-			document.pageNumber = [NSNumber numberWithInteger:page]; // Update it
+			document.pageNumber = [NSNumber numberWithInteger:page]; // Update page number
 		}
 
-		[mainPagebar updatePageNumberDisplay]; // Update display
+		NSURL *fileURL = document.fileURL; NSString *phrase = document.password; NSString *guid = document.guid;
+
+		if ([newPageSet containsIndex:page] == YES) // Visible page first
+		{
+			NSNumber *key = [NSNumber numberWithInteger:page]; // # key
+
+			ReaderContentView *targetView = [contentViews objectForKey:key];
+
+			[targetView showPageThumb:fileURL page:page password:phrase guid:guid];
+
+			[newPageSet removeIndex:page]; // Remove visible page from set
+		}
+
+		[newPageSet enumerateIndexesWithOptions:NSEnumerationReverse usingBlock: // Show page thumbs
+			^(NSUInteger number, BOOL *stop)
+			{
+				NSNumber *key = [NSNumber numberWithInteger:number]; // # key
+
+				ReaderContentView *targetView = [contentViews objectForKey:key];
+
+				[targetView showPageThumb:fileURL page:number password:phrase guid:guid];
+			}
+		];
+
+		[newPageSet release], newPageSet = nil; // Release new page set
+
+		[mainPagebar updatePagebar]; // Update the pagebar display
 
 		currentPage = page; // Track current page number
 	}
@@ -208,7 +239,7 @@
 
 	document.lastOpen = [NSDate date]; // Update last opened date
 
-	isVisible = YES; // iOS present modal WTF bodge
+	isVisible = YES; // iOS present modal bodge
 }
 
 #pragma mark UIViewController methods
@@ -259,9 +290,11 @@
 
 	[super viewDidLoad];
 
-	assert(delegate != nil); assert(document != nil);
+	NSAssert(!(document == nil), @"ReaderDocument == nil");
 
 	assert(self.splitViewController == nil); // Not supported (sorry)
+
+	[ReaderThumbCache createThumbCacheWithGUID:document.guid]; // Cache
 
 	self.view.backgroundColor = [UIColor scrollViewTexturedBackgroundColor];
 
@@ -295,8 +328,8 @@
 	[self.view addSubview:mainToolbar];
 
 	CGRect pagebarRect = viewRect;
-	pagebarRect.size.height = TOOLBAR_HEIGHT;
-	pagebarRect.origin.y = (viewRect.size.height - TOOLBAR_HEIGHT);
+	pagebarRect.size.height = PAGEBAR_HEIGHT;
+	pagebarRect.origin.y = (viewRect.size.height - PAGEBAR_HEIGHT);
 
 	mainPagebar = [[ReaderMainPagebar alloc] initWithFrame:pagebarRect document:document]; // At bottom
 
@@ -417,7 +450,7 @@
 	NSLog(@"%s %@ (%d)", __FUNCTION__, NSStringFromCGRect(self.view.bounds), toInterfaceOrientation);
 #endif
 
-	if (isVisible == NO) return; // iOS present modal WTF bodge
+	if (isVisible == NO) return; // iOS present modal bodge
 
 	if (printInteraction != nil) [printInteraction dismissAnimated:NO];
 }
@@ -428,7 +461,7 @@
 	NSLog(@"%s %@ (%d)", __FUNCTION__, NSStringFromCGRect(self.view.bounds), interfaceOrientation);
 #endif
 
-	if (isVisible == NO) return; // iOS present modal WTF bodge
+	if (isVisible == NO) return; // iOS present modal bodge
 
 	[self updateScrollViewContentViews]; // Update content views
 
@@ -441,7 +474,7 @@
 	NSLog(@"%s %@ (%d to %d)", __FUNCTION__, NSStringFromCGRect(self.view.bounds), fromInterfaceOrientation, self.interfaceOrientation);
 #endif
 
-	//if (isVisible == NO) return; // iOS present modal WTF bodge
+	//if (isVisible == NO) return; // iOS present modal bodge
 
 	//if (fromInterfaceOrientation == self.interfaceOrientation) return;
 }
@@ -526,9 +559,9 @@
 		{
 			UITouch *touch = [touches anyObject]; // Touch info
 
-			CGPoint point = [touch locationInView:self.view]; // Location
+			CGPoint point = [touch locationInView:self.view]; // Touch location
 
-			CGRect areaRect = CGRectInset(self.view.bounds, PAGING_AREA_WIDTH, TOOLBAR_HEIGHT);
+			CGRect areaRect = CGRectInset(self.view.bounds, TAP_AREA_SIZE, TAP_AREA_SIZE);
 
 			if (CGRectContainsPoint(areaRect, point) == false) return;
 		}
@@ -616,7 +649,7 @@
 
 		CGPoint point = [recognizer locationInView:recognizer.view];
 
-		CGRect areaRect = CGRectInset(viewRect, PAGING_AREA_WIDTH, 0.0f);
+		CGRect areaRect = CGRectInset(viewRect, TAP_AREA_SIZE, 0.0f); // Area
 
 		if (CGRectContainsPoint(areaRect, point)) // Single tap is inside the area
 		{
@@ -659,8 +692,8 @@
 		}
 
 		CGRect nextPageRect = viewRect;
-		nextPageRect.size.width = PAGING_AREA_WIDTH;
-		nextPageRect.origin.x = (viewRect.size.width - PAGING_AREA_WIDTH);
+		nextPageRect.size.width = TAP_AREA_SIZE;
+		nextPageRect.origin.x = (viewRect.size.width - TAP_AREA_SIZE);
 
 		if (CGRectContainsPoint(nextPageRect, point)) // page++ area
 		{
@@ -668,7 +701,7 @@
 		}
 
 		CGRect prevPageRect = viewRect;
-		prevPageRect.size.width = PAGING_AREA_WIDTH;
+		prevPageRect.size.width = TAP_AREA_SIZE;
 
 		if (CGRectContainsPoint(prevPageRect, point)) // page-- area
 		{
@@ -687,9 +720,9 @@
 	{
 		CGRect viewRect = recognizer.view.bounds; // View bounds
 
-		CGPoint point = [recognizer locationInView:recognizer.view]; // Location
+		CGPoint point = [recognizer locationInView:recognizer.view];
 
-		CGRect zoomArea = CGRectInset(viewRect, PAGING_AREA_WIDTH, TOOLBAR_HEIGHT);
+		CGRect zoomArea = CGRectInset(viewRect, TAP_AREA_SIZE, TAP_AREA_SIZE);
 
 		if (CGRectContainsPoint(zoomArea, point)) // Double tap is in the zoom area
 		{
@@ -716,8 +749,8 @@
 		}
 
 		CGRect nextPageRect = viewRect;
-		nextPageRect.size.width = PAGING_AREA_WIDTH;
-		nextPageRect.origin.x = (viewRect.size.width - PAGING_AREA_WIDTH);
+		nextPageRect.size.width = TAP_AREA_SIZE;
+		nextPageRect.origin.x = (viewRect.size.width - TAP_AREA_SIZE);
 
 		if (CGRectContainsPoint(nextPageRect, point)) // page++ area
 		{
@@ -725,7 +758,7 @@
 		}
 
 		CGRect prevPageRect = viewRect;
-		prevPageRect.size.width = PAGING_AREA_WIDTH;
+		prevPageRect.size.width = TAP_AREA_SIZE;
 
 		if (CGRectContainsPoint(prevPageRect, point)) // page-- area
 		{
@@ -742,11 +775,26 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
+#if (READER_STANDALONE == FALSE) // Option
+
 	[document saveReaderDocument]; // Save any ReaderDocument object changes
+
+	[[ReaderThumbQueue sharedInstance] cancelOperationsWithGUID:document.guid];
+
+	[[ReaderThumbCache sharedInstance] removeAllObjects]; // Empty the thumb cache
 
 	if (printInteraction != nil) [printInteraction dismissAnimated:NO]; // Dismiss
 
-	[delegate dismissReaderViewController:self]; // Dismiss view controller
+	if ([delegate respondsToSelector:@selector(dismissReaderViewController:)] == YES)
+	{
+		[delegate dismissReaderViewController:self]; // Dismiss the ReaderViewController
+	}
+	else // We have a "Delegate must respond to -dismissReaderViewController: error"
+	{
+		NSAssert(NO, @"Delegate must respond to -dismissReaderViewController:");
+	}
+
+#endif // end of READER_STANDALONE Option
 }
 
 - (void)tappedInToolbar:(ReaderMainToolbar *)toolbar printButton:(UIBarButtonItem *)button

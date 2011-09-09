@@ -1,8 +1,8 @@
 //
 //	ReaderMainPagebar.h
-//	Reader v2.1.0
+//	Reader v2.2.0
 //
-//	Created by Julius Oklamcak on 2011-07-01.
+//	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
 //
 //	This work is being made available under a Creative Commons Attribution license:
@@ -14,7 +14,11 @@
 
 #import <UIKit/UIKit.h>
 
+#import "ReaderThumbView.h"
+
 @class ReaderMainPagebar;
+@class ReaderTrackControl;
+@class ReaderPagebarThumb;
 @class ReaderDocument;
 
 @protocol ReaderMainPagebarDelegate <NSObject>
@@ -31,22 +35,58 @@
 
 	ReaderDocument *document;
 
-	UIView *pageNumberView;
+	ReaderTrackControl *trackControl;
+
+	NSMutableDictionary *miniThumbViews;
+
+	ReaderPagebarThumb *pageThumbView;
 
 	UILabel *pageNumberLabel;
 
-	UISlider *thePageSlider;
+	UIView *pageNumberView;
 
-	NSInteger lastPageTrack;
+	NSTimer *trackTimer;
 }
 
 @property (nonatomic, assign, readwrite) id <ReaderMainPagebarDelegate> delegate;
 
 - (id)initWithFrame:(CGRect)frame document:(ReaderDocument *)object;
 
-- (void)updatePageNumberDisplay;
+- (void)updatePagebar;
 
 - (void)hidePagebar;
 - (void)showPagebar;
+
+@end
+
+#pragma mark -
+
+//
+//	ReaderTrackControl class interface
+//
+
+@interface ReaderTrackControl : UIControl
+{
+@private // Instance variables
+
+	CGFloat _value;
+}
+
+@property (nonatomic, assign, readonly) CGFloat value;
+
+@end
+
+#pragma mark -
+
+//
+//	ReaderPagebarThumb class interface
+//
+
+@interface ReaderPagebarThumb : ReaderThumbView
+{
+@private // Instance variables
+}
+
+- (id)initWithFrame:(CGRect)frame small:(BOOL)small;
 
 @end

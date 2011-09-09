@@ -1,8 +1,8 @@
 //
-//	ReaderConstants.m
+//	ReaderThumbRender.h
 //	Reader v2.2.0
 //
-//	Created by Julius Oklamcak on 2011-07-01.
+//	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
 //
 //	This work is being made available under a Creative Commons Attribution license:
@@ -12,6 +12,19 @@
 //	the original author is attributed.
 //
 
-#import "ReaderConstants.h"
+#import <Foundation/Foundation.h>
 
-NSString *const kReaderCopyrightNotice = @"Reader v2.2 • Copyright © 2011 Julius Oklamcak. All rights reserved.";
+#import "ReaderThumbQueue.h"
+
+@class ReaderThumbRequest;
+
+@interface ReaderThumbRender : ReaderThumbOperation
+{
+@private // Instance variables
+
+	ReaderThumbRequest *request;
+}
+
+- (id)initWithRequest:(ReaderThumbRequest *)request;
+
+@end

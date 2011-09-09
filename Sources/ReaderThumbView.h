@@ -1,8 +1,8 @@
 //
-//	ReaderConstants.m
+//	ReaderThumbView.h
 //	Reader v2.2.0
 //
-//	Created by Julius Oklamcak on 2011-07-01.
+//	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
 //
 //	This work is being made available under a Creative Commons Attribution license:
@@ -12,6 +12,23 @@
 //	the original author is attributed.
 //
 
-#import "ReaderConstants.h"
+#import <UIKit/UIKit.h>
 
-NSString *const kReaderCopyrightNotice = @"Reader v2.2 • Copyright © 2011 Julius Oklamcak. All rights reserved.";
+@interface ReaderThumbView : UIView
+{
+@private // Instance variables
+
+	NSOperation *_operation;
+
+@protected // Instance variables
+
+	UIImageView *imageView;
+}
+
+@property (assign, readwrite) NSOperation *operation;
+
+- (void)showImage:(UIImage *)image;
+
+- (void)reuse;
+
+@end

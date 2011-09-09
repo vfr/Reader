@@ -1,6 +1,6 @@
 //
 //	ReaderDocument.m
-//	Reader v2.1.0
+//	Reader v2.2.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -20,6 +20,7 @@
 
 #pragma mark Properties
 
+@synthesize guid = _guid;
 @synthesize fileDate = _fileDate;
 @synthesize fileSize = _fileSize;
 @synthesize pageCount = _pageCount;
@@ -29,6 +30,26 @@
 @dynamic fileName, fileURL;
 
 #pragma mark ReaderDocument class methods
+
++ (NSString *)GUID
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	CFUUIDRef theUUID;
+	CFStringRef theString;
+
+	theUUID = CFUUIDCreate(NULL);
+
+	theString = CFUUIDCreateString(NULL, theUUID);
+
+	NSString *unique = [NSString stringWithString:(id)theString];
+
+	CFRelease(theString); CFRelease(theUUID); // Cleanup
+
+	return unique;
+}
 
 + (NSString *)documentsPath
 {
@@ -150,12 +171,14 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	id object = nil;
+	id object = nil; // ReaderDocument object
 
 	if ([ReaderDocument isPDF:fullFilePath] == YES) // File must exist
 	{
-		if ((self = [super init])) // First initialize the superclass object
+		if ((self = [super init])) // Initialize the superclass object first
 		{
+			_guid = [[ReaderDocument GUID] retain]; // Create a document GUID
+
 			_password = [phrase copy]; // Keep a copy of any document password
 
 			_pageNumber = [[NSNumber numberWithInteger:1] retain]; // Start page 1
@@ -174,22 +197,22 @@
 
 				CGPDFDocumentRelease(thePDFDocRef); // Cleanup
 			}
-			else // Cupertino, we have a problem with the document...
+			else // Cupertino, we have a problem with the document
 			{
-				NSAssert(NO, @"thePDFDocRef == NULL"); //abort();
+				NSAssert(NO, @"CGPDFDocumentRef == NULL");
 			}
 
-			_lastOpen = [[NSDate dateWithTimeIntervalSinceReferenceDate:0.0] retain];
+			NSFileManager *fileManager = [NSFileManager new]; // File manager
 
-			NSFileManager *fileManager = [[NSFileManager new] autorelease]; // File manager
+			_lastOpen = [[NSDate dateWithTimeIntervalSinceReferenceDate:0.0] retain]; // Last opened
 
 			NSDictionary *fileAttributes = [fileManager attributesOfItemAtPath:fullFilePath error:NULL];
 
 			_fileDate = [[fileAttributes objectForKey:NSFileModificationDate] retain]; // File date
 
-			_fileSize = [[fileAttributes objectForKey:NSFileSize] retain]; // File size
+			_fileSize = [[fileAttributes objectForKey:NSFileSize] retain]; // File size (bytes)
 
-			object = self; // Return an initialized ReaderDocument object
+			[fileManager release]; object = self; // Return initialized ReaderDocument object
 		}
 	}
 
@@ -201,6 +224,8 @@
 #ifdef DEBUGX
 	NSLog(@"%s", __FUNCTION__);
 #endif
+
+	[_guid release], _guid = nil;
 
 	[_fileURL release], _fileURL = nil;
 
@@ -274,6 +299,8 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
+	[encoder encodeObject:_guid forKey:@"FileGUID"];
+
 	[encoder encodeObject:_fileName forKey:@"FileName"];
 
 	[encoder encodeObject:_fileDate forKey:@"FileDate"];
@@ -293,8 +320,10 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	if ((self = [super init])) // Initialize superclass
+	if ((self = [super init])) // Superclass init
 	{
+		_guid = [[decoder decodeObjectForKey:@"FileGUID"] retain];
+
 		_fileName = [[decoder decodeObjectForKey:@"FileName"] retain];
 
 		_fileDate = [[decoder decodeObjectForKey:@"FileDate"] retain];
@@ -306,6 +335,8 @@
 		_fileSize = [[decoder decodeObjectForKey:@"FileSize"] retain];
 
 		_lastOpen = [[decoder decodeObjectForKey:@"LastOpen"] retain];
+
+		if (_guid == nil) _guid = [[ReaderDocument GUID] retain];
 	}
 
 	return self;

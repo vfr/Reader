@@ -1,6 +1,6 @@
 //
 //	ReaderContentView.m
-//	Reader v2.1.0
+//	Reader v2.2.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -16,6 +16,7 @@
 #import "ReaderContentView.h"
 #import "ReaderContentPage.h"
 #import "ReaderScrollView.h"
+#import "ReaderThumbCache.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -31,6 +32,9 @@
 #else
 	#define CONTENT_INSET 2.0f
 #endif // end of READER_SHOW_SHADOW Option
+
+#define PAGE_THUMB_LARGE 240
+#define PAGE_THUMB_SMALL 144
 
 #pragma mark Properties
 
@@ -111,6 +115,10 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 			theScrollView.contentOffset = CGPointMake((0.0f - CONTENT_INSET), (0.0f - CONTENT_INSET));
 			theScrollView.contentInset = UIEdgeInsetsMake(CONTENT_INSET, CONTENT_INSET, CONTENT_INSET, CONTENT_INSET);
 
+			theThumbView = [[ReaderContentThumb alloc] initWithFrame:theContentView.bounds]; // Page thumb view
+
+			[theContainerView addSubview:theThumbView]; // Add the thumb view to the container view
+
 			[theContainerView addSubview:theContentView]; // Add the content view to the container view
 
 			[theScrollView addSubview:theContainerView]; // Add the container view to the scroll view
@@ -144,7 +152,26 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 
 	[theContentView release], theContentView = nil;
 
+	[theThumbView release], theThumbView = nil;
+
 	[super dealloc];
+}
+
+- (void)showPageThumb:(NSURL *)fileURL page:(NSInteger)page password:(NSString *)phrase guid:(NSString *)guid
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	BOOL large = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad); // Page thumb size
+
+	CGSize size = large ? CGSizeMake(PAGE_THUMB_LARGE, PAGE_THUMB_LARGE) : CGSizeMake(PAGE_THUMB_SMALL, PAGE_THUMB_SMALL);
+
+	ReaderThumbRequest *request = [ReaderThumbRequest forView:theThumbView fileURL:fileURL password:phrase guid:guid page:page size:size];
+
+	UIImage *image = [[ReaderThumbCache sharedInstance] thumbRequest:request priority:YES]; // Request the page thumb
+
+	if ([image isKindOfClass:[UIImage class]]) [theThumbView showImage:image]; // Show image from cache
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -286,6 +313,38 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
 {
 	return theContainerView;
+}
+
+@end
+
+#pragma mark -
+
+//
+//	ReaderContentThumb class implementation
+//
+
+@implementation ReaderContentThumb
+
+//#pragma mark Properties
+
+//@synthesize ;
+
+#pragma mark ReaderContentThumb instance methods
+
+- (id)initWithFrame:(CGRect)frame
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	if ((self = [super initWithFrame:frame])) // Superclass init
+	{
+		imageView.contentMode = UIViewContentModeScaleAspectFill;
+
+		imageView.clipsToBounds = YES; // Needed for aspect fill
+	}
+
+	return self;
 }
 
 @end
