@@ -1,6 +1,6 @@
 //
 //	ReaderDemoController.m
-//	Reader v2.1.0
+//	Reader v2.2.1
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -210,13 +210,15 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	ReaderDocument *document = [ReaderDocument unarchiveFromFileName:SAMPLE_DOCUMENT];
+	NSString *phrase = nil; // Document password (for unlocking most encrypted PDF files)
 
-	if (document == nil) // Create a brand new ReaderDocument object the first time we run
+	ReaderDocument *document = [ReaderDocument unarchiveFromFileName:SAMPLE_DOCUMENT password:phrase];
+
+	if (document == nil) // We need to create a brand new ReaderDocument object the first time we run
 	{
-		NSString *filePath = [[NSBundle mainBundle] pathForResource:SAMPLE_DOCUMENT ofType:nil];
+		NSString *filePath = [[NSBundle mainBundle] pathForResource:SAMPLE_DOCUMENT ofType:nil]; // Path
 
-		document = [[[ReaderDocument alloc] initWithFilePath:filePath password:nil] autorelease];
+		document = [[[ReaderDocument alloc] initWithFilePath:filePath password:phrase] autorelease];
 	}
 
 	if (document != nil) // Must have a valid ReaderDocument object in order to proceed

@@ -157,6 +157,10 @@ HISTORY
 
 	- A medium resolution page preview image is now shown first.
 
+2011-09-10: Version 2.2.1
+
+	- Added password handling to ReaderDocument plist unarchive.
+
 CONTACT INFO
 
 Questions, feedback and iOS development work welcome:

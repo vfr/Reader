@@ -1,6 +1,6 @@
 //
 //	ReaderDocument.h
-//	Reader v2.2.0
+//	Reader v2.2.1
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -47,7 +47,7 @@
 @property (nonatomic, retain, readonly) NSString *password;
 @property (nonatomic, retain, readonly) NSURL *fileURL;
 
-+ (ReaderDocument *)unarchiveFromFileName:(NSString *)filename;
++ (ReaderDocument *)unarchiveFromFileName:(NSString *)filename password:(NSString *)phrase;
 
 - (id)initWithFilePath:(NSString *)fullFilePath password:(NSString *)phrase;
 

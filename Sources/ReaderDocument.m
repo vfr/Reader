@@ -1,6 +1,6 @@
 //
 //	ReaderDocument.m
-//	Reader v2.2.0
+//	Reader v2.2.1
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -105,7 +105,7 @@
 	return [documentsPath stringByAppendingPathComponent:archiveName]; // "~/Documents/'filename'.plist"
 }
 
-+ (ReaderDocument *)unarchiveFromFileName:(NSString *)filename
++ (ReaderDocument *)unarchiveFromFileName:(NSString *)filename password:(NSString *)phrase
 {
 #ifdef DEBUGX
 	NSLog(@"%s", __FUNCTION__);
@@ -115,9 +115,14 @@
 
 	NSString *archiveFilePath = [ReaderDocument archiveFilePath:filename];
 
-	@try // To unarchive an archived ReaderDocument object from its property list
+	@try // Unarchive an archived ReaderDocument object from its property list
 	{
 		document = [NSKeyedUnarchiver unarchiveObjectWithFile:archiveFilePath];
+
+		if ((document != nil) && (phrase != nil)) // Set the document password
+		{
+			[document setValue:[[phrase copy] autorelease] forKey:@"password"];
+		}
 	}
 	@catch (NSException *exception) // Exception handling (just in case O_o)
 	{
