@@ -1,6 +1,6 @@
 //
 //	ReaderContentTile.m
-//	Reader v2.1.0
+//	Reader v2.3.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -33,7 +33,9 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	return 0.0; // No fading wanted
+	return 0.001; // iOS bug workaround
+
+	//return 0.0; // No fading wanted
 }
 
 #pragma mark ReaderContentTile instance methods

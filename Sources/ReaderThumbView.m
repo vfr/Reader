@@ -1,6 +1,6 @@
 //
 //	ReaderThumbView.m
-//	Reader v2.2.0
+//	Reader v2.3.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -19,6 +19,7 @@
 #pragma mark Properties
 
 @synthesize operation = _operation;
+@synthesize targetTag = _targetTag;
 
 #pragma mark ReaderThumbView instance methods
 
@@ -76,6 +77,8 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
+	_targetTag = 0; // Clear target tag
+
 	[self.operation cancel], self.operation = nil;
 
 	[super removeFromSuperview];
@@ -86,6 +89,8 @@
 #ifdef DEBUGX
 	NSLog(@"%s", __FUNCTION__);
 #endif
+
+	_targetTag = 0; // Clear target tag
 
 	[self.operation cancel], self.operation = nil;
 

@@ -1,6 +1,6 @@
 //
 //	ReaderViewController.h
-//	Reader v2.2.0
+//	Reader v2.3.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -19,6 +19,7 @@
 #import "ReaderContentView.h"
 #import "ReaderMainToolbar.h"
 #import "ReaderMainPagebar.h"
+#import "ThumbsViewController.h"
 
 @class ReaderViewController;
 @class ReaderMainToolbar;
@@ -33,7 +34,8 @@
 @end
 
 @interface ReaderViewController : UIViewController <UIScrollViewDelegate, UIGestureRecognizerDelegate, MFMailComposeViewControllerDelegate,
-													ReaderMainToolbarDelegate, ReaderMainPagebarDelegate, ReaderContentViewDelegate>
+													ReaderMainToolbarDelegate, ReaderMainPagebarDelegate, ReaderContentViewDelegate,
+													ThumbsViewControllerDelegate>
 {
 @private // Instance variables
 

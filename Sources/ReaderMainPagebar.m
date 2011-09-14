@@ -1,6 +1,6 @@
 //
 //	ReaderMainPagebar.m
-//	Reader v2.2.0
+//	Reader v2.3.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -37,6 +37,17 @@
 
 @synthesize delegate;
 
+#pragma mark ReaderMainPagebar class methods
+
++ (Class)layerClass
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	return [CAGradientLayer class];
+}
+
 #pragma mark ReaderMainPagebar instance methods
 
 - (id)initWithFrame:(CGRect)frame
@@ -54,30 +65,30 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
+	NSInteger pages = [document.pageCount integerValue];
+
+	if (pages > 1) // Only update frame if more than one page
+	{
+		CGFloat controlWidth = trackControl.bounds.size.width;
+
+		CGFloat useableWidth = (controlWidth - THUMB_LARGE_WIDTH);
+
+		CGFloat stride = (useableWidth / (pages - 1)); // Page stride
+
+		NSInteger X = (stride * (page - 1)); CGFloat pageThumbX = X;
+
+		CGRect pageThumbRect = pageThumbView.frame; // Current frame
+
+		if (pageThumbX != pageThumbRect.origin.x) // Only if different
+		{
+			pageThumbRect.origin.x = pageThumbX; // The new X position
+
+			pageThumbView.frame = pageThumbRect; // Update the frame
+		}
+	}
+
 	if (page != pageThumbView.tag) // Only if page number changed
 	{
-		NSInteger pages = [document.pageCount integerValue]; // Pages
-
-		if (pages > 1) // Only update position if more than one page
-		{
-			CGFloat controlWidth = trackControl.bounds.size.width;
-
-			CGFloat useableWidth = (controlWidth - THUMB_LARGE_WIDTH);
-
-			CGFloat stride = (useableWidth / (pages - 1)); // Page stride
-
-			NSInteger X = (stride * (page - 1)); CGFloat pageThumbX = X;
-
-			CGRect pageThumbRect = pageThumbView.frame; // Current frame
-
-			if (pageThumbX != pageThumbRect.origin.x) // Only if different
-			{
-				pageThumbRect.origin.x = pageThumbX; // The new X position
-
-				pageThumbView.frame = pageThumbRect; // Update the frame
-			}
-		}
-
 		pageThumbView.tag = page; [pageThumbView reuse]; // Reuse the thumb view
 
 		CGSize size = CGSizeMake(THUMB_LARGE_WIDTH, THUMB_LARGE_HEIGHT); // Maximum thumb size
@@ -124,7 +135,12 @@
 		self.userInteractionEnabled = YES;
 		self.contentMode = UIViewContentModeRedraw;
 		self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-		self.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.6f];
+		self.backgroundColor = [UIColor clearColor];
+
+		CAGradientLayer *layer = (CAGradientLayer *)self.layer;
+		CGColorRef liteColor = [UIColor colorWithWhite:0.6f alpha:0.8f].CGColor;
+		CGColorRef darkColor = [UIColor colorWithWhite:0.2f alpha:0.8f].CGColor;
+		layer.colors = [NSArray arrayWithObjects:(id)liteColor, (id)darkColor, nil];
 
 		CGFloat numberY = (0.0f - (PAGE_NUMBER_HEIGHT + PAGE_NUMBER_SPACE));
 		CGFloat numberX = ((self.bounds.size.width - PAGE_NUMBER_WIDTH) / 2.0f);
@@ -181,15 +197,26 @@
 	return self;
 }
 
+- (void)removeFromSuperview
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	[trackTimer invalidate]; [enableTimer invalidate];
+
+	[super removeFromSuperview];
+}
+
 - (void)dealloc
 {
 #ifdef DEBUGX
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	[trackTimer invalidate];
-
 	[trackTimer release], trackTimer = nil;
+
+	[enableTimer release], enableTimer = nil;
 
 	[trackControl release], trackControl = nil;
 
@@ -393,6 +420,17 @@
 	}
 }
 
+- (void)enableTimerFired:(NSTimer *)timer
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	[enableTimer invalidate]; [enableTimer release], enableTimer = nil; // Cleanup
+
+	trackControl.userInteractionEnabled = YES; // Enable track control interaction
+}
+
 - (void)restartTrackTimer
 {
 #ifdef DEBUGX
@@ -402,6 +440,17 @@
 	if (trackTimer != nil) { [trackTimer invalidate]; [trackTimer release], trackTimer = nil; } // Invalidate and release previous timer
 
 	trackTimer = [[NSTimer scheduledTimerWithTimeInterval:0.2 target:self selector:@selector(trackTimerFired:) userInfo:nil repeats:NO] retain];
+}
+
+- (void)startEnableTimer
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	if (enableTimer != nil) { [enableTimer invalidate]; [enableTimer release], enableTimer = nil; } // Invalidate and release previous timer
+
+	enableTimer = [[NSTimer scheduledTimerWithTimeInterval:0.2 target:self selector:@selector(enableTimerFired:) userInfo:nil repeats:NO] retain];
 }
 
 - (NSInteger)trackViewPageNumber:(ReaderTrackControl *)trackView
@@ -469,7 +518,11 @@
 
 	if (trackView.tag != [document.pageNumber integerValue]) // Only if different
 	{
+		trackView.userInteractionEnabled = NO; // Disable track control interaction
+
 		[delegate pagebar:self gotoPage:trackView.tag]; // Go to document page
+
+		[self startEnableTimer]; // Start track control enable timer
 	}
 
 	trackView.tag = 0; // Reset page tracking

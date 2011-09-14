@@ -1,6 +1,6 @@
 //
 //	ReaderThumbRequest.m
-//	Reader v2.2.0
+//	Reader v2.3.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -13,6 +13,7 @@
 //
 
 #import "ReaderThumbRequest.h"
+#import "ReaderThumbView.h"
 
 @implementation ReaderThumbRequest
 
@@ -25,6 +26,7 @@
 @synthesize thumbPage = _thumbPage;
 @synthesize thumbSize = _thumbSize;
 @synthesize thumbName = _thumbName;
+@synthesize targetTag = _targetTag;
 @synthesize cacheKey = _cacheKey;
 @synthesize scale = _scale;
 
@@ -58,6 +60,8 @@
 		_thumbName = [[NSString alloc] initWithFormat:@"%08X-%07d-%04dx%04d", _fileURL.hash, page, w, h];
 
 		_cacheKey = [[NSString alloc] initWithFormat:@"%@+%@", _thumbName, _guid];
+
+		_targetTag = [_thumbName hash]; _thumbView.targetTag = _targetTag;
 
 		_scale = [[UIScreen mainScreen] scale]; // Thumb screen scale
 	}

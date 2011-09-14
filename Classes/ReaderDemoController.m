@@ -1,6 +1,6 @@
 //
 //	ReaderDemoController.m
-//	Reader v2.2.1
+//	Reader v2.3.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -17,8 +17,6 @@
 @implementation ReaderDemoController
 
 #pragma mark Constants
-
-#define SAMPLE_DOCUMENT @"Document.pdf"
 
 #define DEMO_VIEW_CONTROLLER_PUSH FALSE
 
@@ -158,7 +156,10 @@
 	NSLog(@"%s (%d)", __FUNCTION__, interfaceOrientation);
 #endif
 
-	return YES;
+	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) // See README
+		return UIInterfaceOrientationIsPortrait(interfaceOrientation);
+	else
+		return YES;
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
@@ -212,11 +213,15 @@
 
 	NSString *phrase = nil; // Document password (for unlocking most encrypted PDF files)
 
-	ReaderDocument *document = [ReaderDocument unarchiveFromFileName:SAMPLE_DOCUMENT password:phrase];
+	NSArray *pdfs = [[NSBundle mainBundle] pathsForResourcesOfType:@"pdf" inDirectory:nil];
+
+	NSString *documentName = [[pdfs lastObject] lastPathComponent]; assert(documentName != nil);
+
+	ReaderDocument *document = [ReaderDocument unarchiveFromFileName:documentName password:phrase];
 
 	if (document == nil) // We need to create a brand new ReaderDocument object the first time we run
 	{
-		NSString *filePath = [[NSBundle mainBundle] pathForResource:SAMPLE_DOCUMENT ofType:nil]; // Path
+		NSString *filePath = [[NSBundle mainBundle] pathForResource:documentName ofType:nil]; // Path
 
 		document = [[[ReaderDocument alloc] initWithFilePath:filePath password:phrase] autorelease];
 	}

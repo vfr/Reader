@@ -1,6 +1,6 @@
 //
 //	ReaderMainToolbar.h
-//	Reader v2.1.0
+//	Reader v2.3.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -21,8 +21,10 @@
 @required // Delegate protocols
 
 - (void)tappedInToolbar:(ReaderMainToolbar *)toolbar doneButton:(UIBarButtonItem *)button;
+- (void)tappedInToolbar:(ReaderMainToolbar *)toolbar thumbsButton:(UIBarButtonItem *)button;
 - (void)tappedInToolbar:(ReaderMainToolbar *)toolbar printButton:(UIBarButtonItem *)button;
 - (void)tappedInToolbar:(ReaderMainToolbar *)toolbar emailButton:(UIBarButtonItem *)button;
+- (void)tappedInToolbar:(ReaderMainToolbar *)toolbar markButton:(UIBarButtonItem *)button;
 
 @end
 
@@ -31,6 +33,11 @@
 @private // Instance variables
 
 	UILabel *theTitleLabel;
+
+	UIBarButtonItem *markButton;
+
+	UIImage *markImageN;
+	UIImage *markImageY;
 }
 
 @property (nonatomic, assign, readwrite) id <ReaderMainToolbarDelegate> delegate;
@@ -38,6 +45,8 @@
 - (id)initWithFrame:(CGRect)frame title:(NSString *)title;
 
 - (void)setToolbarTitle:(NSString *)title;
+
+- (void)setBookmarkState:(BOOL)state;
 
 - (void)hideToolbar;
 - (void)showToolbar;

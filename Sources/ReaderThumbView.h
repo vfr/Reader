@@ -1,6 +1,6 @@
 //
 //	ReaderThumbView.h
-//	Reader v2.2.0
+//	Reader v2.3.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -18,6 +18,8 @@
 {
 @private // Instance variables
 
+	NSUInteger _targetTag;
+
 	NSOperation *_operation;
 
 @protected // Instance variables
@@ -26,6 +28,8 @@
 }
 
 @property (assign, readwrite) NSOperation *operation;
+
+@property (nonatomic, assign, readwrite) NSUInteger targetTag;
 
 - (void)showImage:(UIImage *)image;
 

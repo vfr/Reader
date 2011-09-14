@@ -1,6 +1,8 @@
-Basic PDF Reader/Viewer V2.2 for iOS
+
+Basic PDF Reader/Viewer V2.3 for iOS
 
 INTRODUCTION
+============
 
 I've written this basic PDF reader/viewer app for fellow iOS
 developers struggling with wrangling PDF files onto iOS device
@@ -15,7 +17,7 @@ supported are the Retina displays on iPhone 4 and iPod touch 4th
 generation and is ready to be fully internationalized. The idea
 was to provide a complete project template that you could start
 building from, or, just pull the required files into an existing
-project to enable PDF reading/viewing in your apps.
+project to enable PDF reading/viewing in your app(s).
 
 After launching the sample app, tap on the left hand side of the
 screen to go back a page. Tap on the right hand side to go to the
@@ -29,35 +31,38 @@ This implementation has been tested with large PDF files (over
 all flavors (from text only documents to graphics heavy magazines).
 It also works rather well on older devices (such as the iPod touch
 2nd generation and iPhone 3G) and takes advantage of the dual-core
-processor (via CATiledLayer multi-threading) in the iPad 2.
+processor (via CATiledLayer and multi-threading) in the iPad 2.
 
 FEATURES
+========
 
 Multithreaded: The UI is always quite smooth and responsive.
 
 Supports:
 
  - iBooks like document navigation.
- - Device rotation and all orientations.
+ - Device rotation and all orientations.¹
  - Encrypted (password protected) PDFs.
- - PDF links (URI and goto page).
+ - PDF links (URI and go to page).
  - PDFs with rotated pages.
 
 NOTES
+=====
 
 Version 2.x of the PDF reader/viewer code was developed and tested
 under Xcode 3.2.6, LLVM 1.7, iOS 4.3.5 and iOS 4.2.1 - if you come
 across any issues with other versions of the tools, or iOS, please
-let me know.
+do let me know.
 
 The overall PDF reader/viewer functionality is encapsulated in the
-ReaderViewController class. First initialize a ReaderDocument object
-with the file path to the PDF document (or unarchive an existing
-ReaderDocument object) and then initialize a ReaderViewController
-with this ReaderDocument object. The ReaderViewController class
-uses the ReaderDocument object to store information about the
-document and to keep track of document properties (the current
-page number for example).
+ReaderViewController class. To present a document with this class,
+you first need to initialize a ReaderDocument object with the file
+path to the PDF document - or unarchive an existing ReaderDocument
+property list - and then initialize a new ReaderViewController with
+this ReaderDocument object. The ReaderViewController class uses the
+ReaderDocument class to store information about the document and to
+keep track of document properties (bookmarks and the current page
+number for example).
 
 An initialized ReaderViewController can then be presented
 modally, pushed onto a UINavigationController stack, placed in
@@ -90,9 +95,15 @@ reader/viewer into one of your projects:
 	ReaderThumbFetch.h	ReaderThumbFetch.m
 	ReaderThumbRender.h	ReaderThumbRender.m
 	ReaderThumbView.h	ReaderThumbView.m
+	ReaderThumbsView.h	ReaderThumbsView.m
+	ThumbsViewController.h	ThumbsViewController.m
+	ThumbsMainToolbar.h	ThumbsMainToolbar.m
 
 	Reader-Email.png	Reader-Email@2x.png
+	Reader-Mark-N.png	Reader-Mark-N@2x.png
+	Reader-Mark-Y.png	Reader-Mark-Y@2x.png
 	Reader-Print.png	Reader-Print@2x.png
+	Reader-Thumbs.png	Reader-Thumbs@2x.png
 
 	Localizable.strings (UTF-16 encoding)
 
@@ -100,7 +111,7 @@ Required iOS Frameworks
 -----------------------
 
 To incorporate the PDF reader/viewer into one of your projects,
-the following iOS frameworks are required by the code:
+all of the following iOS frameworks are required by the code:
 
 	UIKit		Foundation
 	CoreGraphics	QuartzCore
@@ -111,9 +122,7 @@ Compile Time Options
 
 In ReaderConstants.h the following #define options are available:
 
-READER_STANDALONE - If FALSE, a "Done" button is added to the toolbar
-and the -dismissReaderViewController: delegate method is messaged when
-it is tapped.
+READER_BOOKMARKS - If TRUE, enables page bookmark support.
 
 READER_ENABLE_MAIL - If TRUE, an email button is added to the toolbar
 (if the device is properly configured for email support).
@@ -121,21 +130,38 @@ READER_ENABLE_MAIL - If TRUE, an email button is added to the toolbar
 READER_ENABLE_PRINT - If TRUE, a print button is added to the toolbar
 (if printing is supported and available on the device).
 
+READER_ENABLE_THUMBS - If TRUE, a thumbs button is added to the toolbar
+(enabling page thumbnail document navigation).
+
 READER_DISABLE_IDLE - If TRUE, the iOS idle timer is disabled while
 viewing a document (beware of battery drain).
 
-READER_SHOW_SHADOW - If TRUE, a shadow is shown around each page
+READER_SHOW_SHADOWS - If TRUE, a shadow is shown around each page
 and the page content is inset by a couple of extra points.
 
-ReaderDocument Object Archiving
--------------------------------
+READER_STANDALONE - If FALSE, a "Done" button is added to the toolbar
+and the -dismissReaderViewController: delegate method is messaged when
+it is tapped.
+
+ReaderDocument Archiving
+------------------------
 
 To change where the property list for ReaderDocument objects is stored
 (~/Documents by default), please see the +archiveFilePath: method in the
 ReaderDocument.m source file. Note that the ReaderDocument object data
 model is Core Data compatible.
 
+Caveats
+-------
+
+¹ There appears to be a bug in iOS 4.x with view controller rotation
+handling when a modal view controller is presented from a modal view
+controller which is in a UINavigationController on small devices. For
+this reason, landscape support has been disabled on iPhone and iPod
+touch for now.
+
 HISTORY
+=======
 
 2011-07-29: Version 2.0.0
 
@@ -143,9 +169,8 @@ HISTORY
 
 2011-08-25: Version 2.1.0
 
+	- Added PDF link (URI and document page) support.
 	- Assorted code cleanup, optimizations and bug fixes.
-
-	- Added PDF link (URI and page target) support.
 
 2011-08-27: Version 2.1.1
 
@@ -153,15 +178,21 @@ HISTORY
 
 2011-09-09: Version 2.2.0
 
-	- The page bar now uses small page thumbs instead of a slider.
-
 	- A medium resolution page preview image is now shown first.
+	- The page bar now uses small page thumbs instead of a slider.
 
 2011-09-10: Version 2.2.1
 
 	- Added password handling to ReaderDocument plist unarchive.
 
+2011-09-14: Version 2.3.0
+
+	- Added page thumbnail document navigation.
+	- Added support for page bookmarks.
+	- Some more assorted bug fixes.
+
 CONTACT INFO
+============
 
 Questions, feedback and iOS development work welcome:
 
@@ -170,6 +201,7 @@ Email: joklamcak(at)gmail(dot)com
 Website: http://www.vfr.org/
 
 ACKNOWLEDGEMENTS
+================
 
 The PDF link support code in the ReaderContentPage class is based on
 the links navigation code by Sorin Nistor from http://ipdfdev.com/

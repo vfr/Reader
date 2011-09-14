@@ -1,6 +1,6 @@
 //
 //	ReaderMainToolbar.m
-//	Reader v2.1.0
+//	Reader v2.3.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -26,8 +26,10 @@
 #define TITLE_HEIGHT 28.0f
 
 #define DONE_BUTTON_WIDTH 56.0f
+#define THUMBS_BUTTON_WIDTH 44.0f
 #define PRINT_BUTTON_WIDTH 44.0f
 #define EMAIL_BUTTON_WIDTH 44.0f
+#define MARK_BUTTON_WIDTH 44.0f
 
 #pragma mark Properties
 
@@ -56,7 +58,7 @@
 		self.barStyle = UIBarStyleBlack;
 		self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 
-		NSMutableArray *toolbarItems = [NSMutableArray new]; NSUInteger buttonCount = 0;
+		NSMutableArray *toolbarItems = [NSMutableArray new]; // Toolbar items
 
 		CGFloat titleX = TITLE_X; CGFloat titleWidth = (self.bounds.size.width - (titleX * 2.0f));
 
@@ -65,9 +67,22 @@
 		UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Done", @"button")
 										style:UIBarButtonItemStyleDone target:self action:@selector(doneButtonTapped:)];
 
-		[toolbarItems addObject:doneButton]; [doneButton release]; buttonCount++; titleX += DONE_BUTTON_WIDTH; titleWidth -= DONE_BUTTON_WIDTH;
+		doneButton.width = (DONE_BUTTON_WIDTH - 8.0f); titleX += DONE_BUTTON_WIDTH; titleWidth -= DONE_BUTTON_WIDTH;
+
+		[toolbarItems addObject:doneButton]; [doneButton release];
 
 #endif // end of READER_STANDALONE Option
+
+#if (READER_ENABLE_THUMBS == TRUE) // Option
+
+		UIBarButtonItem *thumbsButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Reader-Thumbs.png"]
+										style:UIBarButtonItemStyleBordered target:self action:@selector(thumbsButtonTapped:)];
+
+		thumbsButton.width = (THUMBS_BUTTON_WIDTH - 8.0f); titleX += THUMBS_BUTTON_WIDTH; titleWidth -= THUMBS_BUTTON_WIDTH;
+
+		[toolbarItems addObject:thumbsButton]; [thumbsButton release];
+
+#endif // end of READER_ENABLE_THUMBS Option
 
 		UIBarButtonItem *flexSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:NULL];
 
@@ -82,7 +97,9 @@
 			UIBarButtonItem *printButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Reader-Print.png"]
 											style:UIBarButtonItemStyleBordered target:self action:@selector(printButtonTapped:)];
 
-			[toolbarItems addObject:printButton]; [printButton release]; buttonCount++; titleWidth -= PRINT_BUTTON_WIDTH;
+			printButton.width = (PRINT_BUTTON_WIDTH - 8.0f); titleWidth -= PRINT_BUTTON_WIDTH;
+
+			[toolbarItems addObject:printButton]; [printButton release];
 		}
 
 #endif // end of READER_ENABLE_PRINT Option
@@ -94,12 +111,27 @@
 			UIBarButtonItem *emailButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Reader-Email.png"]
 											style:UIBarButtonItemStyleBordered target:self action:@selector(emailButtonTapped:)];
 
-			[toolbarItems addObject:emailButton]; [emailButton release]; buttonCount++; titleWidth -= EMAIL_BUTTON_WIDTH;
+			emailButton.width = (EMAIL_BUTTON_WIDTH - 8.0f); titleWidth -= EMAIL_BUTTON_WIDTH;
+
+			[toolbarItems addObject:emailButton]; [emailButton release];
 		}
 
 #endif // end of READER_ENABLE_MAIL Option
 
-		if (buttonCount > 0) [self setItems:toolbarItems animated:NO]; [toolbarItems release];
+#if (READER_BOOKMARKS == TRUE) // Option
+
+		markButton = [[UIBarButtonItem alloc] initWithImage:nil style:UIBarButtonItemStyleBordered target:self action:@selector(markButtonTapped:)];
+
+		markButton.width = (MARK_BUTTON_WIDTH - 8.0f); titleWidth -= MARK_BUTTON_WIDTH;
+
+		[toolbarItems addObject:markButton]; markButton.tag = NSIntegerMin;
+
+		markImageN = [[UIImage imageNamed:@"Reader-Mark-N.png"] retain]; // N image
+		markImageY = [[UIImage imageNamed:@"Reader-Mark-Y.png"] retain]; // Y image
+
+#endif // end of READER_BOOKMARKS Option
+
+		if (toolbarItems.count > 1) [self setItems:toolbarItems animated:NO]; [toolbarItems release];
 
 		CGRect titleRect = CGRectMake(titleX, TITLE_Y, titleWidth, TITLE_HEIGHT);
 
@@ -127,7 +159,12 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
+	[markButton release], markButton = nil;
+
 	[theTitleLabel release], theTitleLabel = nil;
+
+	[markImageN release], markImageN = nil;
+	[markImageY release], markImageY = nil;
 
 	[super dealloc];
 }
@@ -139,6 +176,42 @@
 #endif
 
 	theTitleLabel.text = title;
+}
+
+- (void)setBookmarkState:(BOOL)state
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+#if (READER_BOOKMARKS == TRUE) // Option
+
+	if (state != markButton.tag) // Only if different state
+	{
+		if (self.hidden == NO) markButton.image = (state ? markImageY : markImageN);
+
+		markButton.tag = state; // Update bookmarked state tag
+	}
+
+#endif // end of READER_BOOKMARKS Option
+}
+
+- (void)updateBookmarkImage
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+#if (READER_BOOKMARKS == TRUE) // Option
+
+	if (markButton.tag != NSIntegerMin) // Valid tag
+	{
+		BOOL state = markButton.tag; // Bookmarked state
+
+		markButton.image = (state ? markImageY : markImageN);
+	}
+
+#endif // end of READER_BOOKMARKS Option
 }
 
 - (void)hideToolbar
@@ -171,6 +244,8 @@
 
 	if (self.hidden == YES)
 	{
+		[self updateBookmarkImage]; // First
+
 		[UIView animateWithDuration:0.25 delay:0.0
 			options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionAllowUserInteraction
 			animations:^(void)
@@ -194,6 +269,15 @@
 	[delegate tappedInToolbar:self doneButton:button];
 }
 
+- (void)thumbsButtonTapped:(UIBarButtonItem *)button
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	[delegate tappedInToolbar:self thumbsButton:button];
+}
+
 - (void)printButtonTapped:(UIBarButtonItem *)button
 {
 #ifdef DEBUGX
@@ -210,6 +294,15 @@
 #endif
 
 	[delegate tappedInToolbar:self emailButton:button];
+}
+
+- (void)markButtonTapped:(UIBarButtonItem *)button
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	[delegate tappedInToolbar:self markButton:button];
 }
 
 @end

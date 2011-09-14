@@ -1,6 +1,6 @@
 //
 //	ReaderMainPagebar.h
-//	Reader v2.2.0
+//	Reader v2.3.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -45,6 +45,7 @@
 
 	UIView *pageNumberView;
 
+	NSTimer *enableTimer;
 	NSTimer *trackTimer;
 }
 

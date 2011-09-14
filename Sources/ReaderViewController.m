@@ -1,6 +1,6 @@
 //
 //	ReaderViewController.m
-//	Reader v2.2.0
+//	Reader v2.3.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -90,6 +90,19 @@
 	{
 		theScrollView.contentOffset = contentOffset; // Update content offset
 	}
+}
+
+- (void)updateToolbarBookmarkIcon
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	NSInteger page = [document.pageNumber integerValue];
+
+	BOOL bookmarked = [document.bookmarks containsIndex:page];
+
+	[mainToolbar setBookmarkState:bookmarked]; // Update
 }
 
 - (void)showDocumentPage:(NSInteger)page
@@ -197,7 +210,7 @@
 
 		NSURL *fileURL = document.fileURL; NSString *phrase = document.password; NSString *guid = document.guid;
 
-		if ([newPageSet containsIndex:page] == YES) // Visible page first
+		if ([newPageSet containsIndex:page] == YES) // Preview visible page first
 		{
 			NSNumber *key = [NSNumber numberWithInteger:page]; // # key
 
@@ -208,7 +221,7 @@
 			[newPageSet removeIndex:page]; // Remove visible page from set
 		}
 
-		[newPageSet enumerateIndexesWithOptions:NSEnumerationReverse usingBlock: // Show page thumbs
+		[newPageSet enumerateIndexesWithOptions:NSEnumerationReverse usingBlock: // Show previews
 			^(NSUInteger number, BOOL *stop)
 			{
 				NSNumber *key = [NSNumber numberWithInteger:number]; // # key
@@ -222,6 +235,8 @@
 		[newPageSet release], newPageSet = nil; // Release new page set
 
 		[mainPagebar updatePagebar]; // Update the pagebar display
+
+		[self updateToolbarBookmarkIcon]; // Update bookmark
 
 		currentPage = page; // Track current page number
 	}
@@ -441,7 +456,10 @@
 	NSLog(@"%s (%d)", __FUNCTION__, interfaceOrientation);
 #endif
 
-	return YES;
+	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) // See README
+		return UIInterfaceOrientationIsPortrait(interfaceOrientation);
+	else
+		return YES;
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
@@ -797,6 +815,26 @@
 #endif // end of READER_STANDALONE Option
 }
 
+- (void)tappedInToolbar:(ReaderMainToolbar *)toolbar thumbsButton:(UIBarButtonItem *)button
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	if (printInteraction != nil) [printInteraction dismissAnimated:NO]; // Dismiss
+
+	ThumbsViewController *thumbsViewController = [[ThumbsViewController alloc] initWithReaderDocument:document];
+
+	thumbsViewController.delegate = self; thumbsViewController.title = self.title;
+
+	thumbsViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+	thumbsViewController.modalPresentationStyle = UIModalPresentationFullScreen;
+
+	[self presentModalViewController:thumbsViewController animated:NO];
+
+	[thumbsViewController release]; // Release ThumbsViewController
+}
+
 - (void)tappedInToolbar:(ReaderMainToolbar *)toolbar printButton:(UIBarButtonItem *)button
 {
 #ifdef DEBUGX
@@ -889,6 +927,30 @@
 #endif // end of READER_ENABLE_MAIL Option
 }
 
+- (void)tappedInToolbar:(ReaderMainToolbar *)toolbar markButton:(UIBarButtonItem *)button
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	if (printInteraction != nil) [printInteraction dismissAnimated:YES];
+
+	NSInteger page = [document.pageNumber integerValue];
+
+	if ([document.bookmarks containsIndex:page])
+	{
+		[mainToolbar setBookmarkState:NO];
+
+		[document.bookmarks removeIndex:page];
+	}
+	else // Add the bookmarked page index
+	{
+		[mainToolbar setBookmarkState:YES];
+
+		[document.bookmarks addIndex:page];
+	}
+}
+
 #pragma mark MFMailComposeViewControllerDelegate methods
 
 - (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
@@ -901,7 +963,27 @@
 	if ((result == MFMailComposeResultFailed) && (error != NULL)) NSLog(@"%@", error);
 #endif
 
-	[self dismissModalViewControllerAnimated:YES];
+	[self dismissModalViewControllerAnimated:YES]; // Dismiss
+}
+
+#pragma mark ThumbsViewControllerDelegate methods
+
+- (void)dismissThumbsViewController:(ThumbsViewController *)viewController
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	[self dismissModalViewControllerAnimated:NO]; // Dismiss
+}
+
+- (void)thumbsViewController:(ThumbsViewController *)viewController gotoPage:(NSInteger)page
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	[self showDocumentPage:page]; // Show the page
 }
 
 #pragma mark ReaderMainPagebarDelegate methods

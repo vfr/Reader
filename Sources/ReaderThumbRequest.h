@@ -1,6 +1,6 @@
 //
 //	ReaderThumbRequest.h
-//	Reader v2.2.0
+//	Reader v2.3.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -32,6 +32,8 @@
 
 	ReaderThumbView *_thumbView;
 
+	NSUInteger _targetTag;
+
 	NSInteger _thumbPage;
 
 	CGSize _thumbSize;
@@ -45,6 +47,7 @@
 @property (nonatomic, retain, readonly) NSString *cacheKey;
 @property (nonatomic, retain, readonly) NSString *thumbName;
 @property (nonatomic, retain, readonly) ReaderThumbView *thumbView;
+@property (nonatomic, assign, readonly) NSUInteger targetTag;
 @property (nonatomic, assign, readonly) NSInteger thumbPage;
 @property (nonatomic, assign, readonly) CGSize thumbSize;
 @property (nonatomic, assign, readonly) CGFloat scale;

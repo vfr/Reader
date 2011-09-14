@@ -1,6 +1,6 @@
 //
 //	ReaderContentView.m
-//	Reader v2.2.0
+//	Reader v2.3.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -27,11 +27,11 @@
 #define ZOOM_LEVELS 4
 #define ZOOM_AMOUNT 0.5f
 
-#if (READER_SHOW_SHADOW == TRUE) // Option
+#if (READER_SHOW_SHADOWS == TRUE) // Option
 	#define CONTENT_INSET 4.0f
 #else
 	#define CONTENT_INSET 2.0f
-#endif // end of READER_SHOW_SHADOW Option
+#endif // end of READER_SHOW_SHADOWS Option
 
 #define PAGE_THUMB_LARGE 240
 #define PAGE_THUMB_SMALL 144
@@ -103,13 +103,13 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 			theContainerView.autoresizingMask = UIViewAutoresizingNone;
 			theContainerView.backgroundColor = [UIColor whiteColor];
 
-#if (READER_SHOW_SHADOW == TRUE) // Option
+#if (READER_SHOW_SHADOWS == TRUE) // Option
 
 			theContainerView.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
 			theContainerView.layer.shadowRadius = 4.0f; theContainerView.layer.shadowOpacity = 1.0f;
 			theContainerView.layer.shadowPath = [UIBezierPath bezierPathWithRect:theContainerView.bounds].CGPath;
 
-#endif // end of READER_SHOW_SHADOW Option
+#endif // end of READER_SHOW_SHADOWS Option
 
 			theScrollView.contentSize = theContentView.bounds.size; // Content size same as view size
 			theScrollView.contentOffset = CGPointMake((0.0f - CONTENT_INSET), (0.0f - CONTENT_INSET));

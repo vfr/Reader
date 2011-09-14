@@ -1,6 +1,6 @@
 //
 //	ReaderDocument.m
-//	Reader v2.2.1
+//	Reader v2.3.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -25,6 +25,7 @@
 @synthesize fileSize = _fileSize;
 @synthesize pageCount = _pageCount;
 @synthesize pageNumber = _pageNumber;
+@synthesize bookmarks = _bookmarks;
 @synthesize lastOpen = _lastOpen;
 @synthesize password = _password;
 @dynamic fileName, fileURL;
@@ -186,6 +187,8 @@
 
 			_password = [phrase copy]; // Keep a copy of any document password
 
+			_bookmarks = [NSMutableIndexSet new]; // Bookmarked pages index set
+
 			_pageNumber = [[NSNumber numberWithInteger:1] retain]; // Start page 1
 
 			_fileName = [[ReaderDocument relativeFilePath:fullFilePath] retain];
@@ -217,7 +220,9 @@
 
 			_fileSize = [[fileAttributes objectForKey:NSFileSize] retain]; // File size (bytes)
 
-			[fileManager release]; object = self; // Return initialized ReaderDocument object
+			[fileManager release]; [self saveReaderDocument]; // Save ReaderDocument object
+
+			object = self; // Return initialized ReaderDocument object
 		}
 	}
 
@@ -241,6 +246,8 @@
 	[_pageCount release], _pageCount = nil;
 
 	[_pageNumber release], _pageNumber = nil;
+
+	[_bookmarks release], _bookmarks = nil;
 
 	[_fileSize release], _fileSize = nil;
 
@@ -314,6 +321,8 @@
 
 	[encoder encodeObject:_pageNumber forKey:@"PageNumber"];
 
+	[encoder encodeObject:_bookmarks forKey:@"Bookmarks"];
+
 	[encoder encodeObject:_fileSize forKey:@"FileSize"];
 
 	[encoder encodeObject:_lastOpen forKey:@"LastOpen"];
@@ -337,9 +346,13 @@
 
 		_pageNumber = [[decoder decodeObjectForKey:@"PageNumber"] retain];
 
+        _bookmarks = [[decoder decodeObjectForKey:@"Bookmarks"] mutableCopy];
+
 		_fileSize = [[decoder decodeObjectForKey:@"FileSize"] retain];
 
 		_lastOpen = [[decoder decodeObjectForKey:@"LastOpen"] retain];
+
+		if (_bookmarks == nil) _bookmarks = [NSMutableIndexSet new];
 
 		if (_guid == nil) _guid = [[ReaderDocument GUID] retain];
 	}

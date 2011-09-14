@@ -1,6 +1,6 @@
 //
 //	ReaderDocument.h
-//	Reader v2.2.1
+//	Reader v2.3.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -30,6 +30,8 @@
 
 	NSNumber *_pageNumber;
 
+	NSMutableIndexSet *_bookmarks;
+
 	NSString *_fileName;
 
 	NSString *_password;
@@ -43,6 +45,7 @@
 @property (nonatomic, retain, readonly) NSNumber *fileSize;
 @property (nonatomic, retain, readonly) NSNumber *pageCount;
 @property (nonatomic, retain, readwrite) NSNumber *pageNumber;
+@property (nonatomic, retain, readonly) NSMutableIndexSet *bookmarks;
 @property (nonatomic, retain, readonly) NSString *fileName;
 @property (nonatomic, retain, readonly) NSString *password;
 @property (nonatomic, retain, readonly) NSURL *fileURL;

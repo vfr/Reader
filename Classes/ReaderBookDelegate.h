@@ -1,8 +1,8 @@
 //
-//	ReaderConstants.h
+//	ReaderBookDelegate.h
 //	Reader v2.3.0
 //
-//	Created by Julius Oklamcak on 2011-07-01.
+//	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
 //
 //	This work is being made available under a Creative Commons Attribution license:
@@ -12,14 +12,17 @@
 //	the original author is attributed.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-#define READER_BOOKMARKS TRUE
-#define READER_ENABLE_MAIL TRUE
-#define READER_ENABLE_PRINT TRUE
-#define READER_ENABLE_THUMBS TRUE
-#define READER_DISABLE_IDLE FALSE
-#define READER_SHOW_SHADOWS TRUE
-#define READER_STANDALONE FALSE
+#import "ReaderViewController.h"
 
-extern NSString *const kReaderCopyrightNotice;
+@interface ReaderBookDelegate : NSObject <UIApplicationDelegate, ReaderViewControllerDelegate>
+{
+@private // Instance variables
+
+	UIWindow *mainWindow; // Main App Window
+
+	ReaderViewController *readerViewController;
+}
+
+@end

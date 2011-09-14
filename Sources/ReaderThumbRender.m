@@ -1,6 +1,6 @@
 //
 //	ReaderThumbRender.m
-//	Reader v2.2.0
+//	Reader v2.3.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -200,7 +200,12 @@
 		{
 			ReaderThumbView *thumbView = request.thumbView; // Target thumb view for image show
 
-			dispatch_async(dispatch_get_main_queue(), ^{ [thumbView showImage:image]; });
+			NSUInteger targetTag = request.targetTag; // Target reference tag for image show
+
+			dispatch_async(dispatch_get_main_queue(), // Queue image show on main thread
+			^{
+				if (thumbView.targetTag == targetTag) [thumbView showImage:image];
+			});
 		}
 	}
 }
