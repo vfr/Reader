@@ -1,6 +1,6 @@
 //
 //	ReaderThumbRender.m
-//	Reader v2.3.0
+//	Reader v2.4.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -164,35 +164,20 @@
 
 				CGContextDrawPDFPage(context, thePDFPageRef); // Render the PDF page into the custom CGBitmap context
 
-				imageRef = CGBitmapContextCreateImage(context); // Create CGImage from the custom CGBitmap context
+				imageRef = CGBitmapContextCreateImage(context); // Create CGImage from custom CGBitmap context
 
-				CGContextRelease(context); // Release the custom CGBitmap context reference
+				CGContextRelease(context); // Release custom CGBitmap context reference
 			}
 
-			CGColorSpaceRelease(rgb); // Release the device RGB color space reference
+			CGColorSpaceRelease(rgb); // Release device RGB color space reference
 		}
 
 		CGPDFDocumentRelease(thePDFDocRef); // Release CGPDFDocumentRef reference
 	}
 
-	if (imageRef != NULL) // Save thumb as PNG then create UIImage from CGImage and show it
+	if (imageRef != NULL) // Create UIImage from CGImage and show it, then save thumb as PNG
 	{
-		CFURLRef thumbURL = (CFURLRef)[self thumbFileURL]; // Thumb cache path and PNG file name URL
-
-		CGImageDestinationRef thumbRef = CGImageDestinationCreateWithURL(thumbURL, (CFStringRef)@"public.png", 1, NULL);
-
-		if (thumbRef != NULL) // Write the thumb image file out to the thumb cache directory
-		{
-			CGImageDestinationAddImage(thumbRef, imageRef, NULL); // Add the image
-
-			CGImageDestinationFinalize(thumbRef); // Finalize the image file
-
-			CFRelease(thumbRef); // Release CGImageDestination reference
-		}
-
 		UIImage *image = [UIImage imageWithCGImage:imageRef scale:request.scale orientation:0];
-
-		CGImageRelease(imageRef); // Release the CGImage reference from the above thumb render code
 
 		[[ReaderThumbCache sharedInstance] setObject:image forKey:request.cacheKey]; // Update cache
 
@@ -207,6 +192,21 @@
 				if (thumbView.targetTag == targetTag) [thumbView showImage:image];
 			});
 		}
+
+		CFURLRef thumbURL = (CFURLRef)[self thumbFileURL]; // Thumb cache path with PNG file name URL
+
+		CGImageDestinationRef thumbRef = CGImageDestinationCreateWithURL(thumbURL, (CFStringRef)@"public.png", 1, NULL);
+
+		if (thumbRef != NULL) // Write the thumb image file out to the thumb cache directory
+		{
+			CGImageDestinationAddImage(thumbRef, imageRef, NULL); // Add the image
+
+			CGImageDestinationFinalize(thumbRef); // Finalize the image file
+
+			CFRelease(thumbRef); // Release CGImageDestination reference
+		}
+
+		CGImageRelease(imageRef); // Release CGImage reference
 	}
 }
 

@@ -1,6 +1,6 @@
 //
 //	ReaderViewController.m
-//	Reader v2.3.0
+//	Reader v2.4.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -787,7 +787,7 @@
 
 #pragma mark ReaderMainToolbarDelegate methods
 
-- (void)tappedInToolbar:(ReaderMainToolbar *)toolbar doneButton:(UIBarButtonItem *)button
+- (void)tappedInToolbar:(ReaderMainToolbar *)toolbar doneButton:(UIButton *)button
 {
 #ifdef DEBUGX
 	NSLog(@"%s", __FUNCTION__);
@@ -815,7 +815,7 @@
 #endif // end of READER_STANDALONE Option
 }
 
-- (void)tappedInToolbar:(ReaderMainToolbar *)toolbar thumbsButton:(UIBarButtonItem *)button
+- (void)tappedInToolbar:(ReaderMainToolbar *)toolbar thumbsButton:(UIButton *)button
 {
 #ifdef DEBUGX
 	NSLog(@"%s", __FUNCTION__);
@@ -835,7 +835,7 @@
 	[thumbsViewController release]; // Release ThumbsViewController
 }
 
-- (void)tappedInToolbar:(ReaderMainToolbar *)toolbar printButton:(UIBarButtonItem *)button
+- (void)tappedInToolbar:(ReaderMainToolbar *)toolbar printButton:(UIButton *)button
 {
 #ifdef DEBUGX
 	NSLog(@"%s", __FUNCTION__);
@@ -863,7 +863,7 @@
 			printInteraction.printingItem = fileURL;
 			printInteraction.showsPageRange = YES;
 
-			[printInteraction presentFromBarButtonItem:button animated:YES completionHandler:
+			[printInteraction presentFromRect:button.bounds inView:button animated:YES completionHandler:
 				^(UIPrintInteractionController *pic, BOOL completed, NSError *error)
 				{
 					#ifdef DEBUG
@@ -877,7 +877,7 @@
 #endif // end of READER_ENABLE_PRINT Option
 }
 
-- (void)tappedInToolbar:(ReaderMainToolbar *)toolbar emailButton:(UIBarButtonItem *)button
+- (void)tappedInToolbar:(ReaderMainToolbar *)toolbar emailButton:(UIButton *)button
 {
 #ifdef DEBUGX
 	NSLog(@"%s", __FUNCTION__);
@@ -927,7 +927,7 @@
 #endif // end of READER_ENABLE_MAIL Option
 }
 
-- (void)tappedInToolbar:(ReaderMainToolbar *)toolbar markButton:(UIBarButtonItem *)button
+- (void)tappedInToolbar:(ReaderMainToolbar *)toolbar markButton:(UIButton *)button
 {
 #ifdef DEBUGX
 	NSLog(@"%s", __FUNCTION__);

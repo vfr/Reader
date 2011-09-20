@@ -1,6 +1,6 @@
 //
 //	ReaderMainToolbar.h
-//	Reader v2.3.0
+//	Reader v2.4.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -14,27 +14,27 @@
 
 #import <UIKit/UIKit.h>
 
+#import "UIXToolbarView.h"
+
 @class ReaderMainToolbar;
 
 @protocol ReaderMainToolbarDelegate <NSObject>
 
 @required // Delegate protocols
 
-- (void)tappedInToolbar:(ReaderMainToolbar *)toolbar doneButton:(UIBarButtonItem *)button;
-- (void)tappedInToolbar:(ReaderMainToolbar *)toolbar thumbsButton:(UIBarButtonItem *)button;
-- (void)tappedInToolbar:(ReaderMainToolbar *)toolbar printButton:(UIBarButtonItem *)button;
-- (void)tappedInToolbar:(ReaderMainToolbar *)toolbar emailButton:(UIBarButtonItem *)button;
-- (void)tappedInToolbar:(ReaderMainToolbar *)toolbar markButton:(UIBarButtonItem *)button;
+- (void)tappedInToolbar:(ReaderMainToolbar *)toolbar doneButton:(UIButton *)button;
+- (void)tappedInToolbar:(ReaderMainToolbar *)toolbar thumbsButton:(UIButton *)button;
+- (void)tappedInToolbar:(ReaderMainToolbar *)toolbar printButton:(UIButton *)button;
+- (void)tappedInToolbar:(ReaderMainToolbar *)toolbar emailButton:(UIButton *)button;
+- (void)tappedInToolbar:(ReaderMainToolbar *)toolbar markButton:(UIButton *)button;
 
 @end
 
-@interface ReaderMainToolbar : UIToolbar
+@interface ReaderMainToolbar : UIXToolbarView
 {
 @private // Instance variables
 
-	UILabel *theTitleLabel;
-
-	UIBarButtonItem *markButton;
+	UIButton *markButton;
 
 	UIImage *markImageN;
 	UIImage *markImageY;
@@ -43,8 +43,6 @@
 @property (nonatomic, assign, readwrite) id <ReaderMainToolbarDelegate> delegate;
 
 - (id)initWithFrame:(CGRect)frame title:(NSString *)title;
-
-- (void)setToolbarTitle:(NSString *)title;
 
 - (void)setBookmarkState:(BOOL)state;
 

@@ -1,8 +1,8 @@
 //
-//	ReaderConstants.m
-//	Reader v2.4.0
+//	UIXToolbarView.h
+//	UIClass
 //
-//	Created by Julius Oklamcak on 2011-07-01.
+//	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
 //
 //	This work is being made available under a Creative Commons Attribution license:
@@ -12,6 +12,24 @@
 //	the original author is attributed.
 //
 
-#import "ReaderConstants.h"
+#import <UIKit/UIKit.h>
 
-NSString *const kReaderCopyrightNotice = @"Reader v2.4 • Copyright © 2011 Julius Oklamcak. All rights reserved.";
+@interface UIXToolbarView : UIView
+{
+@private // Instance variables
+}
+
+@end
+
+#pragma mark -
+
+//
+//	UIXToolbarShadow class interface
+//
+
+@interface UIXToolbarShadow : UIView
+{
+@private // Instance variables
+}
+
+@end

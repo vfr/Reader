@@ -1,6 +1,6 @@
 //
 //	ReaderThumbsView.m
-//	Reader v2.3.0
+//	Reader v2.4.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -32,6 +32,7 @@
 	{
 		self.scrollsToTop = NO;
 		self.autoresizesSubviews = NO;
+		self.alwaysBounceVertical = YES;
 		self.contentMode = UIViewContentModeRedraw;
 		self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		self.backgroundColor = [UIColor clearColor];
@@ -343,7 +344,7 @@
 
 		NSInteger thumbY = ((index / _thumbsX) * _thumbSize.height); // Thumb Y
 
-		NSInteger offsetY = (thumbY - (boundsHeight / 2) + (_thumbSize.height / 2) + 32);
+		NSInteger offsetY = (thumbY - (boundsHeight / 2) + (_thumbSize.height / 2));
 
 		if (offsetY < minY) offsetY = minY; else if (offsetY > maxY) offsetY = maxY;
 

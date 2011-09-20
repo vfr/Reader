@@ -1,6 +1,6 @@
 //
 //	ThumbsViewController.m
-//	Reader v2.3.0
+//	Reader v2.4.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -85,22 +85,28 @@
 
 	NSString *toolbarTitle = (self.title == nil) ? [document.fileName stringByDeletingPathExtension] : self.title;
 
-	CGRect toolbarRect = viewRect;
-	toolbarRect.size.height = TOOLBAR_HEIGHT;
+	CGRect toolbarRect = viewRect; toolbarRect.size.height = TOOLBAR_HEIGHT;
 
 	mainToolbar = [[ThumbsMainToolbar alloc] initWithFrame:toolbarRect title:toolbarTitle]; // At top
 
 	mainToolbar.delegate = self;
 
-	[mainToolbar setToolbarTitle:toolbarTitle];
-
 	[self.view addSubview:mainToolbar];
 
-	CGRect thumbsRect = viewRect;
-	thumbsRect.origin.y += TOOLBAR_HEIGHT;
-	thumbsRect.size.height -= TOOLBAR_HEIGHT;
+	CGRect thumbsRect = viewRect; UIEdgeInsets insets = UIEdgeInsetsZero;
+
+	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
+	{
+		thumbsRect.origin.y += TOOLBAR_HEIGHT; thumbsRect.size.height -= TOOLBAR_HEIGHT;
+	}
+	else // Set UIScrollView insets for non-UIUserInterfaceIdiomPad case
+	{
+		insets.top = TOOLBAR_HEIGHT;
+	}
 
 	theThumbsView = [[ReaderThumbsView alloc] initWithFrame:thumbsRect]; // Rest
+
+	theThumbsView.contentInset = insets; theThumbsView.scrollIndicatorInsets = insets;
 
 	theThumbsView.delegate = self;
 
@@ -269,7 +275,7 @@
 	}
 }
 
-- (void)tappedInToolbar:(ThumbsMainToolbar *)toolbar doneButton:(UIBarButtonItem *)button
+- (void)tappedInToolbar:(ThumbsMainToolbar *)toolbar doneButton:(UIButton *)button
 {
 #ifdef DEBUGX
 	NSLog(@"%s", __FUNCTION__);
@@ -389,7 +395,7 @@
 
 		imageView.frame = defaultRect; // Update the image view frame
 
-		CGFloat fontSize = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) ? 21.0f : 17.0f;
+		CGFloat fontSize = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) ? 20.0f : 17.0f;
 
 		textLabel = [[UILabel alloc] initWithFrame:defaultRect];
 
@@ -400,7 +406,7 @@
 		textLabel.textAlignment = UITextAlignmentCenter;
 		textLabel.font = [UIFont systemFontOfSize:fontSize];
 		textLabel.textColor = [UIColor colorWithWhite:0.24f alpha:1.0f];
-		textLabel.backgroundColor = [UIColor clearColor];
+		textLabel.backgroundColor = [UIColor whiteColor];
 
 		[self insertSubview:textLabel belowSubview:imageView];
 

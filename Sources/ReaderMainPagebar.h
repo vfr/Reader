@@ -1,6 +1,6 @@
 //
 //	ReaderMainPagebar.h
-//	Reader v2.3.0
+//	Reader v2.4.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -89,5 +89,18 @@
 }
 
 - (id)initWithFrame:(CGRect)frame small:(BOOL)small;
+
+@end
+
+#pragma mark -
+
+//
+//	ReaderPagebarShadow class interface
+//
+
+@interface ReaderPagebarShadow : UIView
+{
+@private // Instance variables
+}
 
 @end

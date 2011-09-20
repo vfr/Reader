@@ -1,6 +1,6 @@
 //
 //	ReaderMainPagebar.m
-//	Reader v2.3.0
+//	Reader v2.4.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -138,9 +138,15 @@
 		self.backgroundColor = [UIColor clearColor];
 
 		CAGradientLayer *layer = (CAGradientLayer *)self.layer;
-		CGColorRef liteColor = [UIColor colorWithWhite:0.6f alpha:0.8f].CGColor;
-		CGColorRef darkColor = [UIColor colorWithWhite:0.2f alpha:0.8f].CGColor;
+		CGColorRef liteColor = [UIColor colorWithWhite:0.82f alpha:0.8f].CGColor;
+		CGColorRef darkColor = [UIColor colorWithWhite:0.32f alpha:0.8f].CGColor;
 		layer.colors = [NSArray arrayWithObjects:(id)liteColor, (id)darkColor, nil];
+
+		CGRect shadowRect = self.bounds; shadowRect.size.height = 4.0f; shadowRect.origin.y -= shadowRect.size.height;
+
+		ReaderPagebarShadow *shadowView = [[ReaderPagebarShadow alloc] initWithFrame:shadowRect];
+
+		[self addSubview:shadowView]; [shadowView release]; // Add the shadow to the view
 
 		CGFloat numberY = (0.0f - (PAGE_NUMBER_HEIGHT + PAGE_NUMBER_SPACE));
 		CGFloat numberX = ((self.bounds.size.width - PAGE_NUMBER_WIDTH) / 2.0f);
@@ -678,6 +684,74 @@
 	}
 
 	return self;
+}
+
+- (void)dealloc
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	[super dealloc];
+}
+
+@end
+
+#pragma mark -
+
+//
+//	ReaderPagebarShadow class implementation
+//
+
+@implementation ReaderPagebarShadow
+
+//#pragma mark Properties
+
+//@synthesize ;
+
+#pragma mark ReaderPagebarShadow class methods
+
++ (Class)layerClass
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	return [CAGradientLayer class];
+}
+
+#pragma mark ReaderPagebarShadow instance methods
+
+- (id)initWithFrame:(CGRect)frame
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	if ((self = [super initWithFrame:frame]))
+	{
+		self.autoresizesSubviews = NO;
+		self.userInteractionEnabled = NO;
+		self.contentMode = UIViewContentModeRedraw;
+		self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		self.backgroundColor = [UIColor clearColor];
+
+		CAGradientLayer *layer = (CAGradientLayer *)self.layer;
+		CGColorRef blackColor = [UIColor colorWithWhite:0.42f alpha:1.0f].CGColor;
+		CGColorRef clearColor = [UIColor colorWithWhite:0.42f alpha:0.0f].CGColor;
+		layer.colors = [NSArray arrayWithObjects:(id)clearColor, (id)blackColor, nil];
+	}
+
+	return self;
+}
+
+- (void)dealloc
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	[super dealloc];
 }
 
 @end

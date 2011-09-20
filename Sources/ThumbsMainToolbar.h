@@ -1,6 +1,6 @@
 //
 //	ThumbsMainToolbar.h
-//	Reader v2.3.0
+//	Reader v2.4.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -14,29 +14,27 @@
 
 #import <UIKit/UIKit.h>
 
+#import "UIXToolbarView.h"
+
 @class ThumbsMainToolbar;
 
 @protocol ThumbsMainToolbarDelegate <NSObject>
 
 @required // Delegate protocols
 
-- (void)tappedInToolbar:(ThumbsMainToolbar *)toolbar doneButton:(UIBarButtonItem *)button;
+- (void)tappedInToolbar:(ThumbsMainToolbar *)toolbar doneButton:(UIButton *)button;
 
 - (void)tappedInToolbar:(ThumbsMainToolbar *)toolbar showControl:(UISegmentedControl *)control;
 
 @end
 
-@interface ThumbsMainToolbar : UIToolbar
+@interface ThumbsMainToolbar : UIXToolbarView
 {
 @private // Instance variables
-
-	UILabel *theTitleLabel;
 }
 
 @property (nonatomic, assign, readwrite) id <ThumbsMainToolbarDelegate> delegate;
 
 - (id)initWithFrame:(CGRect)frame title:(NSString *)title;
-
-- (void)setToolbarTitle:(NSString *)title;
 
 @end
