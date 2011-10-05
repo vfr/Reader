@@ -1,6 +1,6 @@
 //
 //	ThumbsViewController.m
-//	Reader v2.4.0
+//	Reader v2.5.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -47,7 +47,9 @@
 	{
 		if ((self = [super initWithNibName:nil bundle:nil])) // Designated initializer
 		{
-			document = [object retain]; // Retain the supplied ReaderDocument object for our use
+			updateBookmarked = YES; bookmarked = [NSMutableArray new]; // Bookmarked pages
+
+			document = [object retain]; // Retain the ReaderDocument object for our use
 
 			thumbs = self; // Return an initialized ThumbsViewController object
 		}
@@ -83,7 +85,7 @@
 
 	CGRect viewRect = self.view.bounds; // View controller's view bounds
 
-	NSString *toolbarTitle = (self.title == nil) ? [document.fileName stringByDeletingPathExtension] : self.title;
+	NSString *toolbarTitle = [document.fileName stringByDeletingPathExtension];
 
 	CGRect toolbarRect = viewRect; toolbarRect.size.height = TOOLBAR_HEIGHT;
 
@@ -111,6 +113,12 @@
 	theThumbsView.delegate = self;
 
 	[self.view insertSubview:theThumbsView belowSubview:mainToolbar];
+
+	BOOL large = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad);
+
+	NSInteger thumbSize = (large ? PAGE_THUMB_LARGE : PAGE_THUMB_SMALL); // Thumb dimensions
+
+	[theThumbsView setThumbSize:CGSizeMake(thumbSize, thumbSize)]; // Thumb size based on device
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -120,12 +128,6 @@
 #endif
 
 	[super viewWillAppear:animated];
-
-	BOOL large = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad);
-
-	NSInteger thumbSize = (large ? PAGE_THUMB_LARGE : PAGE_THUMB_SMALL); // Thumb dimensions
-
-	[theThumbsView setThumbSize:CGSizeMake(thumbSize, thumbSize)]; // Thumb size based on device
 
 	[theThumbsView reloadThumbsCenterOnIndex:([document.pageNumber integerValue] - 1)]; // Page
 }
@@ -243,34 +245,38 @@
 	{
 		case 0: // Show all page thumbs
 		{
-			fBookmarked = NO; // Show all thumbs
+			showBookmarked = NO; // Show all thumbs
 
 			markedOffset = theThumbsView.contentOffset;
 
 			[theThumbsView reloadThumbsContentOffset:thumbsOffset];
-			break;
+
+			break; // We're done
 		}
 
 		case 1: // Show bookmarked thumbs
 		{
-			fBookmarked = YES; // Only bookmarked
+			showBookmarked = YES; // Only bookmarked
 
 			thumbsOffset = theThumbsView.contentOffset;
 
-			if (bookmarked == nil) // Create bookmarked list
+			if (updateBookmarked == YES) // Update bookmarked list
 			{
-				bookmarked = [NSMutableArray new];
+				[bookmarked removeAllObjects]; // Empty the list first
 
-				[document.bookmarks enumerateIndexesUsingBlock:
+				[document.bookmarks enumerateIndexesUsingBlock: // Enumerate
 					^(NSUInteger page, BOOL *stop)
 					{
 						[bookmarked addObject:[NSNumber numberWithInteger:page]];
 					}
 				];
+
+				markedOffset = CGPointZero; updateBookmarked = NO; // Reset
 			}
 
 			[theThumbsView reloadThumbsContentOffset:markedOffset];
-			break;
+
+			break; // We're done
 		}
 	}
 }
@@ -292,7 +298,7 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	return (fBookmarked ? bookmarked.count : [document.pageCount integerValue]);
+	return (showBookmarked ? bookmarked.count : [document.pageCount integerValue]);
 }
 
 - (id)thumbsView:(ReaderThumbsView *)thumbsView thumbCellWithFrame:(CGRect)frame
@@ -312,13 +318,13 @@
 
 	CGSize size = [thumbCell maximumContentSize]; // Get the cell's maximum content size
 
-	NSInteger page = fBookmarked ? [[bookmarked objectAtIndex:index] integerValue] : (index + 1);
+	NSInteger page = (showBookmarked ? [[bookmarked objectAtIndex:index] integerValue] : (index + 1));
 
 	[thumbCell showText:[NSString stringWithFormat:@"%d", page]]; // Page number place holder
 
 	[thumbCell showBookmark:[document.bookmarks containsIndex:page]]; // Show bookmarked status
 
-	NSURL *fileURL = document.fileURL; NSString *guid = document.guid; NSString *phrase = document.password; // Document
+	NSURL *fileURL = document.fileURL; NSString *guid = document.guid; NSString *phrase = document.password; // Document info
 
 	ReaderThumbRequest *thumbRequest = [ReaderThumbRequest forView:thumbCell fileURL:fileURL password:phrase guid:guid page:page size:size];
 
@@ -327,17 +333,41 @@
 	if ([image isKindOfClass:[UIImage class]]) [thumbCell showImage:image]; // Show image from cache
 }
 
+- (void)thumbsView:(ReaderThumbsView *)thumbsView refreshThumbCell:(ThumbsPageThumb *)thumbCell forIndex:(NSInteger)index
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	NSInteger page = (showBookmarked ? [[bookmarked objectAtIndex:index] integerValue] : (index + 1));
+
+	[thumbCell showBookmark:[document.bookmarks containsIndex:page]]; // Show bookmarked status
+}
+
 - (void)thumbsView:(ReaderThumbsView *)thumbsView didSelectThumbWithIndex:(NSInteger)index
 {
 #ifdef DEBUGX
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	NSInteger page = fBookmarked ? [[bookmarked objectAtIndex:index] integerValue] : (index + 1);
+	NSInteger page = (showBookmarked ? [[bookmarked objectAtIndex:index] integerValue] : (index + 1));
 
 	[delegate thumbsViewController:self gotoPage:page]; // Show the selected page
 
 	[delegate dismissThumbsViewController:self]; // Dismiss thumbs display
+}
+
+- (void)thumbsView:(ReaderThumbsView *)thumbsView didPressThumbWithIndex:(NSInteger)index
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	NSInteger page = (showBookmarked ? [[bookmarked objectAtIndex:index] integerValue] : (index + 1));
+
+	if ([document.bookmarks containsIndex:page]) [document.bookmarks removeIndex:page]; else [document.bookmarks addIndex:page];
+
+	updateBookmarked = YES; [thumbsView refreshThumbWithIndex:index]; // Refresh page thumb
 }
 
 @end
@@ -395,7 +425,7 @@
 
 		imageView.frame = defaultRect; // Update the image view frame
 
-		CGFloat fontSize = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) ? 20.0f : 17.0f;
+		CGFloat fontSize = (([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) ? 19.0f : 17.0f);
 
 		textLabel = [[UILabel alloc] initWithFrame:defaultRect];
 
@@ -526,7 +556,7 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	bookMark.hidden = show ? NO : YES;
+	bookMark.hidden = (show ? NO : YES);
 }
 
 - (void)showText:(NSString *)text

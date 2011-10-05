@@ -1,6 +1,6 @@
 //
 //	ReaderViewController.m
-//	Reader v2.4.0
+//	Reader v2.5.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -279,6 +279,8 @@
 
 			document = [object retain]; // Retain the supplied ReaderDocument object for our use
 
+			[ReaderThumbCache touchThumbCacheWithGUID:object.guid]; // Touch thumb cache
+
 			reader = self; // Return an initialized ReaderViewController object
 		}
 	}
@@ -309,8 +311,6 @@
 
 	assert(self.splitViewController == nil); // Not supported (sorry)
 
-	[ReaderThumbCache createThumbCacheWithGUID:document.guid]; // Cache
-
 	self.view.backgroundColor = [UIColor scrollViewTexturedBackgroundColor];
 
 	CGRect viewRect = self.view.bounds; // View controller's view bounds
@@ -331,12 +331,10 @@
 
 	[self.view addSubview:theScrollView];
 
-	NSString *toolbarTitle = (self.title == nil) ? [document.fileName stringByDeletingPathExtension] : self.title;
-
 	CGRect toolbarRect = viewRect;
 	toolbarRect.size.height = TOOLBAR_HEIGHT;
 
-	mainToolbar = [[ReaderMainToolbar alloc] initWithFrame:toolbarRect title:toolbarTitle]; // At top
+	mainToolbar = [[ReaderMainToolbar alloc] initWithFrame:toolbarRect document:document]; // At top
 
 	mainToolbar.delegate = self;
 
@@ -915,14 +913,6 @@
 			[mailComposer release]; // Cleanup
 		}
 	}
-	else // The document file is too large to email alert
-	{
-		UIAlertView *theAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"FileTooLargeTitle", @"text")
-								message:NSLocalizedString(@"FileTooLargeMessage", @"text") delegate:NULL
-								cancelButtonTitle:NSLocalizedString(@"OK", @"button") otherButtonTitles:nil];
-
-		[theAlert show]; [theAlert release]; // Show and cleanup
-	}
 
 #endif // end of READER_ENABLE_MAIL Option
 }
@@ -974,6 +964,8 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
+	[self updateToolbarBookmarkIcon]; // Update bookmark icon
+
 	[self dismissModalViewControllerAnimated:NO]; // Dismiss
 }
 
@@ -997,7 +989,7 @@
 	[self showDocumentPage:page]; // Show the page
 }
 
-#pragma mark Notification methods
+#pragma mark Notification observer methods
 
 - (void)saveReaderDocument:(NSNotification *)notification
 {

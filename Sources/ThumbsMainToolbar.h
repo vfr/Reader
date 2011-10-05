@@ -1,6 +1,6 @@
 //
 //	ThumbsMainToolbar.h
-//	Reader v2.4.0
+//	Reader v2.5.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //	ReaderMainPagebar.m
-//	Reader v2.4.0
+//	Reader v2.5.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -99,7 +99,7 @@
 
 		UIImage *image = [[ReaderThumbCache sharedInstance] thumbRequest:request priority:YES]; // Request the thumb
 
-		UIImage *thumb = [image isKindOfClass:[UIImage class]] ? image : nil; [pageThumbView showImage:thumb];
+		UIImage *thumb = ([image isKindOfClass:[UIImage class]] ? image : nil); [pageThumbView showImage:thumb];
 	}
 }
 
@@ -128,6 +128,8 @@
 #ifdef DEBUGX
 	NSLog(@"%s", __FUNCTION__);
 #endif
+
+	assert(object != nil); // Check
 
 	if ((self = [super initWithFrame:frame]))
 	{
@@ -672,7 +674,7 @@
 
 	if ((self = [super initWithFrame:frame])) // Superclass init
 	{
-		CGFloat value = small ? 0.6f : 0.7f; // Size based alpha value
+		CGFloat value = (small ? 0.6f : 0.7f); // Size based alpha value
 
 		UIColor *background = [UIColor colorWithWhite:0.8f alpha:value];
 

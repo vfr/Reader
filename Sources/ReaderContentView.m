@@ -1,6 +1,6 @@
 //
 //	ReaderContentView.m
-//	Reader v2.3.0
+//	Reader v2.5.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -47,7 +47,7 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 	CGFloat w_scale = (target.width / source.width);
 	CGFloat h_scale = (target.height / source.height);
 
-	return (w_scale < h_scale) ? w_scale : h_scale;
+	return ((w_scale < h_scale) ? w_scale : h_scale);
 }
 
 #pragma mark ReaderContentView instance methods
@@ -165,7 +165,7 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 
 	BOOL large = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad); // Page thumb size
 
-	CGSize size = large ? CGSizeMake(PAGE_THUMB_LARGE, PAGE_THUMB_LARGE) : CGSizeMake(PAGE_THUMB_SMALL, PAGE_THUMB_SMALL);
+	CGSize size = (large ? CGSizeMake(PAGE_THUMB_LARGE, PAGE_THUMB_LARGE) : CGSizeMake(PAGE_THUMB_SMALL, PAGE_THUMB_SMALL));
 
 	ReaderThumbRequest *request = [ReaderThumbRequest forView:theThumbView fileURL:fileURL password:phrase guid:guid page:page size:size];
 

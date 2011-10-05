@@ -1,5 +1,5 @@
 
-PDF Reader/Viewer V2.4 for iOS
+PDF Reader/Viewer V2.5 for iOS
 
 INTRODUCTION
 ============
@@ -50,9 +50,9 @@ NOTES
 =====
 
 Version 2.x of the PDF reader/viewer code was developed and tested
-under Xcode 3.2.6, LLVM 1.7, iOS 4.3.5 and iOS 4.2.1 - if you come
-across any issues with other versions of the tools, or iOS, please
-do let me know.
+under Xcode 3.2.6, LLVM 1.7, iOS 4.3.5, iOS 4.2.1 and tested under
+Xcode 4.2, LLVM 3.0, iOS 5. The code uses manual memory management
+and will continue to do so in the near future.
 
 The overall PDF reader/viewer functionality is encapsulated in the
 ReaderViewController class. To present a document with this class,
@@ -147,9 +147,11 @@ ReaderDocument Archiving
 ------------------------
 
 To change where the property list for ReaderDocument objects is stored
-(~/Documents by default), please see the +archiveFilePath: method in the
-ReaderDocument.m source file. Note that the ReaderDocument object data
-model is Core Data compatible.
+(~/Library/Application Support/ by default), see the +archiveFilePath:
+method in the ReaderDocument.m source file. Archiving and unarchiving
+of the ReaderDocument object for a document is mandatory since this is
+where the current page number, bookmarks and directory of the document
+page thumb cache is kept.
 
 Caveats
 -------
@@ -193,7 +195,10 @@ HISTORY
 2011-09-20: Version 2.4.0
 
 	- Replaced UIToolbars with custom toolbars.
-	- Some more assorted bug fixes and tweaks.
+
+2011-10-05: Version 2.5.0
+
+	- Critical bug fixes and various tweaks.
 
 CONTACT INFO
 ============

@@ -1,6 +1,6 @@
 //
 //	ReaderThumbRequest.m
-//	Reader v2.3.0
+//	Reader v2.5.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -57,7 +57,7 @@
 
 		_fileURL = [url copy]; _password = [phrase copy]; _guid = [guid copy];
 
-		_thumbName = [[NSString alloc] initWithFormat:@"%08X-%07d-%04dx%04d", _fileURL.hash, page, w, h];
+		_thumbName = [[NSString alloc] initWithFormat:@"%07d-%04dx%04d", page, w, h];
 
 		_cacheKey = [[NSString alloc] initWithFormat:@"%@+%@", _thumbName, _guid];
 

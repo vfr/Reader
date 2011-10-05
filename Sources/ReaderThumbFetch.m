@@ -1,6 +1,6 @@
 //
 //	ReaderThumbFetch.m
-//	Reader v2.3.0
+//	Reader v2.5.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -74,11 +74,11 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	NSString *cachePath = [ReaderThumbCache thumbCachePathForGUID:request.guid];
+	NSString *cachePath = [ReaderThumbCache thumbCachePathForGUID:request.guid]; // Thumb cache path
 
-	NSString *fileName = [NSString stringWithFormat:@"%@.png", request.thumbName];
+	NSString *fileName = [NSString stringWithFormat:@"%@.png", request.thumbName]; // Thumb file name
 
-	return [NSURL fileURLWithPath:[cachePath stringByAppendingPathComponent:fileName]];
+	return [NSURL fileURLWithPath:[cachePath stringByAppendingPathComponent:fileName]]; // File URL
 }
 
 - (void)main

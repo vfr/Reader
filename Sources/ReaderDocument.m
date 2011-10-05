@@ -1,6 +1,6 @@
 //
 //	ReaderDocument.m
-//	Reader v2.3.0
+//	Reader v2.5.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -60,7 +60,7 @@
 
 	NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 
-	return [documentsPaths objectAtIndex:0]; // Path to the application's "Documents" directory
+	return [documentsPaths objectAtIndex:0]; // Path to the application's "~/Documents" directory
 }
 
 + (NSString *)applicationPath
@@ -72,6 +72,19 @@
 	NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 
 	return [[documentsPaths objectAtIndex:0] stringByDeletingLastPathComponent]; // Strip "Documents" component
+}
+
++ (NSString *)applicationSupportPath
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	NSFileManager *fileManager = [[NSFileManager new] autorelease]; // File manager instance
+
+	NSURL *pathURL = [fileManager URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:NULL];
+
+	return [pathURL path]; // Path to the application's "~/Library/Application Support" directory
 }
 
 + (NSString *)relativeFilePath:(NSString *)fullFilePath
@@ -99,11 +112,13 @@
 
 	assert(filename != nil); // Ensure that the archive file name is not nil
 
-	NSString *documentsPath = [ReaderDocument documentsPath]; // Application's "Documents" path
+	//NSString *archivePath = [ReaderDocument documentsPath]; // Application's "~/Documents" path
+
+	NSString *archivePath = [ReaderDocument applicationSupportPath]; // Application's "~/Library/Application Support" path
 
 	NSString *archiveName = [[filename stringByDeletingPathExtension] stringByAppendingPathExtension:@"plist"];
 
-	return [documentsPath stringByAppendingPathComponent:archiveName]; // "~/Documents/'filename'.plist"
+	return [archivePath stringByAppendingPathComponent:archiveName]; // "{archivePath}/'filename'.plist"
 }
 
 + (ReaderDocument *)unarchiveFromFileName:(NSString *)filename password:(NSString *)phrase
@@ -346,7 +361,7 @@
 
 		_pageNumber = [[decoder decodeObjectForKey:@"PageNumber"] retain];
 
-        _bookmarks = [[decoder decodeObjectForKey:@"Bookmarks"] mutableCopy];
+		_bookmarks = [[decoder decodeObjectForKey:@"Bookmarks"] mutableCopy];
 
 		_fileSize = [[decoder decodeObjectForKey:@"FileSize"] retain];
 

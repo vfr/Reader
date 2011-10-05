@@ -1,6 +1,6 @@
 //
 //	ReaderThumbsView.m
-//	Reader v2.4.0
+//	Reader v2.5.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -37,13 +37,17 @@
 		self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		self.backgroundColor = [UIColor clearColor];
 
-		[super setDelegate:self]; // Set the UIScrollView superclass delegate
+		[super setDelegate:self]; // Set the superclass UIScrollView delegate
 
 		thumbCellsQueue = [NSMutableArray new]; thumbCellsVisible = [NSMutableArray new]; // Cell management arrays
 
 		UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
 		//tapGesture.numberOfTouchesRequired = 1; tapGesture.numberOfTapsRequired = 1; tapGesture.delegate = self;
 		[self addGestureRecognizer:tapGesture]; [tapGesture release];
+
+		UILongPressGestureRecognizer *pressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handlePressGesture:)];
+		pressGesture.minimumPressDuration = 0.8; //pressGesture.numberOfTouchesRequired = 1; pressGesture.delegate = self;
+		[self addGestureRecognizer:pressGesture]; [pressGesture release];
 
 		lastContentOffset = CGPointMake(CGFLOAT_MIN, CGFLOAT_MIN);
 	}
@@ -133,7 +137,7 @@
 - (NSMutableIndexSet *)visibleIndexSetForContentOffset
 {
 #ifdef DEBUGX
-	NSLog(@"%s %@", __FUNCTION__, NSStringFromCGRect(self.bounds));
+	NSLog(@"%s %@", __FUNCTION__, NSStringFromCGPoint(self.contentOffset));
 #endif
 
 	CGFloat minY = self.contentOffset.y; // Content offset
@@ -203,7 +207,7 @@
 	if (thumbCount > 0) // Have some thumbs
 	{
 		CGFloat bw = self.bounds.size.width;
-		CGFloat bh = self.bounds.size.height;
+		//CGFloat bh = self.bounds.size.height;
 
 		_thumbsX = (bw / _thumbSize.width);
 
@@ -221,7 +225,7 @@
 		else
 			_thumbX = 0; // Reset
 
-		if (tw < bw) tw = bw; if (th < bh) th = bh;
+		if (tw < bw) tw = bw; //if (th < bh) th = bh;
 
 		[self setContentSize:CGSizeMake(tw, th)];
 	}
@@ -239,14 +243,14 @@
 	NSLog(@"%s %@", __FUNCTION__, NSStringFromCGRect(self.bounds));
 #endif
 
-	if (CGSizeEqualToSize(_viewSize, CGSizeZero) == true)
+	if (CGSizeEqualToSize(_lastViewSize, CGSizeZero) == true)
 	{
-		_viewSize = self.bounds.size; // Initial view size
+		_lastViewSize = self.bounds.size; // Initial view size
 	}
 	else
-	if (CGSizeEqualToSize(_viewSize, self.bounds.size) == false)
+	if (CGSizeEqualToSize(_lastViewSize, self.bounds.size) == false)
 	{
-		_viewSize = self.bounds.size; // Track the view size
+		_lastViewSize = self.bounds.size; // Track the view size
 
 		[self updateContentSize:_thumbCount]; // Update the content size
 
@@ -308,7 +312,7 @@
 - (void)reloadThumbsCenterOnIndex:(NSInteger)index
 {
 #ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
+	NSLog(@"%s %d", __FUNCTION__, index);
 #endif
 
 	assert(delegate != nil); // Check delegate
@@ -362,7 +366,7 @@
 - (void)reloadThumbsContentOffset:(CGPoint)newContentOffset
 {
 #ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
+	NSLog(@"%s %@", __FUNCTION__, NSStringFromCGPoint(newContentOffset));
 #endif
 
 	assert(delegate != nil); // Check delegate
@@ -414,7 +418,7 @@
 - (void)refreshThumbWithIndex:(NSInteger)index
 {
 #ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
+	NSLog(@"%s %d", __FUNCTION__, index);
 #endif
 
 	for (ReaderThumbView *tvCell in thumbCellsVisible) // Enumerate visible cells
@@ -454,11 +458,33 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	CGPoint point = [recognizer locationInView:recognizer.view]; // Location
+	if (recognizer.state == UIGestureRecognizerStateRecognized) // Handle the tap
+	{
+		CGPoint point = [recognizer locationInView:recognizer.view]; // Tap location
 
-	ReaderThumbView *tvCell = [self thumbCellContainingPoint:point]; // Look for cell
+		ReaderThumbView *tvCell = [self thumbCellContainingPoint:point]; // Look for cell
 
-	if (tvCell != nil) [delegate thumbsView:self didSelectThumbWithIndex:tvCell.tag];
+		if (tvCell != nil) [delegate thumbsView:self didSelectThumbWithIndex:tvCell.tag];
+	}
+}
+
+- (void)handlePressGesture:(UILongPressGestureRecognizer *)recognizer
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	if (recognizer.state == UIGestureRecognizerStateBegan) // Handle the press
+	{
+		if ([delegate respondsToSelector:@selector(thumbsView:didPressThumbWithIndex:)])
+		{
+			CGPoint point = [recognizer locationInView:recognizer.view]; // Press location
+
+			ReaderThumbView *tvCell = [self thumbCellContainingPoint:point]; // Look for cell
+
+			if (tvCell != nil) [delegate thumbsView:self didPressThumbWithIndex:tvCell.tag];
+		}
+	}
 }
 
 #pragma mark UIScrollViewDelegate methods

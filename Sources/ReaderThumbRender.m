@@ -1,6 +1,6 @@
 //
 //	ReaderThumbRender.m
-//	Reader v2.4.0
+//	Reader v2.5.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -71,11 +71,15 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	NSString *cachePath = [ReaderThumbCache thumbCachePathForGUID:request.guid];
+	NSFileManager *fileManager = [[NSFileManager new] autorelease]; // File manager instance
 
-	NSString *fileName = [NSString stringWithFormat:@"%@.png", request.thumbName];
+	NSString *cachePath = [ReaderThumbCache thumbCachePathForGUID:request.guid]; // Thumb cache path
 
-	return [NSURL fileURLWithPath:[cachePath stringByAppendingPathComponent:fileName]];
+	[fileManager createDirectoryAtPath:cachePath withIntermediateDirectories:NO attributes:nil error:NULL];
+
+	NSString *fileName = [NSString stringWithFormat:@"%@.png", request.thumbName]; // Thumb file name
+
+	return [NSURL fileURLWithPath:[cachePath stringByAppendingPathComponent:fileName]]; // File URL
 }
 
 - (void)main
@@ -135,9 +139,9 @@
 			CGFloat scale = 0.0f; // Page to target thumb size scale
 
 			if (page_h > page_w)
-				scale = (thumb_h > thumb_w) ? scale_w : scale_h; // Portrait
+				scale = ((thumb_h > thumb_w) ? scale_w : scale_h); // Portrait
 			else
-				scale = (thumb_h < thumb_w) ? scale_h : scale_w; // Landscape
+				scale = ((thumb_h < thumb_w) ? scale_h : scale_w); // Landscape
 
 			NSInteger target_w = (page_w * scale); // Integer target thumb width
 			NSInteger target_h = (page_h * scale); // Integer target thumb height

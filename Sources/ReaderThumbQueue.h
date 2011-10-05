@@ -1,6 +1,6 @@
 //
 //	ReaderThumbQueue.h
-//	Reader v2.2.0
+//	Reader v2.5.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -23,7 +23,7 @@
 	NSOperationQueue *workQueue;
 }
 
-+ (id)sharedInstance;
++ (ReaderThumbQueue *)sharedInstance;
 
 - (void)addLoadOperation:(NSOperation *)operation;
 

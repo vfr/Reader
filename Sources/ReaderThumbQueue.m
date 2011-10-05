@@ -1,6 +1,6 @@
 //
 //	ReaderThumbQueue.m
-//	Reader v2.2.0
+//	Reader v2.5.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -22,15 +22,15 @@
 
 #pragma mark ReaderThumbQueue class methods
 
-+ (id)sharedInstance
++ (ReaderThumbQueue *)sharedInstance
 {
 #ifdef DEBUGX
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	static id object = nil;
-
 	static dispatch_once_t predicate = 0;
+
+	static ReaderThumbQueue *object = nil; // Object
 
 	dispatch_once(&predicate, ^{ object = [self new]; });
 

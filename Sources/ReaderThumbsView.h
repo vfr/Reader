@@ -1,6 +1,6 @@
 //
 //	ReaderThumbsView.h
-//	Reader v2.3.0
+//	Reader v2.5.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -34,6 +34,8 @@
 
 - (void)thumbsView:(ReaderThumbsView *)thumbsView refreshThumbCell:(id)thumbCell forIndex:(NSInteger)index;
 
+- (void)thumbsView:(ReaderThumbsView *)thumbsView didPressThumbWithIndex:(NSInteger)index;
+
 @end
 
 @interface ReaderThumbsView : UIScrollView <UIScrollViewDelegate, UIGestureRecognizerDelegate>
@@ -48,7 +50,7 @@
 
 	NSInteger _thumbsX, _thumbsY, _thumbX;
 
-	CGSize _thumbSize, _viewSize;
+	CGSize _thumbSize, _lastViewSize;
 
 	NSUInteger _thumbCount;
 

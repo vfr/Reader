@@ -1,6 +1,6 @@
 //
 //	ThumbsMainToolbar.m
-//	Reader v2.4.0
+//	Reader v2.5.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -110,7 +110,7 @@
 			UILabel *titleLabel = [[UILabel alloc] initWithFrame:titleRect];
 
 			titleLabel.textAlignment = UITextAlignmentCenter;
-			titleLabel.font = [UIFont systemFontOfSize:20.0f]; // 20 pt
+			titleLabel.font = [UIFont systemFontOfSize:19.0f]; // 19 pt
 			titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 			titleLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
 			titleLabel.textColor = [UIColor colorWithWhite:0.0f alpha:1.0f];

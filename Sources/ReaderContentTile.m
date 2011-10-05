@@ -1,6 +1,6 @@
 //
 //	ReaderContentTile.m
-//	Reader v2.3.0
+//	Reader v2.5.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -62,9 +62,9 @@
 
 		CGFloat h_pixels = (screenBounds.size.height * screenScale);
 
-		CGFloat max = (w_pixels < h_pixels) ? h_pixels : w_pixels;
+		CGFloat max = ((w_pixels < h_pixels) ? h_pixels : w_pixels);
 
-		CGFloat sizeOfTiles = (max < 512.0f) ? 512.0f : 1024.0f;
+		CGFloat sizeOfTiles = ((max < 512.0f) ? 512.0f : 1024.0f);
 
 		self.tileSize = CGSizeMake(sizeOfTiles, sizeOfTiles);
 	}

@@ -1,6 +1,6 @@
 //
 //	ReaderMainToolbar.m
-//	Reader v2.4.0
+//	Reader v2.5.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -14,6 +14,7 @@
 
 #import "ReaderConstants.h"
 #import "ReaderMainToolbar.h"
+#import "ReaderDocument.h"
 
 #import <MessageUI/MessageUI.h>
 
@@ -47,14 +48,16 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	return [self initWithFrame:frame title:nil];
+	return [self initWithFrame:frame document:nil];
 }
 
-- (id)initWithFrame:(CGRect)frame title:(NSString *)title
+- (id)initWithFrame:(CGRect)frame document:(ReaderDocument *)object
 {
 #ifdef DEBUGX
 	NSLog(@"%s", __FUNCTION__);
 #endif
+
+	assert(object != nil); // Check
 
 	if ((self = [super initWithFrame:frame]))
 	{
@@ -133,20 +136,25 @@
 
 #if (READER_ENABLE_MAIL == TRUE) // Option
 
-		if ([MFMailComposeViewController canSendMail] == YES)
+		if ([MFMailComposeViewController canSendMail] == YES) // Can email
 		{
-			rightButtonX -= (EMAIL_BUTTON_WIDTH + BUTTON_SPACE);
+			unsigned long long fileSize = [object.fileSize unsignedLongLongValue];
 
-			UIButton *emailButton = [UIButton buttonWithType:UIButtonTypeCustom];
+			if (fileSize < (unsigned long long)15728640) // Check attachment size limit (15MB)
+			{
+				rightButtonX -= (EMAIL_BUTTON_WIDTH + BUTTON_SPACE);
 
-			emailButton.frame = CGRectMake(rightButtonX, BUTTON_Y, EMAIL_BUTTON_WIDTH, BUTTON_HEIGHT);
-			[emailButton setImage:[UIImage imageNamed:@"Reader-Email.png"] forState:UIControlStateNormal];
-			[emailButton addTarget:self action:@selector(emailButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-			[emailButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
-			[emailButton setBackgroundImage:buttonN forState:UIControlStateNormal];
-			emailButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+				UIButton *emailButton = [UIButton buttonWithType:UIButtonTypeCustom];
 
-			[self addSubview:emailButton]; titleWidth -= (EMAIL_BUTTON_WIDTH + BUTTON_SPACE);
+				emailButton.frame = CGRectMake(rightButtonX, BUTTON_Y, EMAIL_BUTTON_WIDTH, BUTTON_HEIGHT);
+				[emailButton setImage:[UIImage imageNamed:@"Reader-Email.png"] forState:UIControlStateNormal];
+				[emailButton addTarget:self action:@selector(emailButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+				[emailButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
+				[emailButton setBackgroundImage:buttonN forState:UIControlStateNormal];
+				emailButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+
+				[self addSubview:emailButton]; titleWidth -= (EMAIL_BUTTON_WIDTH + BUTTON_SPACE);
+			}
 		}
 
 #endif // end of READER_ENABLE_MAIL Option
@@ -180,14 +188,14 @@
 			UILabel *titleLabel = [[UILabel alloc] initWithFrame:titleRect];
 
 			titleLabel.textAlignment = UITextAlignmentCenter;
-			titleLabel.font = [UIFont systemFontOfSize:20.0f]; // 20 pt
+			titleLabel.font = [UIFont systemFontOfSize:19.0f]; // 19 pt
 			titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 			titleLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
 			titleLabel.textColor = [UIColor colorWithWhite:0.0f alpha:1.0f];
 			titleLabel.backgroundColor = [UIColor clearColor];
 			titleLabel.adjustsFontSizeToFitWidth = YES;
 			titleLabel.minimumFontSize = 14.0f;
-			titleLabel.text = title;
+			titleLabel.text = [object.fileName stringByDeletingPathExtension];
 
 			[self addSubview:titleLabel]; [titleLabel release];
 		}

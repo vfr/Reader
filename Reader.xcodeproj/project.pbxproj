@@ -33,7 +33,7 @@
 		45AB72D0141FBFCA003524C3 /* Reader-Print@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45AB72C3141FBFCA003524C3 /* Reader-Print@2x.png */; };
 		45AB72D1141FBFCA003524C3 /* Reader-Thumbs.png in Resources */ = {isa = PBXBuildFile; fileRef = 45AB72C4141FBFCA003524C3 /* Reader-Thumbs.png */; };
 		45AB72D2141FBFCA003524C3 /* Reader-Thumbs@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45AB72C5141FBFCA003524C3 /* Reader-Thumbs@2x.png */; };
-		45AB72DC141FC039003524C3 /* Document.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 45AB72DB141FC039003524C3 /* Document.pdf */; };
+		45AB72DC141FC039003524C3 /* Reader.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 45AB72DB141FC039003524C3 /* Reader.pdf */; };
 		45AB72DE141FC043003524C3 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 45AB72DD141FC043003524C3 /* LICENSE */; };
 		45AB72E0141FC04B003524C3 /* README in Resources */ = {isa = PBXBuildFile; fileRef = 45AB72DF141FC04B003524C3 /* README */; };
 		45AB72EB141FC0A2003524C3 /* ReaderAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 45AB72E8141FC0A2003524C3 /* ReaderAppDelegate.m */; };
@@ -91,7 +91,7 @@
 		45AB72C3141FBFCA003524C3 /* Reader-Print@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Reader-Print@2x.png"; path = "Graphics/Reader-Print@2x.png"; sourceTree = "<group>"; };
 		45AB72C4141FBFCA003524C3 /* Reader-Thumbs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Reader-Thumbs.png"; path = "Graphics/Reader-Thumbs.png"; sourceTree = "<group>"; };
 		45AB72C5141FBFCA003524C3 /* Reader-Thumbs@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Reader-Thumbs@2x.png"; path = "Graphics/Reader-Thumbs@2x.png"; sourceTree = "<group>"; };
-		45AB72DB141FC039003524C3 /* Document.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Document.pdf; path = Resources/Document.pdf; sourceTree = "<group>"; };
+		45AB72DB141FC039003524C3 /* Reader.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = Reader.pdf; path = Resources/Reader.pdf; sourceTree = "<group>"; };
 		45AB72DD141FC043003524C3 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 8; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; tabWidth = 8; };
 		45AB72DF141FC04B003524C3 /* README */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 8; lastKnownFileType = text; path = README; sourceTree = "<group>"; tabWidth = 8; };
 		45AB72E7141FC0A2003524C3 /* ReaderAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReaderAppDelegate.h; sourceTree = "<group>"; };
@@ -207,7 +207,7 @@
 			children = (
 				8D1107310486CEB800E47090 /* Reader-Info.plist */,
 				4541A9D7122EA716001A5E60 /* Localizable.strings */,
-				45AB72DB141FC039003524C3 /* Document.pdf */,
+				45AB72DB141FC039003524C3 /* Reader.pdf */,
 				45AB72DF141FC04B003524C3 /* README */,
 				45AB72DD141FC043003524C3 /* LICENSE */,
 			);
@@ -368,7 +368,7 @@
 				45AB72D0141FBFCA003524C3 /* Reader-Print@2x.png in Resources */,
 				45AB72D1141FBFCA003524C3 /* Reader-Thumbs.png in Resources */,
 				45AB72D2141FBFCA003524C3 /* Reader-Thumbs@2x.png in Resources */,
-				45AB72DC141FC039003524C3 /* Document.pdf in Resources */,
+				45AB72DC141FC039003524C3 /* Reader.pdf in Resources */,
 				45AB72DE141FC043003524C3 /* LICENSE in Resources */,
 				45AB72E0141FC04B003524C3 /* README in Resources */,
 				455C789D14268F6A0053D73B /* Reader-Button-H.png in Resources */,

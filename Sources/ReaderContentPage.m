@@ -1,6 +1,6 @@
 //
 //	ReaderContentPage.m
-//	Reader v2.2.0
+//	Reader v2.5.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -85,7 +85,7 @@
 		if (ll_x > ur_x) { CGPDFReal t = ll_x; ll_x = ur_x; ur_x = t; } // Normalize Xs
 		if (ll_y > ur_y) { CGPDFReal t = ll_y; ll_y = ur_y; ur_y = t; } // Normalize Ys
 
-		switch (_pageRotate) // Page rotation (in degrees)
+		switch (_pageAngle) // Page rotation angle (in degrees)
 		{
 			case 90: // 90 degree page rotation
 			{
@@ -364,15 +364,18 @@
 
 	id result = nil; // Tap result object
 
-	if (_links.count > 0) // Process the single tap
+	if (recognizer.state == UIGestureRecognizerStateRecognized)
 	{
-		CGPoint point = [recognizer locationInView:self];
-
-		for (ReaderDocumentLink *link in _links) // Enumerate links
+		if (_links.count > 0) // Process the single tap
 		{
-			if (CGRectContainsPoint(link.rect, point) == true) // Found it
+			CGPoint point = [recognizer locationInView:self];
+
+			for (ReaderDocumentLink *link in _links) // Enumerate links
 			{
-				result = [self findLinkTarget:link.dictionary]; break;
+				if (CGRectContainsPoint(link.rect, point) == true) // Found it
+				{
+					result = [self findLinkTarget:link.dictionary]; break;
+				}
 			}
 		}
 	}
@@ -388,7 +391,7 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	UIView *view = nil; // View
+	id view = nil; // UIView
 
 	if (CGRectIsEmpty(frame) == false)
 	{
@@ -422,11 +425,7 @@
 
 	if (fileURL != nil) // Check for non-nil file URL
 	{
-		_fileURL = [fileURL copy]; // Keep a copy of the file URL
-
-		_password = [phrase copy]; // Keep a copy of any given password
-
-		_PDFDocRef = CGPDFDocumentCreateX((CFURLRef)_fileURL, _password);
+		_PDFDocRef = CGPDFDocumentCreateX((CFURLRef)fileURL, phrase);
 
 		if (_PDFDocRef != NULL) // Check for non-NULL CGPDFDocumentRef
 		{
@@ -446,9 +445,9 @@
 				CGRect mediaBoxRect = CGPDFPageGetBoxRect(_PDFPageRef, kCGPDFMediaBox);
 				CGRect effectiveRect = CGRectIntersection(cropBoxRect, mediaBoxRect);
 
-				_pageRotate = CGPDFPageGetRotationAngle(_PDFPageRef); // Angle
+				_pageAngle = CGPDFPageGetRotationAngle(_PDFPageRef); // Angle
 
-				switch (_pageRotate) // Page rotation (in degrees)
+				switch (_pageAngle) // Page rotation angle (in degrees)
 				{
 					default: // Default case
 					case 0: case 180: // 0 and 180 degrees
@@ -490,9 +489,9 @@
 		NSAssert(NO, @"fileURL == nil");
 	}
 
-	id view = [self initWithFrame:viewRect]; // View setup
+	id view = [self initWithFrame:viewRect]; // UIView setup
 
-	if (view != nil) [self buildAnnotationLinksList];
+	if (view != nil) [self buildAnnotationLinksList]; // Links
 
 	return view;
 }
@@ -511,10 +510,6 @@
 
 		CGPDFDocumentRelease(_PDFDocRef), _PDFDocRef = NULL;
 	}
-
-	[_password release], _password = nil;
-
-	[_fileURL release], _fileURL = nil;
 
 	[super dealloc];
 }

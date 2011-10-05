@@ -1,6 +1,6 @@
 //
 //	ReaderContentPage.h
-//	Reader v2.2.0
+//	Reader v2.5.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -18,17 +18,13 @@
 {
 @private // Instance variables
 
-	NSURL *_fileURL;
-
-	NSString *_password;
-
 	NSMutableArray *_links;
 
 	CGPDFDocumentRef _PDFDocRef;
 
 	CGPDFPageRef _PDFPageRef;
 
-	NSInteger _pageRotate;
+	NSInteger _pageAngle;
 
 	CGSize _pageSize;
 }
