@@ -1,6 +1,6 @@
 //
 //	ReaderContentView.m
-//	Reader v2.5.0
+//	Reader v2.5.1
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -15,7 +15,6 @@
 #import "ReaderConstants.h"
 #import "ReaderContentView.h"
 #import "ReaderContentPage.h"
-#import "ReaderScrollView.h"
 #import "ReaderThumbCache.h"
 
 #import <QuartzCore/QuartzCore.h>
@@ -38,7 +37,7 @@
 
 #pragma mark Properties
 
-@synthesize delegate;
+@synthesize message;
 
 #pragma mark ReaderContentView functions
 
@@ -54,13 +53,13 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 
 - (void)updateMinimumMaximumZoom
 {
-	CGRect targetRect = CGRectInset(theScrollView.bounds, CONTENT_INSET, CONTENT_INSET);
+	CGRect targetRect = CGRectInset(self.bounds, CONTENT_INSET, CONTENT_INSET);
 
 	CGFloat zoomScale = ZoomScaleThatFits(targetRect.size, theContentView.bounds.size);
 
-	theScrollView.minimumZoomScale = zoomScale; // Set the minimum and maximum zoom scales
+	self.minimumZoomScale = zoomScale; // Set the minimum and maximum zoom scales
 
-	theScrollView.maximumZoomScale = (zoomScale * ZOOM_LEVELS); // Number of zoom levels
+	self.maximumZoomScale = (zoomScale * ZOOM_LEVELS); // Number of zoom levels
 }
 
 - (id)initWithFrame:(CGRect)frame fileURL:(NSURL *)fileURL page:(NSUInteger)page password:(NSString *)phrase
@@ -71,25 +70,17 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 
 	if ((self = [super initWithFrame:frame]))
 	{
-		self.autoresizesSubviews = YES;
-		self.userInteractionEnabled = YES;
+		self.scrollsToTop = NO;
+		self.delaysContentTouches = NO;
+		self.showsVerticalScrollIndicator = NO;
+		self.showsHorizontalScrollIndicator = NO;
 		self.contentMode = UIViewContentModeRedraw;
 		self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		self.backgroundColor = [UIColor clearColor];
-
-		theScrollView = [[ReaderScrollView alloc] initWithFrame:self.bounds];
-
-		theScrollView.scrollsToTop = NO;
-		theScrollView.delaysContentTouches = NO;
-		theScrollView.showsVerticalScrollIndicator = NO;
-		theScrollView.showsHorizontalScrollIndicator = NO;
-		theScrollView.contentMode = UIViewContentModeRedraw;
-		theScrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		theScrollView.backgroundColor = [UIColor clearColor];
-		theScrollView.userInteractionEnabled = YES;
-		theScrollView.autoresizesSubviews = NO;
-		theScrollView.bouncesZoom = YES;
-		theScrollView.delegate = self;
+		self.userInteractionEnabled = YES;
+		self.autoresizesSubviews = NO;
+		self.bouncesZoom = YES;
+		self.delegate = self;
 
 		theContentView = [[ReaderContentPage alloc] initWithURL:fileURL page:page password:phrase];
 
@@ -111,9 +102,9 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 
 #endif // end of READER_SHOW_SHADOWS Option
 
-			theScrollView.contentSize = theContentView.bounds.size; // Content size same as view size
-			theScrollView.contentOffset = CGPointMake((0.0f - CONTENT_INSET), (0.0f - CONTENT_INSET));
-			theScrollView.contentInset = UIEdgeInsetsMake(CONTENT_INSET, CONTENT_INSET, CONTENT_INSET, CONTENT_INSET);
+			self.contentSize = theContentView.bounds.size; // Content size same as view size
+			self.contentOffset = CGPointMake((0.0f - CONTENT_INSET), (0.0f - CONTENT_INSET)); // Offset
+			self.contentInset = UIEdgeInsetsMake(CONTENT_INSET, CONTENT_INSET, CONTENT_INSET, CONTENT_INSET);
 
 			theThumbView = [[ReaderContentThumb alloc] initWithFrame:theContentView.bounds]; // Page thumb view
 
@@ -121,16 +112,14 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 
 			[theContainerView addSubview:theContentView]; // Add the content view to the container view
 
-			[theScrollView addSubview:theContainerView]; // Add the container view to the scroll view
+			[self addSubview:theContainerView]; // Add the container view to the scroll view
 
 			[self updateMinimumMaximumZoom]; // Update the minimum and maximum zoom scales
 
-			theScrollView.zoomScale = theScrollView.minimumZoomScale; // Zoom to fit
+			self.zoomScale = self.minimumZoomScale; // Set zoom to fit page content
 		}
 
-		[self addSubview:theScrollView]; // Add the scroll view to the parent container view
-
-		[theScrollView addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
+		[self addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
 
 		self.tag = page; // Tag the view with the page number
 	}
@@ -144,9 +133,7 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	[theScrollView removeObserver:self forKeyPath:@"frame"];
-
-	[theScrollView release], theScrollView = nil;
+	[self removeObserver:self forKeyPath:@"frame"];
 
 	[theContainerView release], theContainerView = nil;
 
@@ -180,27 +167,27 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	if ((object == theScrollView) && [keyPath isEqualToString:@"frame"])
+	if ((object == self) && [keyPath isEqualToString:@"frame"])
 	{
-		CGFloat oldMinimumZoomScale = theScrollView.minimumZoomScale;
+		CGFloat oldMinimumZoomScale = self.minimumZoomScale;
 
-		[self updateMinimumMaximumZoom]; // Update the zoom scale limits
+		[self updateMinimumMaximumZoom]; // Update zoom scale limits
 
-		if (theScrollView.zoomScale == oldMinimumZoomScale) // Old minimum
+		if (self.zoomScale == oldMinimumZoomScale) // Old minimum
 		{
-			theScrollView.zoomScale = theScrollView.minimumZoomScale;
+			self.zoomScale = self.minimumZoomScale;
 		}
 		else // Check against minimum zoom scale
 		{
-			if (theScrollView.zoomScale < theScrollView.minimumZoomScale)
+			if (self.zoomScale < self.minimumZoomScale)
 			{
-				theScrollView.zoomScale = theScrollView.minimumZoomScale;
+				self.zoomScale = self.minimumZoomScale;
 			}
 			else // Check against maximum zoom scale
 			{
-				if (theScrollView.zoomScale > theScrollView.maximumZoomScale)
+				if (self.zoomScale > self.maximumZoomScale)
 				{
-					theScrollView.zoomScale = theScrollView.maximumZoomScale;
+					self.zoomScale = self.maximumZoomScale;
 				}
 			}
 		}
@@ -213,17 +200,18 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
+	[super layoutSubviews];
+
+	CGSize boundsSize = self.bounds.size;
 	CGRect viewFrame = theContainerView.frame;
-	CGSize boundsSize = theScrollView.bounds.size;
-	CGPoint contentOffset = theScrollView.contentOffset;
 
 	if (viewFrame.size.width < boundsSize.width)
-		viewFrame.origin.x = (((boundsSize.width - viewFrame.size.width) / 2.0f) + contentOffset.x);
+		viewFrame.origin.x = (((boundsSize.width - viewFrame.size.width) / 2.0f) + self.contentOffset.x);
 	else
 		viewFrame.origin.x = 0.0f;
 
 	if (viewFrame.size.height < boundsSize.height)
-		viewFrame.origin.y = (((boundsSize.height - viewFrame.size.height) / 2.0f) + contentOffset.y);
+		viewFrame.origin.y = (((boundsSize.height - viewFrame.size.height) / 2.0f) + self.contentOffset.y);
 	else
 		viewFrame.origin.y = 0.0f;
 
@@ -245,21 +233,21 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	CGFloat zoomScale = theScrollView.zoomScale;
+	CGFloat zoomScale = self.zoomScale;
 
-	if (zoomScale <= theScrollView.maximumZoomScale)
+	if (zoomScale <= self.maximumZoomScale)
 	{
-		zoomScale += ZOOM_AMOUNT;
+		zoomScale += ZOOM_AMOUNT; // +=
 
-		if (zoomScale > theScrollView.maximumZoomScale)
+		if (zoomScale > self.maximumZoomScale)
 		{
-			zoomScale = theScrollView.minimumZoomScale;
+			zoomScale = self.minimumZoomScale;
 		}
 	}
 
-	if (zoomScale != theScrollView.zoomScale) // Do zoom
+	if (zoomScale != self.zoomScale) // Do zoom
 	{
-		[theScrollView setZoomScale:zoomScale animated:YES];
+		[self setZoomScale:zoomScale animated:YES];
 	}
 }
 
@@ -269,21 +257,21 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	CGFloat zoomScale = theScrollView.zoomScale;
+	CGFloat zoomScale = self.zoomScale;
 
-	if (zoomScale >= theScrollView.minimumZoomScale)
+	if (zoomScale >= self.minimumZoomScale)
 	{
-		zoomScale -= ZOOM_AMOUNT;
+		zoomScale -= ZOOM_AMOUNT; // -=
 
-		if (zoomScale < theScrollView.minimumZoomScale)
+		if (zoomScale < self.minimumZoomScale)
 		{
-			zoomScale = theScrollView.maximumZoomScale;
+			zoomScale = self.maximumZoomScale;
 		}
 	}
 
-	if (zoomScale != theScrollView.zoomScale) // Do zoom
+	if (zoomScale != self.zoomScale) // Do zoom
 	{
-		[theScrollView setZoomScale:zoomScale animated:YES];
+		[self setZoomScale:zoomScale animated:YES];
 	}
 }
 
@@ -293,26 +281,41 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	if (theScrollView.zoomScale > theScrollView.minimumZoomScale)
+	if (self.zoomScale > self.minimumZoomScale)
 	{
-		theScrollView.zoomScale = theScrollView.minimumZoomScale;
+		self.zoomScale = self.minimumZoomScale;
 	}
 }
 
 #pragma mark UIScrollViewDelegate methods
 
-- (void)scrollViewTouchesBegan:(UIScrollView *)scrollView touches:(NSSet *)touches
-{
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
-	[delegate scrollViewTouchesBegan:scrollView touches:touches];
-}
-
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
 {
 	return theContainerView;
+}
+
+#pragma mark UIResponder instance methods
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	[super touchesBegan:touches withEvent:event]; // Message superclass
+
+	[message contentView:self touchesBegan:touches]; // Message delegate
+}
+
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	[super touchesCancelled:touches withEvent:event]; // Message superclass
+}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	[super touchesEnded:touches withEvent:event]; // Message superclass
+}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	[super touchesMoved:touches withEvent:event]; // Message superclass
 }
 
 @end

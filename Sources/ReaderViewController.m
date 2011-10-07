@@ -1,6 +1,6 @@
 //
 //	ReaderViewController.m
-//	Reader v2.5.0
+//	Reader v2.5.1
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -14,7 +14,6 @@
 
 #import "ReaderConstants.h"
 #import "ReaderViewController.h"
-#import "ReaderScrollView.h"
 #import "ReaderThumbCache.h"
 #import "ReaderThumbQueue.h"
 
@@ -156,7 +155,7 @@
 
 				[theScrollView addSubview:contentView]; [contentViews setObject:contentView forKey:key];
 
-				contentView.delegate = self; [contentView release]; [newPageSet addIndex:number];
+				contentView.message = self; [contentView release]; [newPageSet addIndex:number];
 			}
 			else // Reposition the existing content view
 			{
@@ -315,7 +314,7 @@
 
 	CGRect viewRect = self.view.bounds; // View controller's view bounds
 
-	theScrollView = [[ReaderScrollView alloc] initWithFrame:viewRect]; // All
+	theScrollView = [[UIScrollView alloc] initWithFrame:viewRect]; // All
 
 	theScrollView.scrollsToTop = NO;
 	theScrollView.pagingEnabled = YES;
@@ -563,31 +562,6 @@
 	theScrollView.tag = 0; // Clear page number tag
 }
 
-- (void)scrollViewTouchesBegan:(UIScrollView *)scrollView touches:(NSSet *)touches
-{
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
-	if ((mainToolbar.hidden == NO) || (mainPagebar.hidden == NO))
-	{
-		if (touches.count == 1) // Single touches only
-		{
-			UITouch *touch = [touches anyObject]; // Touch info
-
-			CGPoint point = [touch locationInView:self.view]; // Touch location
-
-			CGRect areaRect = CGRectInset(self.view.bounds, TAP_AREA_SIZE, TAP_AREA_SIZE);
-
-			if (CGRectContainsPoint(areaRect, point) == false) return;
-		}
-
-		[mainToolbar hideToolbar]; [mainPagebar hidePagebar]; // Hide
-
-		[lastHideTime release]; lastHideTime = [NSDate new];
-	}
-}
-
 #pragma mark UIGestureRecognizerDelegate methods
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)recognizer shouldReceiveTouch:(UITouch *)touch
@@ -596,7 +570,7 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	if ([touch.view isMemberOfClass:[ReaderScrollView class]]) return YES;
+	if ([touch.view isKindOfClass:[UIScrollView class]]) return YES;
 
 	return NO;
 }
@@ -780,6 +754,33 @@
 		{
 			[self decrementPageNumber]; return;
 		}
+	}
+}
+
+#pragma mark ReaderContentViewDelegate methods
+
+- (void)contentView:(ReaderContentView *)contentView touchesBegan:(NSSet *)touches
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	if ((mainToolbar.hidden == NO) || (mainPagebar.hidden == NO))
+	{
+		if (touches.count == 1) // Single touches only
+		{
+			UITouch *touch = [touches anyObject]; // Touch info
+
+			CGPoint point = [touch locationInView:self.view]; // Touch location
+
+			CGRect areaRect = CGRectInset(self.view.bounds, TAP_AREA_SIZE, TAP_AREA_SIZE);
+
+			if (CGRectContainsPoint(areaRect, point) == false) return;
+		}
+
+		[mainToolbar hideToolbar]; [mainPagebar hidePagebar]; // Hide
+
+		[lastHideTime release]; lastHideTime = [NSDate new];
 	}
 }
 

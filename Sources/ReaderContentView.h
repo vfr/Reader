@@ -1,6 +1,6 @@
 //
 //	ReaderContentView.h
-//	Reader v2.2.0
+//	Reader v2.5.1
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -16,7 +16,7 @@
 
 #import "ReaderThumbView.h"
 
-@class ReaderScrollView;
+@class ReaderContentView;
 @class ReaderContentPage;
 @class ReaderContentThumb;
 
@@ -24,15 +24,13 @@
 
 @required // Delegate protocols
 
-- (void)scrollViewTouchesBegan:(UIScrollView *)scrollView touches:(NSSet *)touches;
+- (void)contentView:(ReaderContentView *)contentView touchesBegan:(NSSet *)touches;
 
 @end
 
-@interface ReaderContentView : UIView <UIScrollViewDelegate>
+@interface ReaderContentView : UIScrollView <UIScrollViewDelegate>
 {
 @private // Instance variables
-
-	ReaderScrollView *theScrollView;
 
 	ReaderContentPage *theContentView;
 
@@ -41,7 +39,7 @@
 	UIView *theContainerView;
 }
 
-@property (nonatomic, assign, readwrite) id <ReaderContentViewDelegate> delegate;
+@property (nonatomic, assign, readwrite) id <ReaderContentViewDelegate> message;
 
 - (id)initWithFrame:(CGRect)frame fileURL:(NSURL *)fileURL page:(NSUInteger)page password:(NSString *)phrase;
 

@@ -88,7 +88,6 @@ reader/viewer into one of your projects:
 	ReaderContentView.h	ReaderContentView.m
 	ReaderContentPage.h	ReaderContentPage.m
 	ReaderContentTile.h	ReaderContentTile.m
-	ReaderScrollView.h	ReaderScrollView.m
 	ReaderThumbCache.h	ReaderThumbCache.m
 	ReaderThumbRequest.h	ReaderThumbRequest.m
 	ReaderThumbQueue.h	ReaderThumbQueue.m
@@ -198,7 +197,11 @@ HISTORY
 
 2011-10-05: Version 2.5.0
 
-	- Critical bug fixes and various tweaks.
+	- Critical bug fixes and various assorted tweaks.
+
+2011-10-06: Version 2.5.1
+
+	- Fixed content view centering under iOS 5.
 
 CONTACT INFO
 ============

@@ -1,6 +1,6 @@
 //
 //	ReaderViewController.h
-//	Reader v2.3.0
+//	Reader v2.5.1
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -23,7 +23,6 @@
 
 @class ReaderViewController;
 @class ReaderMainToolbar;
-@class ReaderScrollView;
 
 @protocol ReaderViewControllerDelegate <NSObject>
 
@@ -41,11 +40,11 @@
 
 	ReaderDocument *document;
 
+	UIScrollView *theScrollView;
+
 	ReaderMainToolbar *mainToolbar;
 
 	ReaderMainPagebar *mainPagebar;
-
-	ReaderScrollView *theScrollView;
 
 	NSMutableDictionary *contentViews;
 
