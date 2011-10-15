@@ -1,6 +1,6 @@
 //
 //	ThumbsViewController.m
-//	Reader v2.5.0
+//	Reader v2.5.2
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -247,7 +247,7 @@
 		{
 			showBookmarked = NO; // Show all thumbs
 
-			markedOffset = theThumbsView.contentOffset;
+			markedOffset = [theThumbsView insetContentOffset];
 
 			[theThumbsView reloadThumbsContentOffset:thumbsOffset];
 
@@ -258,7 +258,7 @@
 		{
 			showBookmarked = YES; // Only bookmarked
 
-			thumbsOffset = theThumbsView.contentOffset;
+			thumbsOffset = [theThumbsView insetContentOffset];
 
 			if (updateBookmarked == YES) // Update bookmarked list
 			{

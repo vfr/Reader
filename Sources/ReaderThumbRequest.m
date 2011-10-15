@@ -1,6 +1,6 @@
 //
 //	ReaderThumbRequest.m
-//	Reader v2.5.0
+//	Reader v2.5.2
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -61,7 +61,7 @@
 
 		_cacheKey = [[NSString alloc] initWithFormat:@"%@+%@", _thumbName, _guid];
 
-		_targetTag = [_thumbName hash]; _thumbView.targetTag = _targetTag;
+		_targetTag = [_cacheKey hash]; _thumbView.targetTag = _targetTag;
 
 		_scale = [[UIScreen mainScreen] scale]; // Thumb screen scale
 	}

@@ -1,6 +1,6 @@
 //
 //	ReaderViewController.m
-//	Reader v2.5.1
+//	Reader v2.5.2
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -467,7 +467,10 @@
 
 	if (isVisible == NO) return; // iOS present modal bodge
 
-	if (printInteraction != nil) [printInteraction dismissAnimated:NO];
+	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
+	{
+		if (printInteraction != nil) [printInteraction dismissAnimated:NO];
+	}
 }
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration
@@ -862,14 +865,28 @@
 			printInteraction.printingItem = fileURL;
 			printInteraction.showsPageRange = YES;
 
-			[printInteraction presentFromRect:button.bounds inView:button animated:YES completionHandler:
-				^(UIPrintInteractionController *pic, BOOL completed, NSError *error)
-				{
-					#ifdef DEBUG
-						if ((completed == NO) && (error != nil)) NSLog(@"%s %@", __FUNCTION__, error);
-					#endif
-				}
-			];
+			if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
+			{
+				[printInteraction presentFromRect:button.bounds inView:button animated:YES completionHandler:
+					^(UIPrintInteractionController *pic, BOOL completed, NSError *error)
+					{
+						#ifdef DEBUG
+							if ((completed == NO) && (error != nil)) NSLog(@"%s %@", __FUNCTION__, error);
+						#endif
+					}
+				];
+			}
+			else // Presume UIUserInterfaceIdiomPhone
+			{
+				[printInteraction presentAnimated:YES completionHandler:
+					^(UIPrintInteractionController *pic, BOOL completed, NSError *error)
+					{
+						#ifdef DEBUG
+							if ((completed == NO) && (error != nil)) NSLog(@"%s %@", __FUNCTION__, error);
+						#endif
+					}
+				];
+			}
 		}
 	}
 

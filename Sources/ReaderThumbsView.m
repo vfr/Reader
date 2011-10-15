@@ -1,6 +1,6 @@
 //
 //	ReaderThumbsView.m
-//	Reader v2.5.0
+//	Reader v2.5.2
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -355,6 +355,8 @@
 		newContentOffset.y = offsetY; // Calculated content offset Y position
 	}
 
+	newContentOffset.y -= self.contentInset.top; // Content inset adjust
+
 	if (CGPointEqualToPoint(self.contentOffset, newContentOffset) == false)
 		[self setContentOffset:newContentOffset animated:NO];
 	else
@@ -407,6 +409,8 @@
 		newContentOffset = CGPointZero;
 	}
 
+	newContentOffset.y -= self.contentInset.top; // Content inset adjust
+
 	if (CGPointEqualToPoint(self.contentOffset, newContentOffset) == false)
 		[self setContentOffset:newContentOffset animated:NO];
 	else
@@ -448,6 +452,19 @@
 			[delegate thumbsView:self refreshThumbCell:tvCell forIndex:tvCell.tag]; // Refresh
 		}
 	}
+}
+
+- (CGPoint)insetContentOffset
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	CGPoint insetContentOffset = self.contentOffset; // Actual
+
+	insetContentOffset.y += self.contentInset.top; // Inset adjust
+
+	return insetContentOffset; // Adjusted content offset
 }
 
 #pragma mark UIGestureRecognizer action methods

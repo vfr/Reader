@@ -1,6 +1,6 @@
 //
 //	ReaderThumbCache.m
-//	Reader v2.5.0
+//	Reader v2.5.2
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -158,6 +158,10 @@
 					if (seconds > age) // Older than so remove the thumb cache
 					{
 						[fileManager removeItemAtPath:cachePath error:NULL];
+
+						#ifdef DEBUG
+							NSLog(@"%s purged %@", __FUNCTION__, cacheName);
+						#endif
 					}
 				}
 			}

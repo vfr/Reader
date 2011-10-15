@@ -1,6 +1,6 @@
 //
 //	ReaderThumbsView.h
-//	Reader v2.5.0
+//	Reader v2.5.2
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -68,5 +68,7 @@
 - (void)refreshThumbWithIndex:(NSInteger)index;
 
 - (void)refreshVisibleThumbs;
+
+- (CGPoint)insetContentOffset;
 
 @end
