@@ -1,6 +1,6 @@
 //
 //	ReaderViewController.m
-//	Reader v2.5.2
+//	Reader v2.5.3
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -272,13 +272,13 @@
 		{
 			NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 
-			[notificationCenter addObserver:self selector:@selector(saveReaderDocument:) name:UIApplicationWillTerminateNotification object:nil];
+			[notificationCenter addObserver:self selector:@selector(applicationWill:) name:UIApplicationWillTerminateNotification object:nil];
 
-			[notificationCenter addObserver:self selector:@selector(saveReaderDocument:) name:UIApplicationWillResignActiveNotification object:nil];
+			[notificationCenter addObserver:self selector:@selector(applicationWill:) name:UIApplicationWillResignActiveNotification object:nil];
 
-			document = [object retain]; // Retain the supplied ReaderDocument object for our use
+			[object updateProperties]; document = [object retain]; // Retain the supplied ReaderDocument object for our use
 
-			[ReaderThumbCache touchThumbCacheWithGUID:object.guid]; // Touch thumb cache
+			[ReaderThumbCache touchThumbCacheWithGUID:object.guid]; // Touch the document thumb cache
 
 			reader = self; // Return an initialized ReaderViewController object
 		}
@@ -396,7 +396,7 @@
 
 	if (CGSizeEqualToSize(theScrollView.contentSize, CGSizeZero)) // First time
 	{
-		[self performSelector:@selector(showDocument:) withObject:nil afterDelay:0.0];
+		[self performSelector:@selector(showDocument:) withObject:nil afterDelay:0.02];
 	}
 
 #if (READER_DISABLE_IDLE == TRUE) // Option
@@ -453,10 +453,7 @@
 	NSLog(@"%s (%d)", __FUNCTION__, interfaceOrientation);
 #endif
 
-	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) // See README
-		return UIInterfaceOrientationIsPortrait(interfaceOrientation);
-	else
-		return YES;
+	return YES;
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
@@ -512,11 +509,7 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-
-	[notificationCenter removeObserver:self name:UIApplicationWillTerminateNotification object:nil];
-
-	[notificationCenter removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[mainToolbar release], mainToolbar = nil; [mainPagebar release], mainPagebar = nil;
 
@@ -853,7 +846,7 @@
 
 		printInteraction = [printInteractionController sharedPrintController];
 
-		if ([printInteractionController canPrintURL:fileURL] == YES)
+		if ([printInteractionController canPrintURL:fileURL] == YES) // Check first
 		{
 			UIPrintInfo *printInfo = [NSClassFromString(@"UIPrintInfo") printInfo];
 
@@ -967,9 +960,9 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-#ifdef DEBUG
-	if ((result == MFMailComposeResultFailed) && (error != NULL)) NSLog(@"%@", error);
-#endif
+	#ifdef DEBUG
+		if ((result == MFMailComposeResultFailed) && (error != NULL)) NSLog(@"%@", error);
+	#endif
 
 	[self dismissModalViewControllerAnimated:YES]; // Dismiss
 }
@@ -1007,15 +1000,20 @@
 	[self showDocumentPage:page]; // Show the page
 }
 
-#pragma mark Notification observer methods
+#pragma mark UIApplication notification methods
 
-- (void)saveReaderDocument:(NSNotification *)notification
+- (void)applicationWill:(NSNotification *)notification
 {
 #ifdef DEBUGX
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
 	[document saveReaderDocument]; // Save any ReaderDocument object changes
+
+	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
+	{
+		if (printInteraction != nil) [printInteraction dismissAnimated:NO];
+	}
 }
 
 @end

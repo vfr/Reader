@@ -1,6 +1,6 @@
 //
 //	ThumbsMainToolbar.m
-//	Reader v2.5.0
+//	Reader v2.5.3
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -27,7 +27,6 @@
 #define DONE_BUTTON_WIDTH 56.0f
 #define SHOW_CONTROL_WIDTH 78.0f
 
-#define TITLE_MINIMUM_WIDTH 128.0f
 #define TITLE_HEIGHT 28.0f
 
 #pragma mark Properties
@@ -103,7 +102,7 @@
 
 #endif // end of READER_BOOKMARKS Option
 
-		if (titleWidth >= TITLE_MINIMUM_WIDTH) // Title minimum width check
+		if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
 		{
 			CGRect titleRect = CGRectMake(titleX, BUTTON_Y, titleWidth, TITLE_HEIGHT);
 
@@ -114,7 +113,9 @@
 			titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 			titleLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
 			titleLabel.textColor = [UIColor colorWithWhite:0.0f alpha:1.0f];
+			titleLabel.shadowColor = [UIColor colorWithWhite:0.65f alpha:1.0f];
 			titleLabel.backgroundColor = [UIColor clearColor];
+			titleLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
 			titleLabel.adjustsFontSizeToFitWidth = YES;
 			titleLabel.minimumFontSize = 14.0f;
 			titleLabel.text = title;

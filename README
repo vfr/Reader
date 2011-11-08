@@ -155,11 +155,10 @@ page thumb cache is kept.
 Caveats
 -------
 
-¹ There appears to be a bug in iOS 4.x with view controller rotation
-handling when a modal view controller is presented from a modal view
-controller which is in a UINavigationController on small devices. For
-this reason, landscape support has been disabled on iPhone and iPod
-touch for now.
+¹ There appears to be a bug in iOS 4 with its view controller rotation
+handling when a modal view controller is presented in landscape from a
+modal view controller when the status bar is visible on iPhone and iPod
+touch. The good news is that iOS 5 appears to have this bug fixed.
 
 HISTORY
 =======
@@ -205,7 +204,11 @@ HISTORY
 
 2011-10-15: Version 2.5.2
 
-        - One (crashing) bug fix and one minor UI tweak.
+	- One (crashing) bug fix and one minor UI tweak.
+
+2011-11-08: Version 2.5.3
+
+	- Various refinements and minor bug fixes.
 
 CONTACT INFO
 ============

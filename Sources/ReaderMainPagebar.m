@@ -1,6 +1,6 @@
 //
 //	ReaderMainPagebar.m
-//	Reader v2.5.0
+//	Reader v2.5.3
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -161,7 +161,7 @@
 		pageNumberView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
 		pageNumberView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.4f];
 
-		pageNumberView.layer.cornerRadius = 4.0f;
+		//pageNumberView.layer.cornerRadius = 4.0f;
 		pageNumberView.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
 		pageNumberView.layer.shadowColor = [UIColor colorWithWhite:0.0f alpha:0.6f].CGColor;
 		pageNumberView.layer.shadowPath = [UIBezierPath bezierPathWithRect:pageNumberView.bounds].CGPath;

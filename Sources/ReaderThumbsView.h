@@ -1,6 +1,6 @@
 //
 //	ReaderThumbsView.h
-//	Reader v2.5.2
+//	Reader v2.5.3
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -43,6 +43,8 @@
 @private // Instance variables
 
 	CGPoint lastContentOffset;
+
+	ReaderThumbView *touchedCell;
 
 	NSMutableArray *thumbCellsQueue;
 

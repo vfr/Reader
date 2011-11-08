@@ -1,6 +1,6 @@
 //
 //	ReaderThumbsView.m
-//	Reader v2.5.2
+//	Reader v2.5.3
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -32,6 +32,7 @@
 	{
 		self.scrollsToTop = NO;
 		self.autoresizesSubviews = NO;
+		self.delaysContentTouches = NO;
 		self.alwaysBounceVertical = YES;
 		self.contentMode = UIViewContentModeRedraw;
 		self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -64,6 +65,8 @@
 	[thumbCellsQueue release], thumbCellsQueue = nil;
 
 	[thumbCellsVisible release], thumbCellsVisible = nil;
+
+	[touchedCell release], touchedCell = nil;
 
 	[super dealloc];
 }
@@ -460,7 +463,7 @@
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	CGPoint insetContentOffset = self.contentOffset; // Actual
+	CGPoint insetContentOffset = self.contentOffset; // Offset
 
 	insetContentOffset.y += self.contentInset.top; // Inset adjust
 
@@ -556,6 +559,45 @@
 			];
 		}
 	}
+}
+
+#pragma mark UIResponder instance methods
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	[super touchesBegan:touches withEvent:event]; // Message superclass
+
+	if (touchedCell != nil) { [touchedCell showTouched:NO]; [touchedCell release], touchedCell = nil; }
+
+	if (touches.count == 1) // Show selection on single touch
+	{
+		UITouch *touch = [touches anyObject]; // Get touch from set
+
+		CGPoint point = [touch locationInView:touch.view]; // Touch location
+
+		ReaderThumbView *tvCell = [self thumbCellContainingPoint:point]; // Look for cell
+
+		if (tvCell != nil) { touchedCell = [tvCell retain]; [touchedCell showTouched:YES]; }
+	}
+}
+
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	[super touchesCancelled:touches withEvent:event]; // Message superclass
+
+	if (touchedCell != nil) { [touchedCell showTouched:NO]; [touchedCell release], touchedCell = nil; }
+}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	[super touchesEnded:touches withEvent:event]; // Message superclass
+
+	if (touchedCell != nil) { [touchedCell showTouched:NO]; [touchedCell release], touchedCell = nil; }
+}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	[super touchesMoved:touches withEvent:event]; // Message superclass
 }
 
 @end

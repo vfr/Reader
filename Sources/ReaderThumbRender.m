@@ -1,6 +1,6 @@
 //
 //	ReaderThumbRender.m
-//	Reader v2.5.0
+//	Reader v2.5.3
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -160,9 +160,9 @@
 			{
 				CGRect thumbRect = CGRectMake(0.0f, 0.0f, target_w, target_h); // Target thumb rect
 
-				CGContextSetRGBFillColor(context, 1.0f, 1.0f, 1.0f, 1.0f); CGContextFillRect(context, thumbRect);
+				CGContextSetRGBFillColor(context, 1.0f, 1.0f, 1.0f, 1.0f); CGContextFillRect(context, thumbRect); // White fill
 
-				CGContextConcatCTM(context, CGPDFPageGetDrawingTransform(thePDFPageRef, kCGPDFCropBox, thumbRect, 0, true));
+				CGContextConcatCTM(context, CGPDFPageGetDrawingTransform(thePDFPageRef, kCGPDFCropBox, thumbRect, 0, true)); // Fit rect
 
 				CGContextSetRenderingIntent(context, kCGRenderingIntentDefault); CGContextSetInterpolationQuality(context, kCGInterpolationDefault);
 
@@ -211,6 +211,10 @@
 		}
 
 		CGImageRelease(imageRef); // Release CGImage reference
+	}
+	else // No image - so remove the placeholder object from the cache
+	{
+		[[ReaderThumbCache sharedInstance] removeNullForKey:request.cacheKey];
 	}
 }
 

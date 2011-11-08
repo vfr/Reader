@@ -1,6 +1,6 @@
 //
 //	ReaderMainToolbar.m
-//	Reader v2.5.0
+//	Reader v2.5.3
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -33,7 +33,6 @@
 #define EMAIL_BUTTON_WIDTH 40.0f
 #define MARK_BUTTON_WIDTH 40.0f
 
-#define TITLE_MINIMUM_WIDTH 128.0f
 #define TITLE_HEIGHT 28.0f
 
 #pragma mark Properties
@@ -161,27 +160,30 @@
 
 #if (READER_ENABLE_PRINT == TRUE) // Option
 
-		Class printInteractionController = NSClassFromString(@"UIPrintInteractionController");
-
-		if ((printInteractionController != nil) && [printInteractionController isPrintingAvailable])
+		if (object.password == nil) // We can only print documents without passwords
 		{
-			rightButtonX -= (PRINT_BUTTON_WIDTH + BUTTON_SPACE);
+			Class printInteractionController = NSClassFromString(@"UIPrintInteractionController");
 
-			UIButton *printButton = [UIButton buttonWithType:UIButtonTypeCustom];
+			if ((printInteractionController != nil) && [printInteractionController isPrintingAvailable])
+			{
+				rightButtonX -= (PRINT_BUTTON_WIDTH + BUTTON_SPACE);
 
-			printButton.frame = CGRectMake(rightButtonX, BUTTON_Y, PRINT_BUTTON_WIDTH, BUTTON_HEIGHT);
-			[printButton setImage:[UIImage imageNamed:@"Reader-Print.png"] forState:UIControlStateNormal];
-			[printButton addTarget:self action:@selector(printButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-			[printButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
-			[printButton setBackgroundImage:buttonN forState:UIControlStateNormal];
-			printButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+				UIButton *printButton = [UIButton buttonWithType:UIButtonTypeCustom];
 
-			[self addSubview:printButton]; titleWidth -= (PRINT_BUTTON_WIDTH + BUTTON_SPACE);
+				printButton.frame = CGRectMake(rightButtonX, BUTTON_Y, PRINT_BUTTON_WIDTH, BUTTON_HEIGHT);
+				[printButton setImage:[UIImage imageNamed:@"Reader-Print.png"] forState:UIControlStateNormal];
+				[printButton addTarget:self action:@selector(printButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+				[printButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
+				[printButton setBackgroundImage:buttonN forState:UIControlStateNormal];
+				printButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+
+				[self addSubview:printButton]; titleWidth -= (PRINT_BUTTON_WIDTH + BUTTON_SPACE);
+			}
 		}
 
 #endif // end of READER_ENABLE_PRINT Option
 
-		if (titleWidth >= TITLE_MINIMUM_WIDTH) // Title minimum width check
+		if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
 		{
 			CGRect titleRect = CGRectMake(titleX, BUTTON_Y, titleWidth, TITLE_HEIGHT);
 
@@ -192,7 +194,9 @@
 			titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 			titleLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
 			titleLabel.textColor = [UIColor colorWithWhite:0.0f alpha:1.0f];
+			titleLabel.shadowColor = [UIColor colorWithWhite:0.65f alpha:1.0f];
 			titleLabel.backgroundColor = [UIColor clearColor];
+			titleLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
 			titleLabel.adjustsFontSizeToFitWidth = YES;
 			titleLabel.minimumFontSize = 14.0f;
 			titleLabel.text = [object.fileName stringByDeletingPathExtension];

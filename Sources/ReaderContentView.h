@@ -1,6 +1,6 @@
 //
 //	ReaderContentView.h
-//	Reader v2.5.1
+//	Reader v2.5.3
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -37,6 +37,8 @@
 	ReaderContentThumb *theThumbView;
 
 	UIView *theContainerView;
+
+	CGFloat zoomAmount;
 }
 
 @property (nonatomic, assign, readwrite) id <ReaderContentViewDelegate> message;

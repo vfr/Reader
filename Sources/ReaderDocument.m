@@ -318,6 +318,13 @@
 	[self archiveWithFileName:[self fileName]];
 }
 
+- (void)updateProperties
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+}
+
 #pragma mark NSCoding protocol methods
 
 - (void)encodeWithCoder:(NSCoder *)encoder

@@ -1,6 +1,6 @@
 //
 //	ReaderThumbView.m
-//	Reader v2.3.0
+//	Reader v2.5.3
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -69,6 +69,13 @@
 #endif
 
 	imageView.image = image; // Show image
+}
+
+- (void)showTouched:(BOOL)touched
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
 }
 
 - (void)removeFromSuperview

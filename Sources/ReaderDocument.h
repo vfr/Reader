@@ -1,6 +1,6 @@
 //
 //	ReaderDocument.h
-//	Reader v2.3.0
+//	Reader v2.5.3
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -55,5 +55,7 @@
 - (id)initWithFilePath:(NSString *)fullFilePath password:(NSString *)phrase;
 
 - (void)saveReaderDocument;
+
+- (void)updateProperties;
 
 @end

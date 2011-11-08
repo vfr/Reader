@@ -1,6 +1,6 @@
 //
 //	ReaderThumbView.h
-//	Reader v2.3.0
+//	Reader v2.5.3
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -32,6 +32,8 @@
 @property (nonatomic, assign, readwrite) NSUInteger targetTag;
 
 - (void)showImage:(UIImage *)image;
+
+- (void)showTouched:(BOOL)touched;
 
 - (void)reuse;
 

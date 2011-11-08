@@ -1,6 +1,6 @@
 //
 //	ThumbsViewController.h
-//	Reader v2.5.0
+//	Reader v2.5.3
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -67,6 +67,8 @@
 @private // Instance variables
 
 	UIView *backView;
+
+	UIView *maskView;
 
 	UILabel *textLabel;
 

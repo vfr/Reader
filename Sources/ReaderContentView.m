@@ -1,6 +1,6 @@
 //
 //	ReaderContentView.m
-//	Reader v2.5.1
+//	Reader v2.5.3
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011 Julius Oklamcak. All rights reserved.
@@ -24,7 +24,6 @@
 #pragma mark Constants
 
 #define ZOOM_LEVELS 4
-#define ZOOM_AMOUNT 0.5f
 
 #if (READER_SHOW_SHADOWS == TRUE) // Option
 	#define CONTENT_INSET 4.0f
@@ -59,7 +58,9 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 
 	self.minimumZoomScale = zoomScale; // Set the minimum and maximum zoom scales
 
-	self.maximumZoomScale = (zoomScale * ZOOM_LEVELS); // Number of zoom levels
+	self.maximumZoomScale = (zoomScale * ZOOM_LEVELS); // Max number of zoom levels
+
+	zoomAmount = ((self.maximumZoomScale - self.minimumZoomScale) / ZOOM_LEVELS);
 }
 
 - (id)initWithFrame:(CGRect)frame fileURL:(NSURL *)fileURL page:(NSUInteger)page password:(NSString *)phrase
@@ -235,18 +236,15 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 
 	CGFloat zoomScale = self.zoomScale;
 
-	if (zoomScale <= self.maximumZoomScale)
+	if (zoomScale < self.maximumZoomScale)
 	{
-		zoomScale += ZOOM_AMOUNT; // +=
+		zoomScale += zoomAmount; // += value
 
 		if (zoomScale > self.maximumZoomScale)
 		{
-			zoomScale = self.minimumZoomScale;
+			zoomScale = self.maximumZoomScale;
 		}
-	}
 
-	if (zoomScale != self.zoomScale) // Do zoom
-	{
 		[self setZoomScale:zoomScale animated:YES];
 	}
 }
@@ -259,18 +257,15 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 
 	CGFloat zoomScale = self.zoomScale;
 
-	if (zoomScale >= self.minimumZoomScale)
+	if (zoomScale > self.minimumZoomScale)
 	{
-		zoomScale -= ZOOM_AMOUNT; // -=
+		zoomScale -= zoomAmount; // -= value
 
 		if (zoomScale < self.minimumZoomScale)
 		{
-			zoomScale = self.maximumZoomScale;
+			zoomScale = self.minimumZoomScale;
 		}
-	}
 
-	if (zoomScale != self.zoomScale) // Do zoom
-	{
 		[self setZoomScale:zoomScale animated:YES];
 	}
 }
