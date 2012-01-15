@@ -1,15 +1,26 @@
 //
 //	ReaderContentPage.m
-//	Reader v2.5.0
+//	Reader v2.5.4
 //
 //	Created by Julius Oklamcak on 2011-07-01.
-//	Copyright © 2011 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
 //
-//	This work is being made available under a Creative Commons Attribution license:
-//		«http://creativecommons.org/licenses/by/3.0/»
-//	You are free to use this work and any derivatives of this work in personal and/or
-//	commercial products and projects as long as the above copyright is maintained and
-//	the original author is attributed.
+//	Permission is hereby granted, free of charge, to any person obtaining a copy
+//	of this software and associated documentation files (the "Software"), to deal
+//	in the Software without restriction, including without limitation the rights to
+//	use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+//	of the Software, and to permit persons to whom the Software is furnished to
+//	do so, subject to the following conditions:
+//
+//	The above copyright notice and this permission notice shall be included in all
+//	copies or substantial portions of the Software.
+//
+//	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+//	OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+//	WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+//	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
 #import "ReaderContentPage.h"
@@ -164,7 +175,7 @@
 	}
 }
 
-- (CGPDFArrayRef)findDestinationWithName:(const char *)destinationName inDestsTree:(CGPDFDictionaryRef)node
+- (CGPDFArrayRef)destinationWithName:(const char *)destinationName inDestsTree:(CGPDFDictionaryRef)node
 {
 #ifdef DEBUGX
 	NSLog(@"%s", __FUNCTION__);
@@ -235,11 +246,11 @@
 		{
 			CGPDFDictionaryRef kidNode = NULL; // Kid node dictionary
 
-			if (CGPDFArrayGetDictionary(kidsArray, index, &kidNode) == true) // Recurse into kid node
+			if (CGPDFArrayGetDictionary(kidsArray, index, &kidNode) == true) // Recurse into node
 			{
-				destinationArray = [self findDestinationWithName:destinationName inDestsTree:kidNode];
+				destinationArray = [self destinationWithName:destinationName inDestsTree:kidNode];
 
-				if (destinationArray != NULL) return destinationArray; // Return the destination array
+				if (destinationArray != NULL) return destinationArray; // Return destination array
 			}
 		}
 	}
@@ -247,7 +258,7 @@
 	return NULL;
 }
 
-- (id)findLinkTarget:(CGPDFDictionaryRef)annotationDictionary
+- (id)annotationLinkTarget:(CGPDFDictionaryRef)annotationDictionary
 {
 #ifdef DEBUGX
 	NSLog(@"%s", __FUNCTION__);
@@ -255,9 +266,9 @@
 
 	id linkTarget = nil; // Link target object
 
-	CGPDFArrayRef destArray = NULL; CGPDFStringRef destName = NULL;
+	CGPDFStringRef destName = NULL; const char *destString = NULL;
 
-	CGPDFDictionaryRef actionDictionary = NULL; // Link action dictionary
+	CGPDFDictionaryRef actionDictionary = NULL; CGPDFArrayRef destArray = NULL;
 
 	if (CGPDFDictionaryGetDictionary(annotationDictionary, "A", &actionDictionary) == true)
 	{
@@ -288,11 +299,14 @@
 			}
 		}
 	}
-	else // Handle other link target possibility
+	else // Handle other link target possibilities
 	{
 		if (CGPDFDictionaryGetArray(annotationDictionary, "Dest", &destArray) == false)
 		{
-			CGPDFDictionaryGetString(annotationDictionary, "Dest", &destName);
+			if (CGPDFDictionaryGetString(annotationDictionary, "Dest", &destName) == false)
+			{
+				CGPDFDictionaryGetName(annotationDictionary, "Dest", &destString);
+			}
 		}
 	}
 
@@ -310,7 +324,24 @@
 			{
 				const char *destinationName = (const char *)CGPDFStringGetBytePtr(destName); // Name
 
-				destArray = [self findDestinationWithName:destinationName inDestsTree:destsDictionary];
+				destArray = [self destinationWithName:destinationName inDestsTree:destsDictionary];
+			}
+		}
+	}
+
+	if (destString != NULL) // Handle a destination string
+	{
+		CGPDFDictionaryRef catalogDictionary = CGPDFDocumentGetCatalog(_PDFDocRef);
+
+		CGPDFDictionaryRef destsDictionary = NULL; // Document destinations dictionary
+
+		if (CGPDFDictionaryGetDictionary(catalogDictionary, "Dests", &destsDictionary) == true)
+		{
+			CGPDFDictionaryRef targetDictionary = NULL; // Destination target dictionary
+
+			if (CGPDFDictionaryGetDictionary(destsDictionary, destString, &targetDictionary) == true)
+			{
+				CGPDFDictionaryGetArray(targetDictionary, "D", &destArray);
 			}
 		}
 	}
@@ -323,7 +354,7 @@
 
 		if (CGPDFArrayGetDictionary(destArray, 0, &pageDictionaryFromDestArray) == true)
 		{
-			NSInteger pageCount = CGPDFDocumentGetNumberOfPages(_PDFDocRef);
+			NSInteger pageCount = CGPDFDocumentGetNumberOfPages(_PDFDocRef); // Pages
 
 			for (NSInteger pageNumber = 1; pageNumber <= pageCount; pageNumber++)
 			{
@@ -374,7 +405,7 @@
 			{
 				if (CGRectContainsPoint(link.rect, point) == true) // Found it
 				{
-					result = [self findLinkTarget:link.dictionary]; break;
+					result = [self annotationLinkTarget:link.dictionary]; break;
 				}
 			}
 		}

@@ -1,8 +1,8 @@
 //
-//	ReaderThumbCache.h
+//	Reader-Prefix.pch
 //	Reader v2.5.4
 //
-//	Created by Julius Oklamcak on 2011-09-01.
+//	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,37 +23,10 @@
 //	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import <UIKit/UIKit.h>
-
-#import "ReaderThumbRequest.h"
-
-@interface ReaderThumbCache : NSObject
-{
-@private // Instance variables
-
-	NSCache *thumbCache;
-}
-
-+ (ReaderThumbCache *)sharedInstance;
-
-+ (void)touchThumbCacheWithGUID:(NSString *)guid;
-
-+ (void)createThumbCacheWithGUID:(NSString *)guid;
-
-+ (void)removeThumbCacheWithGUID:(NSString *)guid;
-
-+ (void)purgeThumbCachesOlderThan:(NSTimeInterval)age;
-
-+ (NSString *)thumbCachePathForGUID:(NSString *)guid;
-
-- (id)thumbRequest:(ReaderThumbRequest *)request priority:(BOOL)priority;
-
-- (void)setObject:(UIImage *)image forKey:(NSString *)key;
-
-- (void)removeObjectForKey:(NSString *)key;
-
-- (void)removeNullForKey:(NSString *)key;
-
-- (void)removeAllObjects;
-
-@end
+#ifdef __OBJC__
+	#import <UIKit/UIKit.h>
+	#import <Foundation/Foundation.h>
+	#import <CoreGraphics/CoreGraphics.h>
+	#import <QuartzCore/QuartzCore.h>
+	#import <ImageIO/ImageIO.h>
+#endif

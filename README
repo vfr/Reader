@@ -4,7 +4,7 @@ PDF Reader/Viewer V2.5 for iOS
 INTRODUCTION
 ============
 
-I've written this basic PDF reader/viewer app for fellow iOS
+I've crafted this open source PDF reader/viewer for fellow iOS
 developers struggling with wrangling PDF files onto iOS device
 screens. Version 2.x is a complete rethink and rewrite of the
 original 1.x code. Please see my contact info below if you find
@@ -49,20 +49,19 @@ Supports:
 NOTES
 =====
 
-Version 2.x of the PDF reader/viewer code was developed and tested
-under Xcode 3.2.6, LLVM 1.7, iOS 4.3.5, iOS 4.2.1 and tested under
-Xcode 4.2, LLVM 3.0, iOS 5. The code uses manual memory management
-and will continue to do so in the near future.
+Version 2.x of the PDF reader/viewer code was originally developed
+and tested under Xcode 3.2.6, LLVM 1.7, iOS 4.3.5, iOS 4.2.1 with
+current development and testing under Xcode 4.2, LLVM 3.0, iOS 5.
+The code uses manual memory management and will continue to do so.
 
 The overall PDF reader/viewer functionality is encapsulated in the
 ReaderViewController class. To present a document with this class,
-you first need to initialize a ReaderDocument object with the file
-path to the PDF document - or unarchive an existing ReaderDocument
-property list - and then initialize a new ReaderViewController with
-this ReaderDocument object. The ReaderViewController class uses the
-ReaderDocument class to store information about the document and to
-keep track of document properties (bookmarks and the current page
-number for example).
+you first need to create a ReaderDocument object with the file path
+to the PDF document and then initialize a new ReaderViewController
+with this ReaderDocument object. The ReaderViewController class uses
+a ReaderDocument object to store information about the document and
+to keep track of document properties (thumb cache directory path,
+bookmarks and the current page number for example).
 
 An initialized ReaderViewController can then be presented
 modally, pushed onto a UINavigationController stack, placed in
@@ -71,7 +70,8 @@ Please note that since ReaderViewController implements its own
 toolbar, you need to hide the UINavigationController navigation
 bar before pushing it and then show the navigation bar after
 popping it. The ReaderDemoController class shows how this is
-done with a bundled PDF file.
+done with a bundled PDF file. To create a 'book as an app',
+please see the ReaderBookDelegate class.
 
 Required Files
 --------------
@@ -97,6 +97,7 @@ reader/viewer into one of your projects:
 	ReaderThumbsView.h	ReaderThumbsView.m
 	ThumbsViewController.h	ThumbsViewController.m
 	ThumbsMainToolbar.h	ThumbsMainToolbar.m
+	UIXToolbarView.h	UIXToolbarView.m
 
 	Reader-Email.png	Reader-Email@2x.png
 	Reader-Mark-N.png	Reader-Mark-N@2x.png
@@ -192,7 +193,7 @@ HISTORY
 
 2011-09-20: Version 2.4.0
 
-	- Replaced UIToolbars with custom toolbars.
+	- Replaced UIToolbars with custom UIView-based toolbars.
 
 2011-10-05: Version 2.5.0
 
@@ -209,6 +210,11 @@ HISTORY
 2011-11-08: Version 2.5.3
 
 	- Various refinements and minor bug fixes.
+
+2012-01-14: Version 2.5.4
+
+	- Bug fix to PDF link handling in older format PDFs.
+	- Changed from CC BY 3.0 License to MIT License.
 
 CONTACT INFO
 ============
