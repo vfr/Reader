@@ -1,6 +1,6 @@
 //
 //	ReaderThumbView.m
-//	Reader v2.5.4
+//	Reader v2.5.5
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -54,7 +54,7 @@
 		imageView.userInteractionEnabled = NO;
 		imageView.contentMode = UIViewContentModeScaleAspectFit;
 		imageView.autoresizingMask = UIViewAutoresizingNone;
-		imageView.backgroundColor = [UIColor clearColor];
+		//imageView.backgroundColor = [UIColor clearColor];
 
 		[self addSubview:imageView];
 	}

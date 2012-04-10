@@ -1,6 +1,6 @@
 //
 //	ReaderViewController.m
-//	Reader v2.5.4
+//	Reader v2.5.5
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -662,7 +662,26 @@
 			{
 				if ([target isKindOfClass:[NSURL class]]) // Open a URL
 				{
-					[[UIApplication sharedApplication] openURL:target];
+					NSURL *url = (NSURL *)target; // Cast to a NSURL object
+
+					if (url.scheme == nil) // Handle a missing URL scheme
+					{
+						NSString *www = url.absoluteString; // Get URL string
+
+						if ([www hasPrefix:@"www"] == YES) // Check for 'www' prefix
+						{
+							NSString *http = [NSString stringWithFormat:@"http://%@", www];
+
+							url = [NSURL URLWithString:http]; // Proper http-based URL
+						}
+					}
+
+					if ([[UIApplication sharedApplication] openURL:url] == NO)
+					{
+						#ifdef DEBUG
+							NSLog(@"%s '%@'", __FUNCTION__, url); // Bad or unknown URL
+						#endif
+					}
 				}
 				else // Not a URL, so check for other possible object type
 				{

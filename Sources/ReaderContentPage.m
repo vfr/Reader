@@ -1,6 +1,6 @@
 //
 //	ReaderContentPage.m
-//	Reader v2.5.4
+//	Reader v2.5.5
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -96,6 +96,9 @@
 		if (ll_x > ur_x) { CGPDFReal t = ll_x; ll_x = ur_x; ur_x = t; } // Normalize Xs
 		if (ll_y > ur_y) { CGPDFReal t = ll_y; ll_y = ur_y; ur_y = t; } // Normalize Ys
 
+		ll_x -= _pageOffsetX; ll_y -= _pageOffsetY; // Offset lower-left co-ordinate
+		ur_x -= _pageOffsetX; ur_y -= _pageOffsetY; // Offset upper-right co-ordinate
+
 		switch (_pageAngle) // Page rotation angle (in degrees)
 		{
 			case 90: // 90 degree page rotation
@@ -111,15 +114,15 @@
 				CGPDFReal swap;
 				swap = ll_y; ll_y = ll_x; ll_x = swap;
 				swap = ur_y; ur_y = ur_x; ur_x = swap;
-				ll_x = ((0.0f - ll_x) + _pageSize.width);
-				ur_x = ((0.0f - ur_x) + _pageSize.width);
+				ll_x = ((0.0f - ll_x) + _pageWidth);
+				ur_x = ((0.0f - ur_x) + _pageWidth);
 				break;
 			}
 
 			case 0: // 0 degree page rotation
 			{
-				ll_y = ((0.0f - ll_y) + _pageSize.height);
-				ur_y = ((0.0f - ur_y) + _pageSize.height);
+				ll_y = ((0.0f - ll_y) + _pageHeight);
+				ur_y = ((0.0f - ur_y) + _pageHeight);
 				break;
 			}
 		}
@@ -483,21 +486,25 @@
 					default: // Default case
 					case 0: case 180: // 0 and 180 degrees
 					{
-						_pageSize.width = effectiveRect.size.width;
-						_pageSize.height = effectiveRect.size.height;
+						_pageWidth = effectiveRect.size.width;
+						_pageHeight = effectiveRect.size.height;
+						_pageOffsetX = effectiveRect.origin.x;
+						_pageOffsetY = effectiveRect.origin.y;
 						break;
 					}
 
 					case 90: case 270: // 90 and 270 degrees
 					{
-						_pageSize.height = effectiveRect.size.width;
-						_pageSize.width = effectiveRect.size.height;
+						_pageWidth = effectiveRect.size.height;
+						_pageHeight = effectiveRect.size.width;
+						_pageOffsetX = effectiveRect.origin.y;
+						_pageOffsetY = effectiveRect.origin.x;
 						break;
 					}
 				}
 
-				NSInteger page_w = _pageSize.width; // Integer width
-				NSInteger page_h = _pageSize.height; // Integer height
+				NSInteger page_w = _pageWidth; // Integer width
+				NSInteger page_h = _pageHeight; // Integer height
 
 				if (page_w % 2) page_w--; if (page_h % 2) page_h--; // Even
 
@@ -572,6 +579,8 @@
 
 		drawPDFPageRef = CGPDFPageRetain(_PDFPageRef);
 	}
+
+	//NSLog(@"%s %@", __FUNCTION__, NSStringFromCGRect(CGContextGetClipBoundingBox(context)));
 
 	CGContextSetRGBFillColor(context, 1.0f, 1.0f, 1.0f, 1.0f); // White
 

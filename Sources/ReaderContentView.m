@@ -1,6 +1,6 @@
 //
 //	ReaderContentView.m
-//	Reader v2.5.4
+//	Reader v2.5.5
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -131,7 +131,7 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 			self.zoomScale = self.minimumZoomScale; // Set zoom to fit page content
 		}
 
-		[self addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:NULL];
+		[self addObserver:self forKeyPath:@"frame" options:0 context:NULL];
 
 		self.tag = page; // Tag the view with the page number
 	}

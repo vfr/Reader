@@ -19,6 +19,7 @@
 		455C789E14268F6A0053D73B /* Reader-Button-H@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 455C789A14268F6A0053D73B /* Reader-Button-H@2x.png */; };
 		455C789F14268F6A0053D73B /* Reader-Button-N.png in Resources */ = {isa = PBXBuildFile; fileRef = 455C789B14268F6A0053D73B /* Reader-Button-N.png */; };
 		455C78A014268F6A0053D73B /* Reader-Button-N@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 455C789C14268F6A0053D73B /* Reader-Button-N@2x.png */; };
+		4583767F1533B0AC003CD230 /* AppIcon-144.png in Resources */ = {isa = PBXBuildFile; fileRef = 4583767E1533B0AC003CD230 /* AppIcon-144.png */; };
 		458DDFD7140D45FA00C5DA94 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 458DDFD6140D45FA00C5DA94 /* ImageIO.framework */; };
 		45AB72C6141FBFCA003524C3 /* AppIcon-057.png in Resources */ = {isa = PBXBuildFile; fileRef = 45AB72B9141FBFCA003524C3 /* AppIcon-057.png */; };
 		45AB72C7141FBFCA003524C3 /* AppIcon-072.png in Resources */ = {isa = PBXBuildFile; fileRef = 45AB72BA141FBFCA003524C3 /* AppIcon-072.png */; };
@@ -76,6 +77,7 @@
 		455C789A14268F6A0053D73B /* Reader-Button-H@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Reader-Button-H@2x.png"; path = "Graphics/Reader-Button-H@2x.png"; sourceTree = "<group>"; };
 		455C789B14268F6A0053D73B /* Reader-Button-N.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Reader-Button-N.png"; path = "Graphics/Reader-Button-N.png"; sourceTree = "<group>"; };
 		455C789C14268F6A0053D73B /* Reader-Button-N@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Reader-Button-N@2x.png"; path = "Graphics/Reader-Button-N@2x.png"; sourceTree = "<group>"; };
+		4583767E1533B0AC003CD230 /* AppIcon-144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon-144.png"; path = "Graphics/AppIcon-144.png"; sourceTree = "<group>"; };
 		458BF155143E077500CDF567 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = Resources/de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		458DDFD6140D45FA00C5DA94 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		45AB72B9141FBFCA003524C3 /* AppIcon-057.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon-057.png"; path = "Graphics/AppIcon-057.png"; sourceTree = "<group>"; };
@@ -143,8 +145,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
+				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */,
 				450A670411D27B9D00014BF5 /* QuartzCore.framework in Frameworks */,
 				45BD5AFE13AE721A00D6FE97 /* MessageUI.framework in Frameworks */,
@@ -242,6 +244,7 @@
 				45AB72C3141FBFCA003524C3 /* Reader-Print@2x.png */,
 				45AB72C4141FBFCA003524C3 /* Reader-Thumbs.png */,
 				45AB72C5141FBFCA003524C3 /* Reader-Thumbs@2x.png */,
+				4583767E1533B0AC003CD230 /* AppIcon-144.png */,
 				45AB72BB141FBFCA003524C3 /* AppIcon-114.png */,
 				45AB72BA141FBFCA003524C3 /* AppIcon-072.png */,
 				45AB72B9141FBFCA003524C3 /* AppIcon-057.png */,
@@ -327,7 +330,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Reader" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -374,6 +377,7 @@
 				455C789E14268F6A0053D73B /* Reader-Button-H@2x.png in Resources */,
 				455C789F14268F6A0053D73B /* Reader-Button-N.png in Resources */,
 				455C78A014268F6A0053D73B /* Reader-Button-N@2x.png in Resources */,
+				4583767F1533B0AC003CD230 /* AppIcon-144.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -163,7 +163,7 @@
 	return document;
 }
 
-+ (ReaderDocument *)withDocumentFilePath:(NSString *)filePath password:(NSString *)phrase;
++ (ReaderDocument *)withDocumentFilePath:(NSString *)filePath password:(NSString *)phrase
 {
 #ifdef DEBUGX
 	NSLog(@"%s", __FUNCTION__);

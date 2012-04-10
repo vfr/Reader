@@ -1,6 +1,6 @@
 //
 //	ReaderContentPage.h
-//	Reader v2.5.4
+//	Reader v2.5.5
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -37,7 +37,10 @@
 
 	NSInteger _pageAngle;
 
-	CGSize _pageSize;
+	CGFloat _pageWidth;
+	CGFloat _pageHeight;
+	CGFloat _pageOffsetX;
+	CGFloat _pageOffsetY;
 }
 
 - (id)initWithURL:(NSURL *)fileURL page:(NSInteger)page password:(NSString *)phrase;

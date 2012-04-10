@@ -13,11 +13,11 @@ any bugs or have questions about the code.
 The code is universal and does not require any XIBs (as all UI
 elements are code generated, allowing for greatest flexibility).
 It runs on iPad, iPhone and iPod touch with iOS 4.0 and up. Also
-supported are the Retina displays on iPhone 4 and iPod touch 4th
-generation and is ready to be fully internationalized. The idea
-was to provide a complete project template that you could start
-building from, or, just pull the required files into an existing
-project to enable PDF reading/viewing in your app(s).
+supported are the Retina displays in all new devices and is ready
+to be fully internationalized. The idea was to provide a complete
+project template that you could start building from, or, just pull
+the required files into an existing project to enable PDF
+reading/viewing in your app(s).
 
 After launching the sample app, tap on the left hand side of the
 screen to go back a page. Tap on the right hand side to go to the
@@ -31,7 +31,7 @@ This implementation has been tested with large PDF files (over
 all flavors (from text only documents to graphics heavy magazines).
 It also works rather well on older devices (such as the iPod touch
 2nd generation and iPhone 3G) and takes advantage of the dual-core
-processor (via CATiledLayer and multi-threading) in the iPad 2.
+processor (via CATiledLayer and multi-threading) in new devices.
 
 FEATURES
 ========
@@ -40,7 +40,7 @@ Multithreaded: The UI is always quite smooth and responsive.
 
 Supports:
 
- - iBooks like document navigation.
+ - iBooks-like document navigation.
  - Device rotation and all orientations.¹
  - Encrypted (password protected) PDFs.
  - PDF links (URI and go to page).
@@ -51,7 +51,7 @@ NOTES
 
 Version 2.x of the PDF reader/viewer code was originally developed
 and tested under Xcode 3.2.6, LLVM 1.7, iOS 4.3.5, iOS 4.2.1 with
-current development and testing under Xcode 4.2, LLVM 3.0, iOS 5.
+current development and testing under Xcode 4.3, Clang 3.1, iOS 5.
 The code uses manual memory management and will continue to do so.
 
 The overall PDF reader/viewer functionality is encapsulated in the
@@ -99,6 +99,8 @@ reader/viewer into one of your projects:
 	ThumbsMainToolbar.h	ThumbsMainToolbar.m
 	UIXToolbarView.h	UIXToolbarView.m
 
+	Reader-Button-H.png	Reader-Button-H@2x.png
+	Reader-Button-N.png	Reader-Button-N@2x.png
 	Reader-Email.png	Reader-Email@2x.png
 	Reader-Mark-N.png	Reader-Mark-N@2x.png
 	Reader-Mark-Y.png	Reader-Mark-Y@2x.png
@@ -215,6 +217,12 @@ HISTORY
 
 	- Bug fix to PDF link handling in older format PDFs.
 	- Changed from CC BY 3.0 License to MIT License.
+
+2012-04-10: Version 2.5.5
+
+	- Handles PDF web links without http:// as the prefix.
+	- Bug fix to PDF link handling with cropboxed PDF files.
+	- Some performance improvements on iPad 3rd generation.
 
 CONTACT INFO
 ============
