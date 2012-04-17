@@ -1,6 +1,6 @@
 //
 //	ReaderThumbFetch.m
-//	Reader v2.5.4
+//	Reader v2.5.6
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -134,7 +134,15 @@
 
 		CGImageRelease(imageRef); // Release the CGImage reference from the above thumb load code
 
-		[[ReaderThumbCache sharedInstance] setObject:image forKey:request.cacheKey]; // Update cache
+		UIGraphicsBeginImageContextWithOptions(image.size, YES, request.scale); // Graphics context
+
+		[image drawAtPoint:CGPointZero]; // Decode and draw the image on this background thread
+
+		UIImage *decoded = UIGraphicsGetImageFromCurrentImageContext(); // Newly decoded image
+
+		UIGraphicsEndImageContext(); // Cleanup after the bitmap-based graphics drawing context
+
+		[[ReaderThumbCache sharedInstance] setObject:decoded forKey:request.cacheKey]; // Update cache
 
 		if (self.isCancelled == NO) // Show the image in the target thumb view on the main thread
 		{
@@ -144,7 +152,7 @@
 
 			dispatch_async(dispatch_get_main_queue(), // Queue image show on main thread
 			^{
-				if (thumbView.targetTag == targetTag) [thumbView showImage:image];
+				if (thumbView.targetTag == targetTag) [thumbView showImage:decoded];
 			});
 		}
 	}

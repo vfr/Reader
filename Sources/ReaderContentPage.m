@@ -1,6 +1,6 @@
 //
 //	ReaderContentPage.m
-//	Reader v2.5.5
+//	Reader v2.5.6
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -23,6 +23,7 @@
 //	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#import "ReaderConstants.h"
 #import "ReaderContentPage.h"
 #import "ReaderContentTile.h"
 #import "CGPDFDocument.h"
@@ -551,6 +552,19 @@
 
 	[super dealloc];
 }
+
+#if (READER_DISABLE_RETINA == TRUE) // Option
+
+- (void)didMoveToWindow
+{
+#ifdef DEBUGX
+	NSLog(@"%s", __FUNCTION__);
+#endif
+
+	self.contentScaleFactor = 1.0f; // Override scale factor
+}
+
+#endif // end of READER_DISABLE_RETINA Option
 
 /*
 - (void)layoutSubviews

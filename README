@@ -51,7 +51,7 @@ NOTES
 
 Version 2.x of the PDF reader/viewer code was originally developed
 and tested under Xcode 3.2.6, LLVM 1.7, iOS 4.3.5, iOS 4.2.1 with
-current development and testing under Xcode 4.3, Clang 3.1, iOS 5.
+current development and testing under Xcode 4.3.2, LLVM 3.1, iOS 5.
 The code uses manual memory management and will continue to do so.
 
 The overall PDF reader/viewer functionality is encapsulated in the
@@ -145,6 +145,11 @@ READER_STANDALONE - If FALSE, a "Done" button is added to the toolbar
 and the -dismissReaderViewController: delegate method is messaged when
 it is tapped.
 
+READER_DISABLE_RETINA - If TRUE, sets the CATiledLayer contentScale
+to 1.0f. This effectively disables retina support and results in
+non-retina device rendering speeds on retina display devices at
+the loss of retina display quality.
+
 ReaderDocument Archiving
 ------------------------
 
@@ -223,6 +228,11 @@ HISTORY
 	- Handles PDF web links without http:// as the prefix.
 	- Bug fix to PDF link handling with cropboxed PDF files.
 	- Some performance improvements on iPad 3rd generation.
+
+2012-04-16: Version 2.5.6
+
+	- Now loads and decodes thumbnail PNGs on a background thread.
+	- Added READER_DISABLE_RETINA #define performance option.
 
 CONTACT INFO
 ============
