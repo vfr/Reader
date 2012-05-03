@@ -1,6 +1,6 @@
 //
 //	ReaderThumbRender.m
-//	Reader v2.5.4
+//	Reader v2.5.6
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -100,8 +100,6 @@
 #endif
 
 	if (self.isCancelled == YES) return;
-
-	[[NSThread currentThread] setName:@"ReaderThumbRender"];
 
 	CFURLRef fileURL = (CFURLRef)request.fileURL; CGImageRef imageRef = NULL;
 
