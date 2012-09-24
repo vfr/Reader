@@ -1,6 +1,6 @@
 //
 //	ReaderThumbRequest.m
-//	Reader v2.5.4
+//	Reader v2.6.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -27,6 +27,27 @@
 #import "ReaderThumbView.h"
 
 @implementation ReaderThumbRequest
+{
+	NSURL *_fileURL;
+
+	NSString *_guid;
+
+	NSString *_password;
+
+	NSString *_cacheKey;
+
+	NSString *_thumbName;
+
+	ReaderThumbView *_thumbView;
+
+	NSUInteger _targetTag;
+
+	NSInteger _thumbPage;
+
+	CGSize _thumbSize;
+
+	CGFloat _scale;
+}
 
 #pragma mark Properties
 
@@ -45,26 +66,18 @@
 
 + (id)forView:(ReaderThumbView *)view fileURL:(NSURL *)url password:(NSString *)phrase guid:(NSString *)guid page:(NSInteger)page size:(CGSize)size
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
-	return [[[ReaderThumbRequest alloc] initWithView:view fileURL:url password:phrase guid:guid page:page size:size] autorelease];
+	return [[ReaderThumbRequest alloc] initWithView:view fileURL:url password:phrase guid:guid page:page size:size];
 }
 
 #pragma mark ReaderThumbRequest instance methods
 
 - (id)initWithView:(ReaderThumbView *)view fileURL:(NSURL *)url password:(NSString *)phrase guid:(NSString *)guid page:(NSInteger)page size:(CGSize)size
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	if ((self = [super init])) // Initialize object
 	{
 		NSInteger w = size.width; NSInteger h = size.height;
 
-		_thumbView = [view retain]; _thumbPage = page; _thumbSize = size;
+		_thumbView = view; _thumbPage = page; _thumbSize = size;
 
 		_fileURL = [url copy]; _password = [phrase copy]; _guid = [guid copy];
 
@@ -78,27 +91,6 @@
 	}
 
 	return self;
-}
-
-- (void)dealloc
-{
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
-	[_guid release], _guid = nil;
-
-	[_fileURL release], _fileURL = nil;
-
-	[_password release], _password = nil;
-
-	[_thumbView release], _thumbView = nil;
-
-	[_thumbName release], _thumbName = nil;
-
-	[_cacheKey release], _cacheKey = nil;
-
-	[super dealloc];
 }
 
 @end

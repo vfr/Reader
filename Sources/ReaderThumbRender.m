@@ -1,6 +1,6 @@
 //
 //	ReaderThumbRender.m
-//	Reader v2.5.6
+//	Reader v2.6.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -31,22 +31,17 @@
 #import <ImageIO/ImageIO.h>
 
 @implementation ReaderThumbRender
-
-//#pragma mark Properties
-
-//@synthesize ;
+{
+	ReaderThumbRequest *request;
+}
 
 #pragma mark ReaderThumbRender instance methods
 
 - (id)initWithRequest:(ReaderThumbRequest *)object
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	if ((self = [super initWithGUID:object.guid]))
 	{
-		request = [object retain];
+		request = object;
 	}
 
 	return self;
@@ -54,23 +49,11 @@
 
 - (void)dealloc
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	request.thumbView.operation = nil;
-
-	[request release], request = nil;
-
-	[super dealloc];
 }
 
 - (void)cancel
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	[[ReaderThumbCache sharedInstance] removeNullForKey:request.cacheKey];
 
 	[super cancel];
@@ -78,11 +61,7 @@
 
 - (NSURL *)thumbFileURL
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
-	NSFileManager *fileManager = [[NSFileManager new] autorelease]; // File manager instance
+	NSFileManager *fileManager = [NSFileManager new]; // File manager instance
 
 	NSString *cachePath = [ReaderThumbCache thumbCachePathForGUID:request.guid]; // Thumb cache path
 
@@ -95,13 +74,9 @@
 
 - (void)main
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	if (self.isCancelled == YES) return;
 
-	CFURLRef fileURL = (CFURLRef)request.fileURL; CGImageRef imageRef = NULL;
+	CFURLRef fileURL = (__bridge CFURLRef)request.fileURL; CGImageRef imageRef = NULL;
 
 	NSInteger page = request.thumbPage; NSString *password = request.password;
 
@@ -173,7 +148,7 @@
 
 				CGContextConcatCTM(context, CGPDFPageGetDrawingTransform(thePDFPageRef, kCGPDFCropBox, thumbRect, 0, true)); // Fit rect
 
-				CGContextSetRenderingIntent(context, kCGRenderingIntentDefault); CGContextSetInterpolationQuality(context, kCGInterpolationDefault);
+				//CGContextSetRenderingIntent(context, kCGRenderingIntentDefault); CGContextSetInterpolationQuality(context, kCGInterpolationDefault);
 
 				CGContextDrawPDFPage(context, thePDFPageRef); // Render the PDF page into the custom CGBitmap context
 
@@ -190,7 +165,7 @@
 
 	if (imageRef != NULL) // Create UIImage from CGImage and show it, then save thumb as PNG
 	{
-		UIImage *image = [UIImage imageWithCGImage:imageRef scale:request.scale orientation:0];
+		UIImage *image = [UIImage imageWithCGImage:imageRef scale:request.scale orientation:UIImageOrientationUp];
 
 		[[ReaderThumbCache sharedInstance] setObject:image forKey:request.cacheKey]; // Update cache
 
@@ -206,7 +181,7 @@
 			});
 		}
 
-		CFURLRef thumbURL = (CFURLRef)[self thumbFileURL]; // Thumb cache path with PNG file name URL
+		CFURLRef thumbURL = (__bridge CFURLRef)[self thumbFileURL]; // Thumb cache path with PNG file name URL
 
 		CGImageDestinationRef thumbRef = CGImageDestinationCreateWithURL(thumbURL, (CFStringRef)@"public.png", 1, NULL);
 

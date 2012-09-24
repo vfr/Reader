@@ -1,6 +1,6 @@
 //
 //	ReaderThumbCache.h
-//	Reader v2.5.4
+//	Reader v2.6.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -27,12 +27,7 @@
 
 #import "ReaderThumbRequest.h"
 
-@interface ReaderThumbCache : NSObject
-{
-@private // Instance variables
-
-	NSCache *thumbCache;
-}
+@interface ReaderThumbCache : NSObject <NSObject>
 
 + (ReaderThumbCache *)sharedInstance;
 

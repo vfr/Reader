@@ -1,6 +1,6 @@
 //
 //	ReaderThumbView.m
-//	Reader v2.5.5
+//	Reader v2.6.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -26,6 +26,11 @@
 #import "ReaderThumbView.h"
 
 @implementation ReaderThumbView
+{
+	NSOperation *__unsafe_unretained _operation;
+
+	NSUInteger _targetTag;
+}
 
 #pragma mark Properties
 
@@ -36,10 +41,6 @@
 
 - (id)initWithFrame:(CGRect)frame
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	if ((self = [super initWithFrame:frame]))
 	{
 		self.autoresizesSubviews = NO;
@@ -52,9 +53,8 @@
 
 		imageView.autoresizesSubviews = NO;
 		imageView.userInteractionEnabled = NO;
-		imageView.contentMode = UIViewContentModeScaleAspectFit;
 		imageView.autoresizingMask = UIViewAutoresizingNone;
-		//imageView.backgroundColor = [UIColor clearColor];
+		imageView.contentMode = UIViewContentModeScaleAspectFit;
 
 		[self addSubview:imageView];
 	}
@@ -62,55 +62,30 @@
 	return self;
 }
 
-- (void)dealloc
-{
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
-	[imageView release], imageView = nil;
-
-	[super dealloc];
-}
-
 - (void)showImage:(UIImage *)image
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	imageView.image = image; // Show image
 }
 
 - (void)showTouched:(BOOL)touched
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
+	// Implemented by ReaderThumbView subclass
 }
 
 - (void)removeFromSuperview
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	_targetTag = 0; // Clear target tag
 
-	[self.operation cancel], self.operation = nil;
+	[self.operation cancel]; self.operation = nil;
 
 	[super removeFromSuperview];
 }
 
 - (void)reuse
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	_targetTag = 0; // Clear target tag
 
-	[self.operation cancel], self.operation = nil;
+	[self.operation cancel]; self.operation = nil;
 
 	imageView.image = nil; // Release image
 }

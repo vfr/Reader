@@ -1,8 +1,8 @@
 //
-//	CGPDFDocument.h
+//	ReaderDocumentOutline.m
 //	Reader v2.6.0
 //
-//	Created by Julius Oklamcak on 2011-07-01.
+//	Created by Julius Oklamcak on 2012-09-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,12 +24,24 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <QuartzCore/QuartzCore.h>
 
-//
-//	Custom CGPDFDocument[...] functions
-//
+@interface ReaderDocumentOutline : NSObject <NSObject>
 
-CGPDFDocumentRef CGPDFDocumentCreateX(CFURLRef theURL, NSString *password);
++ (NSArray *)outlineFromFileURL:(NSURL *)fileURL password:(NSString *)phrase;
 
-BOOL CGPDFDocumentNeedsPassword(CFURLRef theURL, NSString *password);
++ (void)logDocumentOutlineArray:(NSArray *)array;
+
+@end
+
+@interface DocumentOutlineEntry : NSObject <NSObject>
+
++ (id)withTitle:(NSString *)title target:(id)target level:(NSInteger)level;
+
+- (id)initWithTitle:(NSString *)title target:(id)target level:(NSInteger)level;
+
+@property (nonatomic, assign, readonly) NSInteger level;
+@property (nonatomic, strong, readwrite) NSMutableArray *children;
+@property (nonatomic, strong, readonly) NSString *title;
+@property (nonatomic, strong, readonly) id target;
+
+@end

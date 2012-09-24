@@ -1,6 +1,6 @@
 //
 //	ReaderDemoController.h
-//	Reader v2.5.4
+//	Reader v2.6.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -25,11 +25,6 @@
 
 #import <UIKit/UIKit.h>
 
-#import "ReaderViewController.h"
-
-@interface ReaderDemoController : UIViewController <ReaderViewControllerDelegate>
-{
-@private // Instance variables
-}
+@interface ReaderDemoController : UIViewController
 
 @end

@@ -1,6 +1,6 @@
 //
 //	CGPDFDocument.m
-//	Reader v2.5.4
+//	Reader v2.6.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -31,10 +31,6 @@
 
 CGPDFDocumentRef CGPDFDocumentCreateX(CFURLRef theURL, NSString *password)
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	CGPDFDocumentRef thePDFDocRef = NULL;
 
 	if (theURL != NULL) // Check for non-NULL CFURLRef
@@ -89,10 +85,6 @@ CGPDFDocumentRef CGPDFDocumentCreateX(CFURLRef theURL, NSString *password)
 
 BOOL CGPDFDocumentNeedsPassword(CFURLRef theURL, NSString *password)
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	BOOL needPassword = NO; // Default flag
 
 	if (theURL != NULL) // Check for non-NULL CFURLRef
@@ -121,7 +113,9 @@ BOOL CGPDFDocumentNeedsPassword(CFURLRef theURL, NSString *password)
 						}
 					}
 					else
+					{
 						needPassword = YES;
+					}
 				}
 			}
 

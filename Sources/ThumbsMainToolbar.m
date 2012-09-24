@@ -1,6 +1,6 @@
 //
 //	ThumbsMainToolbar.m
-//	Reader v2.5.4
+//	Reader v2.6.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -48,25 +48,17 @@
 
 - (id)initWithFrame:(CGRect)frame
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	return [self initWithFrame:frame title:nil];
 }
 
 - (id)initWithFrame:(CGRect)frame title:(NSString *)title
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	if ((self = [super initWithFrame:frame]))
 	{
 		CGFloat viewWidth = self.bounds.size.width;
 
-		UIImage *imageH = [UIImage imageNamed:@"Reader-Button-H.png"];
-		UIImage *imageN = [UIImage imageNamed:@"Reader-Button-N.png"];
+		UIImage *imageH = [UIImage imageNamed:@"Reader-Button-H"];
+		UIImage *imageN = [UIImage imageNamed:@"Reader-Button-N"];
 
 		UIImage *buttonH = [imageH stretchableImageWithLeftCapWidth:5 topCapHeight:0];
 		UIImage *buttonN = [imageN stretchableImageWithLeftCapWidth:5 topCapHeight:0];
@@ -93,8 +85,8 @@
 
 		CGFloat showControlX = (viewWidth - (SHOW_CONTROL_WIDTH + BUTTON_SPACE));
 
-		UIImage *thumbsImage = [UIImage imageNamed:@"Reader-Thumbs.png"];
-		UIImage *bookmarkImage = [UIImage imageNamed:@"Reader-Mark-Y.png"];
+		UIImage *thumbsImage = [UIImage imageNamed:@"Reader-Thumbs"];
+		UIImage *bookmarkImage = [UIImage imageNamed:@"Reader-Mark-Y"];
 		NSArray *buttonItems = [NSArray arrayWithObjects:thumbsImage, bookmarkImage, nil];
 
 		UISegmentedControl *showControl = [[UISegmentedControl alloc] initWithItems:buttonItems];
@@ -107,7 +99,7 @@
 
 		[showControl addTarget:self action:@selector(showControlTapped:) forControlEvents:UIControlEventValueChanged];
 
-		[self addSubview:showControl]; [showControl release];
+		[self addSubview:showControl]; 
 
 		titleWidth -= (SHOW_CONTROL_WIDTH + BUTTON_SPACE);
 
@@ -120,7 +112,7 @@
 			UILabel *titleLabel = [[UILabel alloc] initWithFrame:titleRect];
 
 			titleLabel.textAlignment = UITextAlignmentCenter;
-			titleLabel.font = [UIFont systemFontOfSize:19.0f]; // 19 pt
+			titleLabel.font = [UIFont systemFontOfSize:19.0f];
 			titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 			titleLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
 			titleLabel.textColor = [UIColor colorWithWhite:0.0f alpha:1.0f];
@@ -131,30 +123,17 @@
 			titleLabel.minimumFontSize = 14.0f;
 			titleLabel.text = title;
 
-			[self addSubview:titleLabel]; [titleLabel release];
+			[self addSubview:titleLabel]; 
 		}
 	}
 
 	return self;
 }
 
-- (void)dealloc
-{
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
-	[super dealloc];
-}
-
 #pragma mark UISegmentedControl action methods
 
 - (void)showControlTapped:(UISegmentedControl *)control
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	[delegate tappedInToolbar:self showControl:control];
 }
 
@@ -162,10 +141,6 @@
 
 - (void)doneButtonTapped:(UIButton *)button
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	[delegate tappedInToolbar:self doneButton:button];
 }
 

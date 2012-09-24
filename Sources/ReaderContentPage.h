@@ -1,6 +1,6 @@
 //
 //	ReaderContentPage.h
-//	Reader v2.5.5
+//	Reader v2.6.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -26,26 +26,10 @@
 #import <UIKit/UIKit.h>
 
 @interface ReaderContentPage : UIView
-{
-@private // Instance variables
-
-	NSMutableArray *_links;
-
-	CGPDFDocumentRef _PDFDocRef;
-
-	CGPDFPageRef _PDFPageRef;
-
-	NSInteger _pageAngle;
-
-	CGFloat _pageWidth;
-	CGFloat _pageHeight;
-	CGFloat _pageOffsetX;
-	CGFloat _pageOffsetY;
-}
 
 - (id)initWithURL:(NSURL *)fileURL page:(NSInteger)page password:(NSString *)phrase;
 
-- (id)singleTap:(UITapGestureRecognizer *)recognizer;
+- (id)processSingleTap:(UITapGestureRecognizer *)recognizer;
 
 @end
 
@@ -55,14 +39,7 @@
 //	ReaderDocumentLink class interface
 //
 
-@interface ReaderDocumentLink : NSObject
-{
-@private // Instance variables
-
-	CGPDFDictionaryRef _dictionary;
-
-	CGRect _rect;
-}
+@interface ReaderDocumentLink : NSObject <NSObject>
 
 @property (nonatomic, assign, readonly) CGRect rect;
 

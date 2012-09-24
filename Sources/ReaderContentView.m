@@ -1,6 +1,6 @@
 //
 //	ReaderContentView.m
-//	Reader v2.5.5
+//	Reader v2.6.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -31,6 +31,15 @@
 #import <QuartzCore/QuartzCore.h>
 
 @implementation ReaderContentView
+{
+	ReaderContentPage *theContentView;
+
+	ReaderContentThumb *theThumbView;
+
+	UIView *theContainerView;
+
+	CGFloat zoomAmount;
+}
 
 #pragma mark Constants
 
@@ -45,6 +54,8 @@
 #define PAGE_THUMB_LARGE 240
 #define PAGE_THUMB_SMALL 144
 
+static void *ReaderContentViewContext = &ReaderContentViewContext;
+
 #pragma mark Properties
 
 @synthesize message;
@@ -54,6 +65,7 @@
 static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 {
 	CGFloat w_scale = (target.width / source.width);
+
 	CGFloat h_scale = (target.height / source.height);
 
 	return ((w_scale < h_scale) ? w_scale : h_scale);
@@ -76,10 +88,6 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 
 - (id)initWithFrame:(CGRect)frame fileURL:(NSURL *)fileURL page:(NSUInteger)page password:(NSString *)phrase
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	if ((self = [super initWithFrame:frame]))
 	{
 		self.scrollsToTop = NO;
@@ -118,9 +126,13 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 			self.contentOffset = CGPointMake((0.0f - CONTENT_INSET), (0.0f - CONTENT_INSET)); // Offset
 			self.contentInset = UIEdgeInsetsMake(CONTENT_INSET, CONTENT_INSET, CONTENT_INSET, CONTENT_INSET);
 
+#if (READER_ENABLE_PREVIEW == TRUE) // Option
+
 			theThumbView = [[ReaderContentThumb alloc] initWithFrame:theContentView.bounds]; // Page thumb view
 
 			[theContainerView addSubview:theThumbView]; // Add the thumb view to the container view
+
+#endif // end of READER_ENABLE_PREVIEW Option
 
 			[theContainerView addSubview:theContentView]; // Add the content view to the container view
 
@@ -131,7 +143,7 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 			self.zoomScale = self.minimumZoomScale; // Set zoom to fit page content
 		}
 
-		[self addObserver:self forKeyPath:@"frame" options:0 context:NULL];
+		[self addObserver:self forKeyPath:@"frame" options:0 context:ReaderContentViewContext];
 
 		self.tag = page; // Tag the view with the page number
 	}
@@ -141,26 +153,12 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 
 - (void)dealloc
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
-	[self removeObserver:self forKeyPath:@"frame"];
-
-	[theContainerView release], theContainerView = nil;
-
-	[theContentView release], theContentView = nil;
-
-	[theThumbView release], theThumbView = nil;
-
-	[super dealloc];
+	[self removeObserver:self forKeyPath:@"frame" context:ReaderContentViewContext];
 }
 
 - (void)showPageThumb:(NSURL *)fileURL page:(NSInteger)page password:(NSString *)phrase guid:(NSString *)guid
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
+#if (READER_ENABLE_PREVIEW == TRUE) // Option
 
 	BOOL large = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad); // Page thumb size
 
@@ -171,35 +169,36 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 	UIImage *image = [[ReaderThumbCache sharedInstance] thumbRequest:request priority:YES]; // Request the page thumb
 
 	if ([image isKindOfClass:[UIImage class]]) [theThumbView showImage:image]; // Show image from cache
+
+#endif // end of READER_ENABLE_PREVIEW Option
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
-	if ((object == self) && [keyPath isEqualToString:@"frame"])
+	if (context == ReaderContentViewContext) // Our context
 	{
-		CGFloat oldMinimumZoomScale = self.minimumZoomScale;
-
-		[self updateMinimumMaximumZoom]; // Update zoom scale limits
-
-		if (self.zoomScale == oldMinimumZoomScale) // Old minimum
+		if ((object == self) && [keyPath isEqualToString:@"frame"])
 		{
-			self.zoomScale = self.minimumZoomScale;
-		}
-		else // Check against minimum zoom scale
-		{
-			if (self.zoomScale < self.minimumZoomScale)
+			CGFloat oldMinimumZoomScale = self.minimumZoomScale;
+
+			[self updateMinimumMaximumZoom]; // Update zoom scale limits
+
+			if (self.zoomScale == oldMinimumZoomScale) // Old minimum
 			{
 				self.zoomScale = self.minimumZoomScale;
 			}
-			else // Check against maximum zoom scale
+			else // Check against minimum zoom scale
 			{
-				if (self.zoomScale > self.maximumZoomScale)
+				if (self.zoomScale < self.minimumZoomScale)
 				{
-					self.zoomScale = self.maximumZoomScale;
+					self.zoomScale = self.minimumZoomScale;
+				}
+				else // Check against maximum zoom scale
+				{
+					if (self.zoomScale > self.maximumZoomScale)
+					{
+						self.zoomScale = self.maximumZoomScale;
+					}
 				}
 			}
 		}
@@ -208,10 +207,6 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 
 - (void)layoutSubviews
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	[super layoutSubviews];
 
 	CGSize boundsSize = self.bounds.size;
@@ -230,21 +225,13 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 	theContainerView.frame = viewFrame;
 }
 
-- (id)singleTap:(UITapGestureRecognizer *)recognizer
+- (id)processSingleTap:(UITapGestureRecognizer *)recognizer
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
-	return [theContentView singleTap:recognizer];
+	return [theContentView processSingleTap:recognizer];
 }
 
 - (void)zoomIncrement
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	CGFloat zoomScale = self.zoomScale;
 
 	if (zoomScale < self.maximumZoomScale)
@@ -262,10 +249,6 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 
 - (void)zoomDecrement
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	CGFloat zoomScale = self.zoomScale;
 
 	if (zoomScale > self.minimumZoomScale)
@@ -283,10 +266,6 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 
 - (void)zoomReset
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	if (self.zoomScale > self.minimumZoomScale)
 	{
 		self.zoomScale = self.minimumZoomScale;
@@ -334,18 +313,10 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 
 @implementation ReaderContentThumb
 
-//#pragma mark Properties
-
-//@synthesize ;
-
 #pragma mark ReaderContentThumb instance methods
 
 - (id)initWithFrame:(CGRect)frame
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	if ((self = [super initWithFrame:frame])) // Superclass init
 	{
 		imageView.contentMode = UIViewContentModeScaleAspectFill;

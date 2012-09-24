@@ -1,6 +1,6 @@
 //
 //	ReaderContentTile.m
-//	Reader v2.5.5
+//	Reader v2.6.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -32,34 +32,20 @@
 #define LEVELS_OF_DETAIL 4
 #define LEVELS_OF_DETAIL_BIAS 3
 
-//#pragma mark Properties
-
-//@synthesize ;
-
 #pragma mark ReaderContentTile class methods
 
 + (CFTimeInterval)fadeDuration
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
-	return 0.001; // iOS bug workaround
-
-	//return 0.0; // No fading wanted
+	return 0.001; // iOS bug (flickering tiles) workaround
 }
 
 #pragma mark ReaderContentTile instance methods
 
 - (id)init
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	if ((self = [super init]))
 	{
-		self.levelsOfDetail = LEVELS_OF_DETAIL; // Zoom (?) levels
+		self.levelsOfDetail = LEVELS_OF_DETAIL; // Zoom levels
 
 		UIScreen *mainScreen = [UIScreen mainScreen]; // Main screen
 
@@ -81,15 +67,6 @@
 	}
 
 	return self;
-}
-
-- (void)dealloc
-{
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
-	[super dealloc];
 }
 
 @end

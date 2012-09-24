@@ -1,6 +1,6 @@
 //
 //	ReaderViewController.m
-//	Reader v2.5.5
+//	Reader v2.6.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -25,10 +25,41 @@
 
 #import "ReaderConstants.h"
 #import "ReaderViewController.h"
+#import "ThumbsViewController.h"
+#import "ReaderMainToolbar.h"
+#import "ReaderMainPagebar.h"
+#import "ReaderContentView.h"
 #import "ReaderThumbCache.h"
 #import "ReaderThumbQueue.h"
 
+#import <MessageUI/MessageUI.h>
+
+@interface ReaderViewController () <UIScrollViewDelegate, UIGestureRecognizerDelegate, MFMailComposeViewControllerDelegate,
+									ReaderMainToolbarDelegate, ReaderMainPagebarDelegate, ReaderContentViewDelegate, ThumbsViewControllerDelegate>
+@end
+
 @implementation ReaderViewController
+{
+	ReaderDocument *document;
+
+	UIScrollView *theScrollView;
+
+	ReaderMainToolbar *mainToolbar;
+
+	ReaderMainPagebar *mainPagebar;
+
+	NSMutableDictionary *contentViews;
+
+	UIPrintInteractionController *printInteraction;
+
+	NSInteger currentPage;
+
+	CGSize lastAppearSize;
+
+	NSDate *lastHideTime;
+
+	BOOL isVisible;
+}
 
 #pragma mark Constants
 
@@ -47,10 +78,6 @@
 
 - (void)updateScrollViewContentSize
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	NSInteger count = [document.pageCount integerValue];
 
 	if (count > PAGING_VIEWS) count = PAGING_VIEWS; // Limit
@@ -64,10 +91,6 @@
 
 - (void)updateScrollViewContentViews
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	[self updateScrollViewContentSize]; // Update the content size
 
 	NSMutableIndexSet *pageSet = [NSMutableIndexSet indexSet]; // Page set
@@ -104,10 +127,6 @@
 
 - (void)updateToolbarBookmarkIcon
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	NSInteger page = [document.pageNumber integerValue];
 
 	BOOL bookmarked = [document.bookmarks containsIndex:page];
@@ -117,10 +136,6 @@
 
 - (void)showDocumentPage:(NSInteger)page
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	if (page != currentPage) // Only if different
 	{
 		NSInteger minValue; NSInteger maxValue;
@@ -166,7 +181,7 @@
 
 				[theScrollView addSubview:contentView]; [contentViews setObject:contentView forKey:key];
 
-				contentView.message = self; [contentView release]; [newPageSet addIndex:number];
+				contentView.message = self; [newPageSet addIndex:number];
 			}
 			else // Reposition the existing content view
 			{
@@ -189,7 +204,7 @@
 			}
 		];
 
-		[unusedViews release], unusedViews = nil; // Release unused views
+		unusedViews = nil; // Release unused views
 
 		CGFloat viewWidthX1 = viewRect.size.width;
 		CGFloat viewWidthX2 = (viewWidthX1 * 2.0f);
@@ -242,7 +257,7 @@
 			}
 		];
 
-		[newPageSet release], newPageSet = nil; // Release new page set
+		newPageSet = nil; // Release new page set
 
 		[mainPagebar updatePagebar]; // Update the pagebar display
 
@@ -254,13 +269,9 @@
 
 - (void)showDocument:(id)object
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	[self updateScrollViewContentSize]; // Set content size
 
-	[self showDocumentPage:[document.pageNumber integerValue]]; // Show
+	[self showDocumentPage:[document.pageNumber integerValue]];
 
 	document.lastOpen = [NSDate date]; // Update last opened date
 
@@ -271,10 +282,6 @@
 
 - (id)initWithReaderDocument:(ReaderDocument *)object
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	id reader = nil; // ReaderViewController object
 
 	if ((object != nil) && ([object isKindOfClass:[ReaderDocument class]]))
@@ -287,7 +294,7 @@
 
 			[notificationCenter addObserver:self selector:@selector(applicationWill:) name:UIApplicationWillResignActiveNotification object:nil];
 
-			[object updateProperties]; document = [object retain]; // Retain the supplied ReaderDocument object for our use
+			[object updateProperties]; document = object; // Retain the supplied ReaderDocument object for our use
 
 			[ReaderThumbCache touchThumbCacheWithGUID:object.guid]; // Touch the document thumb cache directory
 
@@ -298,28 +305,11 @@
 	return reader;
 }
 
-/*
-- (void)loadView
-{
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
-	// Implement loadView to create a view hierarchy programmatically, without using a nib.
-}
-*/
-
 - (void)viewDidLoad
 {
-#ifdef DEBUGX
-	NSLog(@"%s %@", __FUNCTION__, NSStringFromCGRect(self.view.bounds));
-#endif
-
 	[super viewDidLoad];
 
-	NSAssert(!(document == nil), @"ReaderDocument == nil");
-
-	assert(self.splitViewController == nil); // Not supported (sorry)
+	assert(document != nil); // Must have a valid ReaderDocument
 
 	self.view.backgroundColor = [UIColor scrollViewTexturedBackgroundColor];
 
@@ -362,28 +352,23 @@
 
 	UITapGestureRecognizer *singleTapOne = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
 	singleTapOne.numberOfTouchesRequired = 1; singleTapOne.numberOfTapsRequired = 1; singleTapOne.delegate = self;
+	[self.view addGestureRecognizer:singleTapOne];
 
 	UITapGestureRecognizer *doubleTapOne = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
 	doubleTapOne.numberOfTouchesRequired = 1; doubleTapOne.numberOfTapsRequired = 2; doubleTapOne.delegate = self;
+	[self.view addGestureRecognizer:doubleTapOne];
 
 	UITapGestureRecognizer *doubleTapTwo = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
 	doubleTapTwo.numberOfTouchesRequired = 2; doubleTapTwo.numberOfTapsRequired = 2; doubleTapTwo.delegate = self;
+	[self.view addGestureRecognizer:doubleTapTwo];
 
 	[singleTapOne requireGestureRecognizerToFail:doubleTapOne]; // Single tap requires double tap to fail
 
-	[self.view addGestureRecognizer:singleTapOne]; [singleTapOne release];
-	[self.view addGestureRecognizer:doubleTapOne]; [doubleTapOne release];
-	[self.view addGestureRecognizer:doubleTapTwo]; [doubleTapTwo release];
-
-	contentViews = [NSMutableDictionary new]; lastHideTime = [NSDate new];
+	contentViews = [NSMutableDictionary new]; lastHideTime = [NSDate date];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-#ifdef DEBUGX
-	NSLog(@"%s %@", __FUNCTION__, NSStringFromCGRect(self.view.bounds));
-#endif
-
 	[super viewWillAppear:animated];
 
 	if (CGSizeEqualToSize(lastAppearSize, CGSizeZero) == false)
@@ -399,10 +384,6 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
-#ifdef DEBUGX
-	NSLog(@"%s %@", __FUNCTION__, NSStringFromCGRect(self.view.bounds));
-#endif
-
 	[super viewDidAppear:animated];
 
 	if (CGSizeEqualToSize(theScrollView.contentSize, CGSizeZero)) // First time
@@ -419,10 +400,6 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-#ifdef DEBUGX
-	NSLog(@"%s %@", __FUNCTION__, NSStringFromCGRect(self.view.bounds));
-#endif
-
 	[super viewWillDisappear:animated];
 
 	lastAppearSize = self.view.bounds.size; // Track view size
@@ -436,43 +413,31 @@
 
 - (void)viewDidDisappear:(BOOL)animated
 {
-#ifdef DEBUGX
-	NSLog(@"%s %@", __FUNCTION__, NSStringFromCGRect(self.view.bounds));
-#endif
-
 	[super viewDidDisappear:animated];
 }
 
 - (void)viewDidUnload
 {
-#ifdef DEBUGX
+#ifdef DEBUG
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
-	[mainToolbar release], mainToolbar = nil; [mainPagebar release], mainPagebar = nil;
+	mainToolbar = nil; mainPagebar = nil;
 
-	[theScrollView release], theScrollView = nil; [contentViews release], contentViews = nil;
+	theScrollView = nil; contentViews = nil; lastHideTime = nil;
 
-	[lastHideTime release], lastHideTime = nil; lastAppearSize = CGSizeZero; currentPage = 0;
+	lastAppearSize = CGSizeZero; currentPage = 0;
 
 	[super viewDidUnload];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-#ifdef DEBUGX
-	NSLog(@"%s (%d)", __FUNCTION__, interfaceOrientation);
-#endif
-
 	return YES;
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
-#ifdef DEBUGX
-	NSLog(@"%s %@ (%d)", __FUNCTION__, NSStringFromCGRect(self.view.bounds), toInterfaceOrientation);
-#endif
-
 	if (isVisible == NO) return; // iOS present modal bodge
 
 	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
@@ -483,10 +448,6 @@
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration
 {
-#ifdef DEBUGX
-	NSLog(@"%s %@ (%d)", __FUNCTION__, NSStringFromCGRect(self.view.bounds), interfaceOrientation);
-#endif
-
 	if (isVisible == NO) return; // iOS present modal bodge
 
 	[self updateScrollViewContentViews]; // Update content views
@@ -494,20 +455,18 @@
 	lastAppearSize = CGSizeZero; // Reset view size tracking
 }
 
+/*
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
-#ifdef DEBUGX
-	NSLog(@"%s %@ (%d to %d)", __FUNCTION__, NSStringFromCGRect(self.view.bounds), fromInterfaceOrientation, self.interfaceOrientation);
-#endif
-
 	//if (isVisible == NO) return; // iOS present modal bodge
 
 	//if (fromInterfaceOrientation == self.interfaceOrientation) return;
 }
+*/
 
 - (void)didReceiveMemoryWarning
 {
-#ifdef DEBUGX
+#ifdef DEBUG
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
@@ -516,29 +475,13 @@
 
 - (void)dealloc
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-
-	[mainToolbar release], mainToolbar = nil; [mainPagebar release], mainPagebar = nil;
-
-	[theScrollView release], theScrollView = nil; [contentViews release], contentViews = nil;
-
-	[lastHideTime release], lastHideTime = nil; [document release], document = nil;
-
-	[super dealloc];
 }
 
 #pragma mark UIScrollViewDelegate methods
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	__block NSInteger page = 0;
 
 	CGFloat contentOffsetX = scrollView.contentOffset.x;
@@ -560,10 +503,6 @@
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	[self showDocumentPage:theScrollView.tag]; // Show page
 
 	theScrollView.tag = 0; // Clear page number tag
@@ -573,10 +512,6 @@
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)recognizer shouldReceiveTouch:(UITouch *)touch
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	if ([touch.view isKindOfClass:[UIScrollView class]]) return YES;
 
 	return NO;
@@ -586,10 +521,6 @@
 
 - (void)decrementPageNumber
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	if (theScrollView.tag == 0) // Scroll view did end
 	{
 		NSInteger page = [document.pageNumber integerValue];
@@ -611,10 +542,6 @@
 
 - (void)incrementPageNumber
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	if (theScrollView.tag == 0) // Scroll view did end
 	{
 		NSInteger page = [document.pageNumber integerValue];
@@ -636,10 +563,6 @@
 
 - (void)handleSingleTap:(UITapGestureRecognizer *)recognizer
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	if (recognizer.state == UIGestureRecognizerStateRecognized)
 	{
 		CGRect viewRect = recognizer.view.bounds; // View bounds
@@ -656,7 +579,7 @@
 
 			ReaderContentView *targetView = [contentViews objectForKey:key];
 
-			id target = [targetView singleTap:recognizer]; // Process tap
+			id target = [targetView processSingleTap:recognizer]; // Target
 
 			if (target != nil) // Handle the returned target object
 			{
@@ -728,10 +651,6 @@
 
 - (void)handleDoubleTap:(UITapGestureRecognizer *)recognizer
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	if (recognizer.state == UIGestureRecognizerStateRecognized)
 	{
 		CGRect viewRect = recognizer.view.bounds; // View bounds
@@ -787,10 +706,6 @@
 
 - (void)contentView:(ReaderContentView *)contentView touchesBegan:(NSSet *)touches
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	if ((mainToolbar.hidden == NO) || (mainPagebar.hidden == NO))
 	{
 		if (touches.count == 1) // Single touches only
@@ -806,7 +721,7 @@
 
 		[mainToolbar hideToolbar]; [mainPagebar hidePagebar]; // Hide
 
-		[lastHideTime release]; lastHideTime = [NSDate new];
+		lastHideTime = [NSDate date];
 	}
 }
 
@@ -814,10 +729,6 @@
 
 - (void)tappedInToolbar:(ReaderMainToolbar *)toolbar doneButton:(UIButton *)button
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 #if (READER_STANDALONE == FALSE) // Option
 
 	[document saveReaderDocument]; // Save any ReaderDocument object changes
@@ -842,10 +753,6 @@
 
 - (void)tappedInToolbar:(ReaderMainToolbar *)toolbar thumbsButton:(UIButton *)button
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	if (printInteraction != nil) [printInteraction dismissAnimated:NO]; // Dismiss
 
 	ThumbsViewController *thumbsViewController = [[ThumbsViewController alloc] initWithReaderDocument:document];
@@ -856,16 +763,10 @@
 	thumbsViewController.modalPresentationStyle = UIModalPresentationFullScreen;
 
 	[self presentModalViewController:thumbsViewController animated:NO];
-
-	[thumbsViewController release]; // Release ThumbsViewController
 }
 
 - (void)tappedInToolbar:(ReaderMainToolbar *)toolbar printButton:(UIButton *)button
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 #if (READER_ENABLE_PRINT == TRUE) // Option
 
 	Class printInteractionController = NSClassFromString(@"UIPrintInteractionController");
@@ -918,10 +819,6 @@
 
 - (void)tappedInToolbar:(ReaderMainToolbar *)toolbar emailButton:(UIButton *)button
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 #if (READER_ENABLE_MAIL == TRUE) // Option
 
 	if ([MFMailComposeViewController canSendMail] == NO) return;
@@ -950,8 +847,6 @@
 			mailComposer.mailComposeDelegate = self; // Set the delegate
 
 			[self presentModalViewController:mailComposer animated:YES];
-
-			[mailComposer release]; // Cleanup
 		}
 	}
 
@@ -960,25 +855,17 @@
 
 - (void)tappedInToolbar:(ReaderMainToolbar *)toolbar markButton:(UIButton *)button
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	if (printInteraction != nil) [printInteraction dismissAnimated:YES];
 
 	NSInteger page = [document.pageNumber integerValue];
 
-	if ([document.bookmarks containsIndex:page])
+	if ([document.bookmarks containsIndex:page]) // Remove bookmark
 	{
-		[mainToolbar setBookmarkState:NO];
-
-		[document.bookmarks removeIndex:page];
+		[mainToolbar setBookmarkState:NO]; [document.bookmarks removeIndex:page];
 	}
-	else // Add the bookmarked page index
+	else // Add the bookmarked page index to the bookmarks set
 	{
-		[mainToolbar setBookmarkState:YES];
-
-		[document.bookmarks addIndex:page];
+		[mainToolbar setBookmarkState:YES]; [document.bookmarks addIndex:page];
 	}
 }
 
@@ -986,10 +873,6 @@
 
 - (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	#ifdef DEBUG
 		if ((result == MFMailComposeResultFailed) && (error != NULL)) NSLog(@"%@", error);
 	#endif
@@ -1001,10 +884,6 @@
 
 - (void)dismissThumbsViewController:(ThumbsViewController *)viewController
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	[self updateToolbarBookmarkIcon]; // Update bookmark icon
 
 	[self dismissModalViewControllerAnimated:NO]; // Dismiss
@@ -1012,10 +891,6 @@
 
 - (void)thumbsViewController:(ThumbsViewController *)viewController gotoPage:(NSInteger)page
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	[self showDocumentPage:page]; // Show the page
 }
 
@@ -1023,10 +898,6 @@
 
 - (void)pagebar:(ReaderMainPagebar *)pagebar gotoPage:(NSInteger)page
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	[self showDocumentPage:page]; // Show the page
 }
 
@@ -1034,10 +905,6 @@
 
 - (void)applicationWill:(NSNotification *)notification
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	[document saveReaderDocument]; // Save any ReaderDocument object changes
 
 	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)

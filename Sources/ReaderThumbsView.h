@@ -1,6 +1,6 @@
 //
 //	ReaderThumbsView.h
-//	Reader v2.5.4
+//	Reader v2.6.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -49,28 +49,9 @@
 
 @end
 
-@interface ReaderThumbsView : UIScrollView <UIScrollViewDelegate, UIGestureRecognizerDelegate>
-{
-@private // Instance variables
+@interface ReaderThumbsView : UIScrollView
 
-	CGPoint lastContentOffset;
-
-	ReaderThumbView *touchedCell;
-
-	NSMutableArray *thumbCellsQueue;
-
-	NSMutableArray *thumbCellsVisible;
-
-	NSInteger _thumbsX, _thumbsY, _thumbX;
-
-	CGSize _thumbSize, _lastViewSize;
-
-	NSUInteger _thumbCount;
-
-	BOOL canUpdate;
-}
-
-@property (nonatomic, assign, readwrite) id <ReaderThumbsViewDelegate> delegate;
+@property (nonatomic, unsafe_unretained, readwrite) id <ReaderThumbsViewDelegate> delegate;
 
 - (void)setThumbSize:(CGSize)thumbSize;
 

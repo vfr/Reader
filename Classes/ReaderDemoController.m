@@ -1,6 +1,6 @@
 //
 //	ReaderDemoController.m
-//	Reader v2.5.4
+//	Reader v2.6.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -24,6 +24,11 @@
 //
 
 #import "ReaderDemoController.h"
+#import "ReaderViewController.h"
+
+@interface ReaderDemoController () <ReaderViewControllerDelegate>
+
+@end
 
 @implementation ReaderDemoController
 
@@ -31,19 +36,11 @@
 
 #define DEMO_VIEW_CONTROLLER_PUSH FALSE
 
-//#pragma mark Properties
-
-//@synthesize ;
-
 #pragma mark UIViewController methods
 
 /*
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]))
 	{
 		// Custom initialization
@@ -56,20 +53,12 @@
 /*
 - (void)loadView
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	// Implement loadView to create a view hierarchy programmatically, without using a nib.
 }
 */
 
 - (void)viewDidLoad
 {
-#ifdef DEBUGX
-	NSLog(@"%s %@", __FUNCTION__, NSStringFromCGRect(self.view.bounds));
-#endif
-
 	[super viewDidLoad];
 
 	self.view.backgroundColor = [UIColor clearColor]; // Transparent
@@ -97,19 +86,15 @@
 	tapLabel.autoresizingMask |= UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
 	tapLabel.center = CGPointMake(viewSize.width / 2.0f, viewSize.height / 2.0f);
 
-	[self.view addSubview:tapLabel]; [tapLabel release];
+	[self.view addSubview:tapLabel]; 
 
 	UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
 	//singleTap.numberOfTouchesRequired = 1; singleTap.numberOfTapsRequired = 1; //singleTap.delegate = self;
-	[self.view addGestureRecognizer:singleTap]; [singleTap release];
+	[self.view addGestureRecognizer:singleTap]; 
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-#ifdef DEBUGX
-	NSLog(@"%s %@", __FUNCTION__, NSStringFromCGRect(self.view.bounds));
-#endif
-
 	[super viewWillAppear:animated];
 
 #if (DEMO_VIEW_CONTROLLER_PUSH == TRUE)
@@ -121,19 +106,11 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
-#ifdef DEBUGX
-	NSLog(@"%s %@", __FUNCTION__, NSStringFromCGRect(self.view.bounds));
-#endif
-
 	[super viewDidAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-#ifdef DEBUGX
-	NSLog(@"%s %@", __FUNCTION__, NSStringFromCGRect(self.view.bounds));
-#endif
-
 	[super viewWillDisappear:animated];
 
 #if (DEMO_VIEW_CONTROLLER_PUSH == TRUE)
@@ -145,16 +122,12 @@
 
 - (void)viewDidDisappear:(BOOL)animated
 {
-#ifdef DEBUGX
-	NSLog(@"%s %@", __FUNCTION__, NSStringFromCGRect(self.view.bounds));
-#endif
-
 	[super viewDidDisappear:animated];
 }
 
 - (void)viewDidUnload
 {
-#ifdef DEBUGX
+#ifdef DEBUG
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
@@ -163,65 +136,40 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-#ifdef DEBUGX
-	NSLog(@"%s (%d)", __FUNCTION__, interfaceOrientation);
-#endif
-
 	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) // See README
 		return UIInterfaceOrientationIsPortrait(interfaceOrientation);
 	else
 		return YES;
 }
 
+/*
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
-#ifdef DEBUGX
-	NSLog(@"%s %@ (%d)", __FUNCTION__, NSStringFromCGRect(self.view.bounds), toInterfaceOrientation);
-#endif
 }
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration
 {
-#ifdef DEBUGX
-	NSLog(@"%s %@ (%d)", __FUNCTION__, NSStringFromCGRect(self.view.bounds), interfaceOrientation);
-#endif
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
-#ifdef DEBUGX
-	NSLog(@"%s %@ (%d to %d)", __FUNCTION__, NSStringFromCGRect(self.view.bounds), fromInterfaceOrientation, self.interfaceOrientation);
-#endif
-
 	//if (fromInterfaceOrientation == self.interfaceOrientation) return;
 }
+*/
 
 - (void)didReceiveMemoryWarning
 {
-#ifdef DEBUGX
+#ifdef DEBUG
 	NSLog(@"%s", __FUNCTION__);
 #endif
 
 	[super didReceiveMemoryWarning];
 }
 
-- (void)dealloc
-{
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
-	[super dealloc];
-}
-
 #pragma mark UIGestureRecognizer methods
 
 - (void)handleSingleTap:(UITapGestureRecognizer *)recognizer
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	NSString *phrase = nil; // Document password (for unlocking most encrypted PDF files)
 
 	NSArray *pdfs = [[NSBundle mainBundle] pathsForResourcesOfType:@"pdf" inDirectory:nil];
@@ -248,8 +196,6 @@
 		[self presentModalViewController:readerViewController animated:YES];
 
 #endif // DEMO_VIEW_CONTROLLER_PUSH
-
-		[readerViewController release]; // Release the ReaderViewController
 	}
 }
 
@@ -257,10 +203,6 @@
 
 - (void)dismissReaderViewController:(ReaderViewController *)viewController
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 #if (DEMO_VIEW_CONTROLLER_PUSH == TRUE)
 
 	[self.navigationController popViewControllerAnimated:YES];

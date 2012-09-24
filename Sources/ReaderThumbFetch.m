@@ -1,6 +1,6 @@
 //
 //	ReaderThumbFetch.m
-//	Reader v2.5.6
+//	Reader v2.6.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -31,22 +31,17 @@
 #import <ImageIO/ImageIO.h>
 
 @implementation ReaderThumbFetch
-
-//#pragma mark Properties
-
-//@synthesize ;
+{
+	ReaderThumbRequest *request;
+}
 
 #pragma mark ReaderThumbFetch instance methods
 
 - (id)initWithRequest:(ReaderThumbRequest *)object
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	if ((self = [super initWithGUID:object.guid]))
 	{
-		request = [object retain];
+		request = object;
 	}
 
 	return self;
@@ -54,26 +49,14 @@
 
 - (void)dealloc
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	if (request.thumbView.operation == self)
 	{
 		request.thumbView.operation = nil; // Done
 	}
-
-	[request release], request = nil;
-
-	[super dealloc];
 }
 
 - (void)cancel
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	[[ReaderThumbCache sharedInstance] removeNullForKey:request.cacheKey];
 
 	[super cancel];
@@ -81,10 +64,6 @@
 
 - (NSURL *)thumbFileURL
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	NSString *cachePath = [ReaderThumbCache thumbCachePathForGUID:request.guid]; // Thumb cache path
 
 	NSString *fileName = [NSString stringWithFormat:@"%@.png", request.thumbName]; // Thumb file name
@@ -94,15 +73,11 @@
 
 - (void)main
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	if (self.isCancelled == YES) return;
 
 	NSURL *thumbURL = [self thumbFileURL]; CGImageRef imageRef = NULL;
 
-	CGImageSourceRef loadRef = CGImageSourceCreateWithURL((CFURLRef)thumbURL, NULL);
+	CGImageSourceRef loadRef = CGImageSourceCreateWithURL((__bridge CFURLRef)thumbURL, NULL);
 
 	if (loadRef != NULL) // Load the existing thumb image
 	{
@@ -122,13 +97,11 @@
 
 			[[ReaderThumbQueue sharedInstance] addWorkOperation:thumbRender]; // Queue the operation
 		}
-
-		[thumbRender release]; // Release ReaderThumbRender object
 	}
 
 	if (imageRef != NULL) // Create UIImage from CGImage and show it
 	{
-		UIImage *image = [UIImage imageWithCGImage:imageRef scale:request.scale orientation:0];
+		UIImage *image = [UIImage imageWithCGImage:imageRef scale:request.scale orientation:UIImageOrientationUp];
 
 		CGImageRelease(imageRef); // Release the CGImage reference from the above thumb load code
 

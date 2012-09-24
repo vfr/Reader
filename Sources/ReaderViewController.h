@@ -1,6 +1,6 @@
 //
 //	ReaderViewController.h
-//	Reader v2.5.4
+//	Reader v2.6.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -24,16 +24,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <MessageUI/MessageUI.h>
 
 #import "ReaderDocument.h"
-#import "ReaderContentView.h"
-#import "ReaderMainToolbar.h"
-#import "ReaderMainPagebar.h"
-#import "ThumbsViewController.h"
 
 @class ReaderViewController;
-@class ReaderMainToolbar;
 
 @protocol ReaderViewControllerDelegate <NSObject>
 
@@ -43,34 +37,9 @@
 
 @end
 
-@interface ReaderViewController : UIViewController <UIScrollViewDelegate, UIGestureRecognizerDelegate, MFMailComposeViewControllerDelegate,
-													ReaderMainToolbarDelegate, ReaderMainPagebarDelegate, ReaderContentViewDelegate,
-													ThumbsViewControllerDelegate>
-{
-@private // Instance variables
+@interface ReaderViewController : UIViewController
 
-	ReaderDocument *document;
-
-	UIScrollView *theScrollView;
-
-	ReaderMainToolbar *mainToolbar;
-
-	ReaderMainPagebar *mainPagebar;
-
-	NSMutableDictionary *contentViews;
-
-	UIPrintInteractionController *printInteraction;
-
-	NSInteger currentPage;
-
-	CGSize lastAppearSize;
-
-	NSDate *lastHideTime;
-
-	BOOL isVisible;
-}
-
-@property (nonatomic, assign, readwrite) id <ReaderViewControllerDelegate> delegate;
+@property (nonatomic, unsafe_unretained, readwrite) id <ReaderViewControllerDelegate> delegate;
 
 - (id)initWithReaderDocument:(ReaderDocument *)object;
 

@@ -1,6 +1,6 @@
 //
 //	ReaderThumbQueue.m
-//	Reader v2.5.4
+//	Reader v2.6.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -26,19 +26,16 @@
 #import "ReaderThumbQueue.h"
 
 @implementation ReaderThumbQueue
+{
+	NSOperationQueue *loadQueue;
 
-//#pragma mark Properties
-
-//@synthesize ;
+	NSOperationQueue *workQueue;
+}
 
 #pragma mark ReaderThumbQueue class methods
 
 + (ReaderThumbQueue *)sharedInstance
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	static dispatch_once_t predicate = 0;
 
 	static ReaderThumbQueue *object = nil; // Object
@@ -52,10 +49,6 @@
 
 - (id)init
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	if ((self = [super init])) // Initialize
 	{
 		loadQueue = [NSOperationQueue new];
@@ -74,25 +67,8 @@
 	return self;
 }
 
-- (void)dealloc
-{
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
-	[loadQueue release], loadQueue = nil;
-
-	[workQueue release], workQueue = nil;
-
-	[super dealloc];
-}
-
 - (void)addLoadOperation:(NSOperation *)operation
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	if ([operation isKindOfClass:[ReaderThumbOperation class]])
 	{
 		[loadQueue addOperation:operation]; // Add to load queue
@@ -101,10 +77,6 @@
 
 - (void)addWorkOperation:(NSOperation *)operation
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	if ([operation isKindOfClass:[ReaderThumbOperation class]])
 	{
 		[workQueue addOperation:operation]; // Add to work queue
@@ -113,10 +85,6 @@
 
 - (void)cancelOperationsWithGUID:(NSString *)guid
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	[loadQueue setSuspended:YES]; [workQueue setSuspended:YES];
 
 	for (ReaderThumbOperation *operation in loadQueue.operations)
@@ -140,10 +108,6 @@
 
 - (void)cancelAllOperations
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	[loadQueue cancelAllOperations]; [workQueue cancelAllOperations];
 }
 
@@ -156,6 +120,9 @@
 //
 
 @implementation ReaderThumbOperation
+{
+	NSString *_guid;
+}
 
 @synthesize guid = _guid;
 
@@ -163,27 +130,12 @@
 
 - (id)initWithGUID:(NSString *)guid
 {
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
 	if ((self = [super init]))
 	{
-		_guid = [guid retain];
+		_guid = guid;
 	}
 
 	return self;
-}
-
-- (void)dealloc
-{
-#ifdef DEBUGX
-	NSLog(@"%s", __FUNCTION__);
-#endif
-
-	[_guid release], _guid = nil;
-
-	[super dealloc];
 }
 
 @end
