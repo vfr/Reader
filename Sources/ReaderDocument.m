@@ -66,12 +66,9 @@
 
 + (NSString *)GUID
 {
-	CFUUIDRef theUUID;
-	CFStringRef theString;
+	CFUUIDRef theUUID = CFUUIDCreate(NULL);
 
-	theUUID = CFUUIDCreate(NULL);
-
-	theString = CFUUIDCreateString(NULL, theUUID);
+	CFStringRef theString = CFUUIDCreateString(NULL, theUUID);
 
 	NSString *unique = [NSString stringWithString:(__bridge id)theString];
 

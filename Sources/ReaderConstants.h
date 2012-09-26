@@ -23,6 +23,10 @@
 //	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#if !__has_feature(objc_arc)
+	#error ARC is required to build this code.
+#endif
+
 #import <Foundation/Foundation.h>
 
 #define READER_BOOKMARKS TRUE

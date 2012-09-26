@@ -1,12 +1,11 @@
 
-## PDF Reader/Viewer for iOS
+## PDF Reader Core for iOS
 
 ### Introduction
 
-I've crafted this open source PDF reader/viewer for fellow iOS
+I've crafted this open source PDF reader code for fellow iOS
 developers struggling with wrangling PDF files onto iOS device
-screens. Version 2.x is a complete rethink and rewrite of the
-original 1.x code.
+screens.
 
 The code is universal and does not require any XIBs (as all UI
 elements are code generated, allowing for greatest flexibility).
@@ -36,6 +35,10 @@ It also works rather well on older devices (such as the iPod touch
 2nd generation and iPhone 3G) and takes advantage of the dual-core
 processor (via CATiledLayer and multi-threading) in new devices.
 
+To see an example open source PDF Viewer App that uses this code
+as its base, have a look at this project repository on GitHub:
+https://github.com/vfr/Viewer
+
 ### Features
 
 Multithreaded: The UI is always quite smooth and responsive.
@@ -50,11 +53,12 @@ Supports:
 
 ### Notes
 
-Version 2.x of the PDF reader/viewer code was originally developed
-and tested under Xcode 3.2.6, LLVM 1.7, iOS 4.3.5, iOS 4.2.1 with
+Version 2.x of the PDF reader code was originally developed and
+tested under Xcode 3.2.6, LLVM 1.7, iOS 4.3.5 and iOS 4.2.1 with
 current development and testing under Xcode 4.5, LLVM 4.1, iOS 5/6.
+Please note that as of v2.6, the code was refactored to use ARC.
 
-The overall PDF reader/viewer functionality is encapsulated in the
+The overall PDF reader functionality is encapsulated in the
 ReaderViewController class. To present a document with this class,
 you first need to create a ReaderDocument object with the file path
 to the PDF document and then initialize a new ReaderViewController
@@ -76,7 +80,7 @@ please see the ReaderBookDelegate class.
 ### Required Files
 
 The following files are required to incorporate the PDF
-reader/viewer into one of your projects:
+reader into one of your projects:
 
 	CGPDFDocument.h, CGPDFDocument.m
 	ReaderDocument.h, ReaderDocument.m
@@ -110,8 +114,8 @@ reader/viewer into one of your projects:
 
 ### Required iOS Frameworks
 
-To incorporate the PDF reader/viewer into one of your projects,
-all of the following iOS frameworks are required by the code:
+To incorporate the PDF reader code into one of your projects,
+all of the following iOS frameworks are required:
 
 	UIKit, Foundation, CoreGraphics, QuartzCore, ImageIO, MessageUI
 
@@ -175,3 +179,7 @@ Email: joklamcak(at)gmail(dot)com
 The PDF link support code in the ReaderContentPage class is based on
 the links navigation code by Sorin Nistor from
 [http://ipdfdev.com/](http://ipdfdev.com/).
+
+### License
+
+This code has been made available under the MIT License.
