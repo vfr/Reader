@@ -24,7 +24,7 @@
 //
 
 #if !__has_feature(objc_arc)
-	#error ARC is required to build this code.
+	#error ARC (-fobjc-arc) is required to build this code.
 #endif
 
 #import <Foundation/Foundation.h>
