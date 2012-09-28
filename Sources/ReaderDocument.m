@@ -284,7 +284,28 @@
 
 - (void)updateProperties
 {
-	// TBD
+	CFURLRef docURLRef = (__bridge CFURLRef)self.fileURL; // File URL
+
+	CGPDFDocumentRef thePDFDocRef = CGPDFDocumentCreateWithURL(docURLRef);
+
+	if (thePDFDocRef != NULL) // Get the number of pages in the document
+	{
+		NSInteger pageCount = CGPDFDocumentGetNumberOfPages(thePDFDocRef);
+
+		_pageCount = [NSNumber numberWithInteger:pageCount];
+
+		CGPDFDocumentRelease(thePDFDocRef); // Cleanup
+	}
+
+	NSString *fullFilePath = [self.fileURL path]; // Full file path
+
+	NSFileManager *fileManager = [NSFileManager new]; // File manager instance
+
+	NSDictionary *fileAttributes = [fileManager attributesOfItemAtPath:fullFilePath error:NULL];
+
+	_fileDate = [fileAttributes objectForKey:NSFileModificationDate]; // File date
+
+	_fileSize = [fileAttributes objectForKey:NSFileSize]; // File size
 }
 
 #pragma mark NSCoding protocol methods
