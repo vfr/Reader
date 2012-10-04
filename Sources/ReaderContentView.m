@@ -153,7 +153,7 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 
 - (void)dealloc
 {
-	[self removeObserver:self forKeyPath:@"frame" context:ReaderContentViewContext];
+	[self removeObserver:self forKeyPath:@"frame"];
 }
 
 - (void)showPageThumb:(NSURL *)fileURL page:(NSInteger)page password:(NSString *)phrase guid:(NSString *)guid
