@@ -1,6 +1,6 @@
 //
 //	ReaderDocumentOutline.m
-//	Reader v2.6.0
+//	Reader v2.6.1
 //
 //	Created by Julius Oklamcak on 2012-09-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -35,7 +35,7 @@
 
 @interface DocumentOutlineEntry : NSObject <NSObject>
 
-+ (id)withTitle:(NSString *)title target:(id)target level:(NSInteger)level;
++ (id)newWithTitle:(NSString *)title target:(id)target level:(NSInteger)level;
 
 - (id)initWithTitle:(NSString *)title target:(id)target level:(NSInteger)level;
 

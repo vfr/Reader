@@ -1,6 +1,6 @@
 //
 //	ReaderContentPage.h
-//	Reader v2.6.0
+//	Reader v2.6.1
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -45,7 +45,7 @@
 
 @property (nonatomic, assign, readonly) CGPDFDictionaryRef dictionary;
 
-+ (id)withRect:(CGRect)linkRect dictionary:(CGPDFDictionaryRef)linkDictionary;
++ (id)newWithRect:(CGRect)linkRect dictionary:(CGPDFDictionaryRef)linkDictionary;
 
 - (id)initWithRect:(CGRect)linkRect dictionary:(CGPDFDictionaryRef)linkDictionary;
 

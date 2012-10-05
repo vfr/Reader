@@ -1,6 +1,6 @@
 //
 //	ReaderDocumentOutline.m
-//	Reader v2.6.0
+//	Reader v2.6.1
 //
 //	Created by Julius Oklamcak on 2012-09-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -343,7 +343,7 @@ void logDictionaryEntry(const char *key, CGPDFObjectRef object, void *info)
 
 				NSString *trimmed = [titleString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 
-				outlineEntry = [DocumentOutlineEntry withTitle:trimmed target:entryTarget level:level]; // New entry
+				outlineEntry = [DocumentOutlineEntry newWithTitle:trimmed target:entryTarget level:level]; // New entry
 
 				[array addObject:outlineEntry]; CFRelease(title); // Add new entry and cleanup
 			}
@@ -440,7 +440,7 @@ void logDictionaryEntry(const char *key, CGPDFObjectRef object, void *info)
 
 #pragma mark DocumentOutlineEntry class methods
 
-+ (id)withTitle:(NSString *)title target:(id)target level:(NSInteger)level
++ (id)newWithTitle:(NSString *)title target:(id)target level:(NSInteger)level
 {
 	return [[DocumentOutlineEntry alloc] initWithTitle:title target:target level:level];
 }

@@ -1,6 +1,6 @@
 //
 //	ReaderThumbRender.h
-//	Reader v2.6.0
+//	Reader v2.6.1
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -31,6 +31,6 @@
 
 @interface ReaderThumbRender : ReaderThumbOperation
 
-- (id)initWithRequest:(ReaderThumbRequest *)request;
+- (id)initWithRequest:(ReaderThumbRequest *)options;
 
 @end

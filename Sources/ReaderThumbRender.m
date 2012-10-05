@@ -1,6 +1,6 @@
 //
 //	ReaderThumbRender.m
-//	Reader v2.6.0
+//	Reader v2.6.1
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -37,26 +37,25 @@
 
 #pragma mark ReaderThumbRender instance methods
 
-- (id)initWithRequest:(ReaderThumbRequest *)object
+- (id)initWithRequest:(ReaderThumbRequest *)options
 {
-	if ((self = [super initWithGUID:object.guid]))
+	if ((self = [super initWithGUID:options.guid]))
 	{
-		request = object;
+		request = options;
 	}
 
 	return self;
 }
 
-- (void)dealloc
-{
-	request.thumbView.operation = nil;
-}
-
 - (void)cancel
 {
-	[[ReaderThumbCache sharedInstance] removeNullForKey:request.cacheKey];
+	[super cancel]; // Cancel the operation
 
-	[super cancel];
+	request.thumbView.operation = nil; // Break retain loop
+
+	request.thumbView = nil; // Release target thumb view on cancel
+
+	[[ReaderThumbCache sharedInstance] removeNullForKey:request.cacheKey];
 }
 
 - (NSURL *)thumbFileURL
@@ -74,11 +73,9 @@
 
 - (void)main
 {
-	if (self.isCancelled == YES) return;
-
-	CFURLRef fileURL = (__bridge CFURLRef)request.fileURL; CGImageRef imageRef = NULL;
-
 	NSInteger page = request.thumbPage; NSString *password = request.password;
+
+	CGImageRef imageRef = NULL; CFURLRef fileURL = (__bridge CFURLRef)request.fileURL;
 
 	CGPDFDocumentRef thePDFDocRef = CGPDFDocumentCreateX(fileURL, password);
 
@@ -200,6 +197,8 @@
 	{
 		[[ReaderThumbCache sharedInstance] removeNullForKey:request.cacheKey];
 	}
+
+	request.thumbView.operation = nil; // Break retain loop
 }
 
 @end

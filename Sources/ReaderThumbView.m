@@ -1,6 +1,6 @@
 //
 //	ReaderThumbView.m
-//	Reader v2.6.0
+//	Reader v2.6.1
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -27,7 +27,7 @@
 
 @implementation ReaderThumbView
 {
-	NSOperation *__unsafe_unretained _operation;
+	NSOperation *_operation;
 
 	NSUInteger _targetTag;
 }
@@ -76,16 +76,16 @@
 {
 	_targetTag = 0; // Clear target tag
 
-	[self.operation cancel]; self.operation = nil;
+	[self.operation cancel]; // Cancel operation
 
-	[super removeFromSuperview];
+	[super removeFromSuperview]; // Remove view
 }
 
 - (void)reuse
 {
 	_targetTag = 0; // Clear target tag
 
-	[self.operation cancel]; self.operation = nil;
+	[self.operation cancel]; // Cancel operation
 
 	imageView.image = nil; // Release image
 }
