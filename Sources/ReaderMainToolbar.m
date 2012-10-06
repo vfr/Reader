@@ -1,6 +1,6 @@
 //
 //	ReaderMainToolbar.m
-//	Reader v2.6.0
+//	Reader v2.6.1
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -118,7 +118,11 @@
 
 #endif // end of READER_ENABLE_THUMBS Option
 
+#if (READER_BOOKMARKS == TRUE || READER_ENABLE_MAIL == TRUE || READER_ENABLE_PRINT == TRUE)
+
 		CGFloat rightButtonX = viewWidth; // Right button start X position
+
+#endif // end of READER_BOOKMARKS || READER_ENABLE_MAIL || READER_ENABLE_PRINT Options
 
 #if (READER_BOOKMARKS == TRUE) // Option
 
