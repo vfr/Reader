@@ -212,11 +212,11 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				8D1107310486CEB800E47090 /* Reader-Info.plist */,
-				4541A9D7122EA716001A5E60 /* Localizable.strings */,
 				45AB72DF141FC04B003524C3 /* README.md */,
 				45D5AD9E1610E66B00706B9A /* HISTORY.md */,
 				45AB72DD141FC043003524C3 /* LICENSE.md */,
+				8D1107310486CEB800E47090 /* Reader-Info.plist */,
+				4541A9D7122EA716001A5E60 /* Localizable.strings */,
 				45AB72DB141FC039003524C3 /* Reader.pdf */,
 			);
 			name = Resources;

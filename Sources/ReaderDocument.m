@@ -1,6 +1,6 @@
 //
 //	ReaderDocument.m
-//	Reader v2.6.0
+//	Reader v2.6.1
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2012 Julius Oklamcak. All rights reserved.
@@ -179,16 +179,11 @@
 
 		if (fd > 0) // We have a valid file descriptor
 		{
-			const unsigned char sig[4]; // File signature
+			const char sig[1024]; // File signature buffer
 
 			ssize_t len = read(fd, (void *)&sig, sizeof(sig));
 
-			if (len == 4)
-				if (sig[0] == '%')
-					if (sig[1] == 'P')
-						if (sig[2] == 'D')
-							if (sig[3] == 'F')
-								state = YES;
+			state = (strnstr(sig, "%PDF", len) != NULL);
 
 			close(fd); // Close the file
 		}
