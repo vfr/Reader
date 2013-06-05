@@ -1,6 +1,10 @@
 
 ## History
 
+2013-06-04: Version 2.6.2
+
+	- Touch two UIButton, exclusiveTouch = NO. Not good. Fixed.
+
 2012-10-05: Version 2.6.1
 
 	- Greatly improved thumb operation cancel handling.
