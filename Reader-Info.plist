@@ -8,27 +8,30 @@
 	<string>en</string>
 	<key>CFBundleIconFiles</key>
 	<array>
+		<string>AppIcon-152.png</string>
 		<string>AppIcon-144.png</string>
+		<string>AppIcon-120.png</string>
 		<string>AppIcon-114.png</string>
+		<string>AppIcon-076.png</string>
 		<string>AppIcon-072.png</string>
 		<string>AppIcon-057.png</string>
 	</array>
+	<key>CFBundleName</key>
+	<string>${PRODUCT_NAME}</string>
 	<key>CFBundleDisplayName</key>
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.example.${PRODUCT_NAME:rfc1034identifier}</string>
-	<key>CFBundleName</key>
-	<string>${PRODUCT_NAME}</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>2.6.2</string>
+	<string>2.7.0</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.6.2</string>
+	<string>2.7.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIPrerenderedIcon</key>

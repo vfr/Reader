@@ -1,6 +1,6 @@
 //
 //	ReaderAppDelegate.m
-//	Reader v2.6.0
+//	Reader v2.7.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2013 Julius Oklamcak. All rights reserved.
@@ -50,7 +50,7 @@
 
 	navigationController = [[UINavigationController alloc] initWithRootViewController:readerDemoController];
 
-	mainWindow.backgroundColor = [UIColor scrollViewTexturedBackgroundColor]; // Window background color
+	mainWindow.backgroundColor = [UIColor grayColor]; // Neutral gray window background color
 
 	navigationController.navigationBar.barStyle = UIBarStyleBlack; navigationController.navigationBar.translucent = YES;
 

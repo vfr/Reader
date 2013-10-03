@@ -9,7 +9,7 @@ screens.
 
 The code is universal and does not require any XIBs (as all UI
 elements are code generated, allowing for greatest flexibility).
-It runs on iPad, iPhone and iPod touch with iOS 4.0 and up. Also
+It runs on iPad, iPhone and iPod touch with iOS 6.0 and up. Also
 supported are the Retina displays in all new devices and is ready
 to be fully internationalized. The idea was to provide a complete
 project template that you could start building from, or, just pull
@@ -32,7 +32,7 @@ This implementation has been tested with large PDF files (over
 250MB in size and over 2800 pages in length) and with PDF files of
 all flavors (from text only documents to graphics heavy magazines).
 It also works rather well on older devices (such as the iPod touch
-2nd generation and iPhone 3G) and takes advantage of the dual-core
+4th generation and iPhone 3GS) and takes advantage of the dual-core
 processor (via CATiledLayer and multi-threading) in new devices.
 
 To see an example open source PDF Viewer App that uses this code
@@ -46,16 +46,21 @@ Multithreaded: The UI is always quite smooth and responsive.
 Supports:
 
  - iBooks-like document navigation.
- - Device rotation and all orientations.¹
+ - Device rotation and all orientations.
  - Encrypted (password protected) PDFs.
  - PDF links (URI and go to page).
  - PDFs with rotated pages.
 
 ### Notes
 
+Version 2.x of the PDF reader code was originally developed
+and tested under Xcode 3.2.6, LLVM 1.7 and iOS 4 with current
+development and testing under Xcode 5.0, LLVM 5.0 and iOS 7.
+Please note that as of v2.6, the code was refactored to use ARC.
+
 Version 2.x of the PDF reader code was originally developed and
 tested under Xcode 3.2.6, LLVM 1.7, iOS 4.3.5 and iOS 4.2.1 with
-current development and testing under Xcode 4.6.2, LLVM 4.2, iOS 6.
+current development and testing under Xcode 5.0, LLVM 5.0, iOS 7.
 Please note that as of v2.6, the code was refactored to use ARC.
 
 The overall PDF reader functionality is encapsulated in the
@@ -160,13 +165,6 @@ method in the ReaderDocument.m source file. Archiving and unarchiving
 of the ReaderDocument object for a document is mandatory since this is
 where the current page number, bookmarks and directory of the document
 page thumb cache is kept.
-
-### Caveats
-
-¹ There appears to be a bug in iOS 4 with its view controller rotation
-handling when a modal view controller is presented in landscape from a
-modal view controller when the status bar is visible on iPhone and iPod
-touch. The good news is that iOS 5 appears to have fixed this bug.
 
 ### Contact Info
 

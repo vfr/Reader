@@ -54,6 +54,8 @@
 
 #pragma mark Constants
 
+#define STATUS_HEIGHT 20.0f
+
 #define TOOLBAR_HEIGHT 44.0f
 
 #define PAGE_THUMB_SMALL 160
@@ -90,9 +92,17 @@
 
 	assert(delegate != nil); assert(document != nil);
 
-	self.view.backgroundColor = [UIColor scrollViewTexturedBackgroundColor];
+	self.view.backgroundColor = [UIColor grayColor]; // Neutral gray
 
 	CGRect viewRect = self.view.bounds; // View controller's view bounds
+
+	if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
+	{
+		if ([self prefersStatusBarHidden] == NO) // Visible status bar
+		{
+			viewRect.origin.y += STATUS_HEIGHT;
+		}
+	}
 
 	NSString *toolbarTitle = [document.fileName stringByDeletingPathExtension];
 
@@ -161,6 +171,16 @@
 	mainToolbar = nil; theThumbsView = nil;
 
 	[super viewDidUnload];
+}
+
+- (BOOL)prefersStatusBarHidden
+{
+	return YES;
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+	return UIStatusBarStyleLightContent;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -259,7 +279,7 @@
 
 	NSInteger page = (showBookmarked ? [[bookmarked objectAtIndex:index] integerValue] : (index + 1));
 
-	[thumbCell showText:[NSString stringWithFormat:@"%d", page]]; // Page number place holder
+	[thumbCell showText:[NSString stringWithFormat:@"%i", page]]; // Page number place holder
 
 	[thumbCell showBookmark:[document.bookmarks containsIndex:page]]; // Show bookmarked status
 
@@ -361,7 +381,7 @@
 		textLabel.userInteractionEnabled = NO;
 		textLabel.contentMode = UIViewContentModeRedraw;
 		textLabel.autoresizingMask = UIViewAutoresizingNone;
-		textLabel.textAlignment = UITextAlignmentCenter;
+		textLabel.textAlignment = NSTextAlignmentCenter;
 		textLabel.font = [UIFont systemFontOfSize:fontSize];
 		textLabel.textColor = [UIColor colorWithWhite:0.24f alpha:1.0f];
 		textLabel.backgroundColor = [UIColor whiteColor];
