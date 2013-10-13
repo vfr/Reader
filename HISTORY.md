@@ -1,6 +1,10 @@
 
 ## History
 
+2013-10-12: Version 2.7.1
+
+	- Changed 'unsafe_unretained' to 'weak'.
+
 2013-10-03: Version 2.7.0
 
 	- iOS 7 and Xcode 5.0 support.

@@ -1,6 +1,6 @@
 //
 //	ThumbsViewController.h
-//	Reader v2.6.0
+//	Reader v2.7.1
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011-2013 Julius Oklamcak. All rights reserved.
@@ -43,7 +43,7 @@
 
 @interface ThumbsViewController : UIViewController
 
-@property (nonatomic, unsafe_unretained, readwrite) id <ThumbsViewControllerDelegate> delegate;
+@property (nonatomic, weak, readwrite) id <ThumbsViewControllerDelegate> delegate;
 
 - (id)initWithReaderDocument:(ReaderDocument *)object;
 
