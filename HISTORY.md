@@ -1,6 +1,10 @@
 
 ## History
 
+2013-10-24: Version 2.7.2
+
+	- iOS 7 status bar handling bug fixes.
+
 2013-10-12: Version 2.7.1
 
 	- Changed 'unsafe_unretained' to 'weak'.

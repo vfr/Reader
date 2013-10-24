@@ -1,6 +1,6 @@
 //
 //	ReaderViewController.m
-//	Reader v2.6.0
+//	Reader v2.7.2
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2013 Julius Oklamcak. All rights reserved.
@@ -315,50 +315,46 @@
 
 	self.view.backgroundColor = [UIColor grayColor]; // Neutral gray
 
-	CGRect viewRect = self.view.bounds; // View controller's view bounds
+	CGRect scrollViewRect = self.view.bounds; UIView *fakeStatusBar = nil;
 
-	if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
+	if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) // iOS 7+
 	{
 		if ([self prefersStatusBarHidden] == NO) // Visible status bar
 		{
-			viewRect.origin.y += STATUS_HEIGHT;
+			CGRect statusBarRect = self.view.bounds; // Status bar frame
+			statusBarRect.size.height = STATUS_HEIGHT; // Default status height
+			fakeStatusBar = [[UIView alloc] initWithFrame:statusBarRect]; // UIView
+			fakeStatusBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+			fakeStatusBar.backgroundColor = [UIColor blackColor];
+			fakeStatusBar.contentMode = UIViewContentModeRedraw;
+			fakeStatusBar.userInteractionEnabled = NO;
+
+			scrollViewRect.origin.y += STATUS_HEIGHT; scrollViewRect.size.height -= STATUS_HEIGHT;
 		}
 	}
 
-	theScrollView = [[UIScrollView alloc] initWithFrame:viewRect]; // All
-
-	theScrollView.scrollsToTop = NO;
-	theScrollView.pagingEnabled = YES;
-	theScrollView.delaysContentTouches = NO;
-	theScrollView.showsVerticalScrollIndicator = NO;
-	theScrollView.showsHorizontalScrollIndicator = NO;
-	theScrollView.contentMode = UIViewContentModeRedraw;
+	theScrollView = [[UIScrollView alloc] initWithFrame:scrollViewRect]; // UIScrollView
+	theScrollView.autoresizesSubviews = NO; theScrollView.contentMode = UIViewContentModeRedraw;
+	theScrollView.showsHorizontalScrollIndicator = NO; theScrollView.showsVerticalScrollIndicator = NO;
+	theScrollView.scrollsToTop = NO; theScrollView.delaysContentTouches = NO; theScrollView.pagingEnabled = YES;
 	theScrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	theScrollView.backgroundColor = [UIColor clearColor];
-	theScrollView.userInteractionEnabled = YES;
-	theScrollView.autoresizesSubviews = NO;
-	theScrollView.delegate = self;
-
+	theScrollView.backgroundColor = [UIColor clearColor]; theScrollView.delegate = self;
 	[self.view addSubview:theScrollView];
 
-	CGRect toolbarRect = viewRect;
-	toolbarRect.size.height = TOOLBAR_HEIGHT;
-
-	mainToolbar = [[ReaderMainToolbar alloc] initWithFrame:toolbarRect document:document]; // At top
-
-	mainToolbar.delegate = self;
-
+	CGRect toolbarRect = scrollViewRect; // Toolbar frame
+	toolbarRect.size.height = TOOLBAR_HEIGHT; // Default toolbar height
+	mainToolbar = [[ReaderMainToolbar alloc] initWithFrame:toolbarRect document:document]; // ReaderMainToolbar
+	mainToolbar.delegate = self; // ReaderMainToolbarDelegate
 	[self.view addSubview:mainToolbar];
 
-	CGRect pagebarRect = viewRect;
-	pagebarRect.size.height = PAGEBAR_HEIGHT;
-	pagebarRect.origin.y = (viewRect.size.height - PAGEBAR_HEIGHT);
-
-	mainPagebar = [[ReaderMainPagebar alloc] initWithFrame:pagebarRect document:document]; // At bottom
-
-	mainPagebar.delegate = self;
-
+	CGRect pagebarRect = self.view.bounds;; // Pagebar frame
+	pagebarRect.origin.y = (pagebarRect.size.height - PAGEBAR_HEIGHT);
+	pagebarRect.size.height = PAGEBAR_HEIGHT; // Default pagebar height
+	mainPagebar = [[ReaderMainPagebar alloc] initWithFrame:pagebarRect document:document]; // ReaderMainPagebar
+	mainPagebar.delegate = self; // ReaderMainPagebarDelegate
 	[self.view addSubview:mainPagebar];
+
+	if (fakeStatusBar != nil) [self.view addSubview:fakeStatusBar]; // Add status bar background view
 
 	UITapGestureRecognizer *singleTapOne = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
 	singleTapOne.numberOfTouchesRequired = 1; singleTapOne.numberOfTapsRequired = 1; singleTapOne.delegate = self;
