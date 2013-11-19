@@ -1,6 +1,6 @@
 //
 //	ReaderContentView.m
-//	Reader v2.6.1
+//	Reader v2.7.3
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2013 Julius Oklamcak. All rights reserved.
@@ -30,6 +30,10 @@
 
 #import <QuartzCore/QuartzCore.h>
 
+@interface ReaderContentView () <UIScrollViewDelegate>
+
+@end
+
 @implementation ReaderContentView
 {
 	ReaderContentPage *theContentView;
@@ -37,13 +41,12 @@
 	ReaderContentThumb *theThumbView;
 
 	UIView *theContainerView;
-
-	CGFloat zoomAmount;
 }
 
 #pragma mark Constants
 
-#define ZOOM_LEVELS 4
+#define ZOOM_FACTOR 2.0f
+#define ZOOM_MAXIMUM 16.0f
 
 #if (READER_SHOW_SHADOWS == TRUE) // Option
 	#define CONTENT_INSET 4.0f
@@ -81,9 +84,7 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 
 	self.minimumZoomScale = zoomScale; // Set the minimum and maximum zoom scales
 
-	self.maximumZoomScale = (zoomScale * ZOOM_LEVELS); // Max number of zoom levels
-
-	zoomAmount = ((self.maximumZoomScale - self.minimumZoomScale) / ZOOM_LEVELS);
+	self.maximumZoomScale = (zoomScale * ZOOM_MAXIMUM); // Max number of zoom levels
 }
 
 - (id)initWithFrame:(CGRect)frame fileURL:(NSURL *)fileURL page:(NSUInteger)page password:(NSString *)phrase
@@ -236,7 +237,7 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 
 	if (zoomScale < self.maximumZoomScale)
 	{
-		zoomScale += zoomAmount; // += value
+		zoomScale *= ZOOM_FACTOR; // Zoom in
 
 		if (zoomScale > self.maximumZoomScale)
 		{
@@ -253,7 +254,7 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 
 	if (zoomScale > self.minimumZoomScale)
 	{
-		zoomScale -= zoomAmount; // -= value
+		zoomScale /= ZOOM_FACTOR; // Zoom out
 
 		if (zoomScale < self.minimumZoomScale)
 		{

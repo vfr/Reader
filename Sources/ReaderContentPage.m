@@ -1,6 +1,6 @@
 //
 //	ReaderContentPage.m
-//	Reader v2.6.1
+//	Reader v2.7.3
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2013 Julius Oklamcak. All rights reserved.
@@ -283,7 +283,11 @@
 					{
 						const char *uri = (const char *)CGPDFStringGetBytePtr(uriString); // Destination URI string
 
-						linkTarget = [NSURL URLWithString:[NSString stringWithCString:uri encoding:NSASCIIStringEncoding]];
+						NSString *target = [NSString stringWithCString:uri encoding:NSUTF8StringEncoding]; // NSString - UTF8
+
+						linkTarget = [NSURL URLWithString:[target stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+
+						if (linkTarget == nil) NSLog(@"%s Bad URI '%@'", __FUNCTION__, target);
 					}
 				}
 			}

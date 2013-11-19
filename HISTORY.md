@@ -1,6 +1,11 @@
 
 ## History
 
+2013-11-19: Version 2.7.3
+
+	- Retina and zoom levels bug fixes.
+	- PDF annotation URI handling bug fix.
+
 2013-10-24: Version 2.7.2
 
 	- iOS 7 status bar handling bug fixes.
