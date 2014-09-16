@@ -1,6 +1,6 @@
 //
 //	ReaderContentPage.m
-//	Reader v2.8.0
+//	Reader v2.8.1
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
@@ -408,27 +408,16 @@
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
-	id view = nil; // UIView
-
-	if (CGRectIsEmpty(frame) == false)
+	if ((self = [super initWithFrame:frame]))
 	{
-		if ((self = [super initWithFrame:frame]))
-		{
-			self.autoresizesSubviews = NO;
-			self.userInteractionEnabled = NO;
-			self.contentMode = UIViewContentModeRedraw;
-			self.autoresizingMask = UIViewAutoresizingNone;
-			self.backgroundColor = [UIColor clearColor];
-
-			view = self; // Return self
-		}
-	}
-	else // Handle invalid frame size
-	{
-		self = nil;
+		self.autoresizesSubviews = NO;
+		self.userInteractionEnabled = NO;
+		self.contentMode = UIViewContentModeRedraw;
+		self.autoresizingMask = UIViewAutoresizingNone;
+		self.backgroundColor = [UIColor clearColor];
 	}
 
-	return view;
+	return self;
 }
 
 - (instancetype)initWithURL:(NSURL *)fileURL page:(NSInteger)page password:(NSString *)phrase
@@ -505,9 +494,9 @@
 		NSAssert(NO, @"fileURL == nil");
 	}
 
-	id view = [self initWithFrame:viewRect]; // UIView setup
+	ReaderContentPage *view = [self initWithFrame:viewRect];
 
-	if (view != nil) [self buildAnnotationLinksList]; // Links
+	if (view != nil) [self buildAnnotationLinksList];
 
 	return view;
 }

@@ -1,6 +1,6 @@
 //
 //	ReaderDocument.m
-//	Reader v2.8.0
+//	Reader v2.8.1
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
@@ -71,6 +71,7 @@
 @synthesize lastOpen = _lastOpen;
 @synthesize password = _password;
 @dynamic fileName, fileURL;
+@dynamic canEmail, canExport, canPrint;
 
 #pragma mark - ReaderDocument class methods
 
@@ -268,6 +269,21 @@
 	}
 
 	return _fileURL;
+}
+
+- (BOOL)canEmail
+{
+	return YES;
+}
+
+- (BOOL)canExport
+{
+	return YES;
+}
+
+- (BOOL)canPrint
+{
+	return YES;
 }
 
 - (BOOL)archiveDocumentProperties

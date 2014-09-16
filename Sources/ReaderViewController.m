@@ -1,6 +1,6 @@
 //
 //	ReaderViewController.m
-//	Reader v2.8.0
+//	Reader v2.8.1
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
@@ -58,6 +58,8 @@
 
 	UIPrintInteractionController *printInteraction;
 
+	CGFloat scrollViewOutset;
+
 	CGSize lastAppearSize;
 
 	NSDate *lastHideTime;
@@ -72,7 +74,8 @@
 #define TOOLBAR_HEIGHT 44.0f
 #define PAGEBAR_HEIGHT 48.0f
 
-#define SCROLLVIEW_OUTSET 4.0f
+#define SCROLLVIEW_OUTSET_SMALL 4.0f
+#define SCROLLVIEW_OUTSET_LARGE 8.0f
 
 #define TAP_AREA_SIZE 48.0f
 
@@ -104,7 +107,7 @@
 
 			viewRect.origin.x = (viewRect.size.width * (page - 1)); // Update X
 
-			contentView.frame = CGRectInset(viewRect, SCROLLVIEW_OUTSET, 0.0f);
+			contentView.frame = CGRectInset(viewRect, scrollViewOutset, 0.0f);
 		}
 	];
 
@@ -126,7 +129,7 @@
 {
 	CGRect viewRect = CGRectZero; viewRect.size = scrollView.bounds.size;
 
-	viewRect.origin.x = (viewRect.size.width * (page - 1)); viewRect = CGRectInset(viewRect, SCROLLVIEW_OUTSET, 0.0f);
+	viewRect.origin.x = (viewRect.size.width * (page - 1)); viewRect = CGRectInset(viewRect, scrollViewOutset, 0.0f);
 
 	NSURL *fileURL = document.fileURL; NSString *phrase = document.password; NSString *guid = document.guid; // Document properties
 
@@ -285,11 +288,9 @@
 
 - (instancetype)initWithReaderDocument:(ReaderDocument *)object
 {
-	id reader = nil; // ReaderViewController object
-
-	if ((object != nil) && ([object isKindOfClass:[ReaderDocument class]]))
+	if ((self = [super initWithNibName:nil bundle:nil])) // Initialize superclass
 	{
-		if ((self = [super initWithNibName:nil bundle:nil])) // Designated initializer
+		if ((object != nil) && ([object isKindOfClass:[ReaderDocument class]])) // Valid object
 		{
 			userInterfaceIdiom = [UIDevice currentDevice].userInterfaceIdiom; // User interface idiom
 
@@ -299,15 +300,19 @@
 
 			[notificationCenter addObserver:self selector:@selector(applicationWillResign:) name:UIApplicationWillResignActiveNotification object:nil];
 
+			scrollViewOutset = ((userInterfaceIdiom == UIUserInterfaceIdiomPad) ? SCROLLVIEW_OUTSET_LARGE : SCROLLVIEW_OUTSET_SMALL);
+
 			[object updateDocumentProperties]; document = object; // Retain the supplied ReaderDocument object for our use
 
 			[ReaderThumbCache touchThumbCacheWithGUID:object.guid]; // Touch the document thumb cache directory
-
-			reader = self; // Return an initialized ReaderViewController object
+		}
+		else // Invalid ReaderDocument object
+		{
+			self = nil;
 		}
 	}
 
-	return reader;
+	return self;
 }
 
 - (void)dealloc
@@ -340,7 +345,7 @@
 		}
 	}
 
-	CGRect scrollViewRect = CGRectInset(viewRect, -SCROLLVIEW_OUTSET, 0.0f);
+	CGRect scrollViewRect = CGRectInset(viewRect, -scrollViewOutset, 0.0f);
 	theScrollView = [[UIScrollView alloc] initWithFrame:scrollViewRect]; // All
 	theScrollView.autoresizesSubviews = NO; theScrollView.contentMode = UIViewContentModeRedraw;
 	theScrollView.showsHorizontalScrollIndicator = NO; theScrollView.showsVerticalScrollIndicator = NO;
@@ -734,8 +739,6 @@
 
 - (void)tappedInToolbar:(ReaderMainToolbar *)toolbar exportButton:(UIButton *)button
 {
-#if (READER_ENABLE_EXPORT == TRUE) // Option
-
 	if (printInteraction != nil) [printInteraction dismissAnimated:YES];
 
 	NSURL *fileURL = document.fileURL; // Document file URL
@@ -745,14 +748,10 @@
 	documentInteraction.delegate = self; // UIDocumentInteractionControllerDelegate
 
 	[documentInteraction presentOpenInMenuFromRect:button.bounds inView:button animated:YES];
-
-#endif // end of READER_ENABLE_EXPORT Option
 }
 
 - (void)tappedInToolbar:(ReaderMainToolbar *)toolbar printButton:(UIButton *)button
 {
-#if (READER_ENABLE_PRINT == TRUE) // Option
-
 	if ([UIPrintInteractionController isPrintingAvailable] == YES)
 	{
 		NSURL *fileURL = document.fileURL; // Document file URL
@@ -794,14 +793,10 @@
 			}
 		}
 	}
-
-#endif // end of READER_ENABLE_PRINT Option
 }
 
 - (void)tappedInToolbar:(ReaderMainToolbar *)toolbar emailButton:(UIButton *)button
 {
-#if (READER_ENABLE_MAIL == TRUE) // Option
-
 	if ([MFMailComposeViewController canSendMail] == NO) return;
 
 	if (printInteraction != nil) [printInteraction dismissAnimated:YES];
@@ -830,8 +825,6 @@
 			[self presentViewController:mailComposer animated:YES completion:NULL];
 		}
 	}
-
-#endif // end of READER_ENABLE_MAIL Option
 }
 
 - (void)tappedInToolbar:(ReaderMainToolbar *)toolbar markButton:(UIButton *)button

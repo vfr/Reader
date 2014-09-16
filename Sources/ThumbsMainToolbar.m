@@ -1,6 +1,6 @@
 //
 //	ThumbsMainToolbar.m
-//	Reader v2.8.0
+//	Reader v2.8.1
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
@@ -138,12 +138,14 @@
 			titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 			titleLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
 			titleLabel.textColor = [UIColor colorWithWhite:0.0f alpha:1.0f];
-			titleLabel.shadowColor = [UIColor colorWithWhite:0.65f alpha:1.0f];
 			titleLabel.backgroundColor = [UIColor clearColor];
-			titleLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
 			titleLabel.adjustsFontSizeToFitWidth = YES;
 			titleLabel.minimumScaleFactor = 0.75f;
 			titleLabel.text = title;
+#if (READER_FLAT_UI == FALSE) // Option
+			titleLabel.shadowColor = [UIColor colorWithWhite:0.65f alpha:1.0f];
+			titleLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
+#endif // end of READER_FLAT_UI Option
 
 			[self addSubview:titleLabel];
 		}

@@ -1,6 +1,6 @@
 //
 //	ThumbsViewController.m
-//	Reader v2.8.0
+//	Reader v2.8.1
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
@@ -69,21 +69,21 @@
 
 - (instancetype)initWithReaderDocument:(ReaderDocument *)object
 {
-	id thumbs = nil; // ThumbsViewController object
-
-	if ((object != nil) && ([object isKindOfClass:[ReaderDocument class]]))
+	if ((self = [super initWithNibName:nil bundle:nil])) // Initialize superclass
 	{
-		if ((self = [super initWithNibName:nil bundle:nil])) // Designated initializer
+		if ((object != nil) && ([object isKindOfClass:[ReaderDocument class]])) // Valid object
 		{
 			updateBookmarked = YES; bookmarked = [NSMutableArray new]; // Bookmarked pages
 
 			document = object; // Retain the ReaderDocument object for our use
-
-			thumbs = self; // Return an initialized ThumbsViewController object
+		}
+		else // Invalid ReaderDocument object
+		{
+			self = nil;
 		}
 	}
 
-	return thumbs;
+	return self;
 }
 
 - (void)viewDidLoad

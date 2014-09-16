@@ -1,6 +1,6 @@
 //
 //	ReaderContentView.m
-//	Reader v2.8.0
+//	Reader v2.8.1
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
@@ -154,10 +154,10 @@ static inline CGFloat zoomScaleThatFits(CGSize target, CGSize source)
 
 			[self updateMinimumMaximumZoom]; // Update the minimum and maximum zoom scales
 
-			self.zoomScale = self.minimumZoomScale; // Set zoom to fit page content
-		}
+			self.zoomScale = self.minimumZoomScale; // Set the zoom scale to fit page content
 
-		[self addObserver:self forKeyPath:@"frame" options:0 context:ReaderContentViewContext];
+			[self addObserver:self forKeyPath:@"frame" options:0 context:ReaderContentViewContext];
+		}
 
 		self.tag = page; // Tag the view with the page number
 	}
@@ -168,21 +168,6 @@ static inline CGFloat zoomScaleThatFits(CGSize target, CGSize source)
 - (void)dealloc
 {
 	[self removeObserver:self forKeyPath:@"frame" context:ReaderContentViewContext];
-}
-
-- (void)showPageThumb:(NSURL *)fileURL page:(NSInteger)page password:(NSString *)phrase guid:(NSString *)guid
-{
-#if (READER_ENABLE_PREVIEW == TRUE) // Option
-
-	CGSize size = ((userInterfaceIdiom == UIUserInterfaceIdiomPad) ? CGSizeMake(PAGE_THUMB_LARGE, PAGE_THUMB_LARGE) : CGSizeMake(PAGE_THUMB_SMALL, PAGE_THUMB_SMALL));
-
-	ReaderThumbRequest *request = [ReaderThumbRequest newForView:theThumbView fileURL:fileURL password:phrase guid:guid page:page size:size];
-
-	UIImage *image = [[ReaderThumbCache sharedInstance] thumbRequest:request priority:YES]; // Request the page thumb
-
-	if ([image isKindOfClass:[UIImage class]]) [theThumbView showImage:image]; // Show image from cache
-
-#endif // end of READER_ENABLE_PREVIEW Option
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -217,6 +202,21 @@ static inline CGFloat zoomScaleThatFits(CGSize target, CGSize source)
 			}
 		}
 	}
+}
+
+- (void)showPageThumb:(NSURL *)fileURL page:(NSInteger)page password:(NSString *)phrase guid:(NSString *)guid
+{
+#if (READER_ENABLE_PREVIEW == TRUE) // Option
+
+	CGSize size = ((userInterfaceIdiom == UIUserInterfaceIdiomPad) ? CGSizeMake(PAGE_THUMB_LARGE, PAGE_THUMB_LARGE) : CGSizeMake(PAGE_THUMB_SMALL, PAGE_THUMB_SMALL));
+
+	ReaderThumbRequest *request = [ReaderThumbRequest newForView:theThumbView fileURL:fileURL password:phrase guid:guid page:page size:size];
+
+	UIImage *image = [[ReaderThumbCache sharedInstance] thumbRequest:request priority:YES]; // Request the page thumb
+
+	if ([image isKindOfClass:[UIImage class]]) [theThumbView showImage:image]; // Show image from cache
+
+#endif // end of READER_ENABLE_PREVIEW Option
 }
 
 - (id)processSingleTap:(UITapGestureRecognizer *)recognizer

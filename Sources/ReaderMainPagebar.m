@@ -1,6 +1,6 @@
 //
 //	ReaderMainPagebar.m
-//	Reader v2.8.0
+//	Reader v2.8.1
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
@@ -23,6 +23,7 @@
 //	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#import "ReaderConstants.h"
 #import "ReaderMainPagebar.h"
 #import "ReaderThumbCache.h"
 #import "ReaderDocument.h"
@@ -62,6 +63,8 @@
 #define PAGE_NUMBER_SPACE_SMALL 16.0f
 #define PAGE_NUMBER_SPACE_LARGE 32.0f
 
+#define SHADOW_HEIGHT 4.0f
+
 #pragma mark - Properties
 
 @synthesize delegate;
@@ -70,7 +73,11 @@
 
 + (Class)layerClass
 {
+#if (READER_FLAT_UI == FALSE) // Option
 	return [CAGradientLayer class];
+#else
+	return [CALayer class];
+#endif // end of READER_FLAT_UI Option
 }
 
 #pragma mark - ReaderMainPagebar instance methods
@@ -146,18 +153,26 @@
 		self.userInteractionEnabled = YES;
 		self.contentMode = UIViewContentModeRedraw;
 		self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-		self.backgroundColor = [UIColor clearColor];
 
-		CAGradientLayer *layer = (CAGradientLayer *)self.layer;
-		UIColor *liteColor = [UIColor colorWithWhite:0.82f alpha:0.8f];
-		UIColor *darkColor = [UIColor colorWithWhite:0.32f alpha:0.8f];
-		layer.colors = [NSArray arrayWithObjects:(id)liteColor.CGColor, (id)darkColor.CGColor, nil];
+		if ([self.layer isKindOfClass:[CAGradientLayer class]])
+		{
+			self.backgroundColor = [UIColor clearColor];
 
-		CGRect shadowRect = self.bounds; shadowRect.size.height = 4.0f; shadowRect.origin.y -= shadowRect.size.height;
+			CAGradientLayer *layer = (CAGradientLayer *)self.layer;
+			UIColor *liteColor = [UIColor colorWithWhite:0.82f alpha:0.8f];
+			UIColor *darkColor = [UIColor colorWithWhite:0.32f alpha:0.8f];
+			layer.colors = [NSArray arrayWithObjects:(id)liteColor.CGColor, (id)darkColor.CGColor, nil];
 
-		ReaderPagebarShadow *shadowView = [[ReaderPagebarShadow alloc] initWithFrame:shadowRect];
+			CGRect shadowRect = self.bounds; shadowRect.size.height = SHADOW_HEIGHT; shadowRect.origin.y -= shadowRect.size.height;
 
-		[self addSubview:shadowView]; // Add the shadow to the view
+			ReaderPagebarShadow *shadowView = [[ReaderPagebarShadow alloc] initWithFrame:shadowRect];
+
+			[self addSubview:shadowView]; // Add shadow to toolbar
+		}
+		else // Follow The Fuglyosity of Flat Fad
+		{
+			self.backgroundColor = [UIColor colorWithWhite:0.94f alpha:0.96f];
+		}
 
 		CGFloat space = (([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) ? PAGE_NUMBER_SPACE_LARGE : PAGE_NUMBER_SPACE_SMALL);
 		CGFloat numberY = (0.0f - (PAGE_NUMBER_HEIGHT + space)); CGFloat numberX = ((self.bounds.size.width - PAGE_NUMBER_WIDTH) * 0.5f);

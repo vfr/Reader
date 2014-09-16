@@ -1,6 +1,6 @@
 //
 //	ReaderMainToolbar.m
-//	Reader v2.8.0
+//	Reader v2.8.1
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
@@ -133,15 +133,11 @@
 
 #endif // end of READER_ENABLE_THUMBS Option
 
-#if (READER_BOOKMARKS == TRUE || READER_ENABLE_MAIL == TRUE || READER_ENABLE_PRINT == TRUE || READER_ENABLE_EXPORT == TRUE)
-
 		CGFloat rightButtonX = viewWidth; // Right-side buttons start X position
-
-#endif // end of READER_BOOKMARKS || READER_ENABLE_MAIL || READER_ENABLE_PRINT || READER_ENABLE_EXPORT Options
 
 #if (READER_BOOKMARKS == TRUE) // Option
 
-		rightButtonX -= (iconButtonWidth + buttonSpacing);
+		rightButtonX -= (iconButtonWidth + buttonSpacing); // Position
 
 		UIButton *flagButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		flagButton.frame = CGRectMake(rightButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
@@ -163,42 +159,39 @@
 
 #endif // end of READER_BOOKMARKS Option
 
-#if (READER_ENABLE_MAIL == TRUE) // Option
-
-		if ([MFMailComposeViewController canSendMail] == YES) // Can email
+		if (document.canEmail == YES) // Document email enabled
 		{
-			unsigned long long fileSize = [document.fileSize unsignedLongLongValue];
-
-			if (fileSize < 15728640ull) // Check attachment size limit (15MB)
+			if ([MFMailComposeViewController canSendMail] == YES) // Can email
 			{
-				rightButtonX -= (iconButtonWidth + buttonSpacing);
+				unsigned long long fileSize = [document.fileSize unsignedLongLongValue];
 
-				UIButton *emailButton = [UIButton buttonWithType:UIButtonTypeCustom];
-				emailButton.frame = CGRectMake(rightButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
-				[emailButton setImage:[UIImage imageNamed:@"Reader-Email"] forState:UIControlStateNormal];
-				[emailButton addTarget:self action:@selector(emailButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-				[emailButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
-				[emailButton setBackgroundImage:buttonN forState:UIControlStateNormal];
-				emailButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-				emailButton.showsTouchWhenHighlighted = highlightButton;
-				//emailButton.backgroundColor = [UIColor grayColor];
-				emailButton.exclusiveTouch = YES;
+				if (fileSize < 15728640ull) // Check attachment size limit (15MB)
+				{
+					rightButtonX -= (iconButtonWidth + buttonSpacing); // Next position
 
-				[self addSubview:emailButton]; titleWidth -= (iconButtonWidth + buttonSpacing);
+					UIButton *emailButton = [UIButton buttonWithType:UIButtonTypeCustom];
+					emailButton.frame = CGRectMake(rightButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
+					[emailButton setImage:[UIImage imageNamed:@"Reader-Email"] forState:UIControlStateNormal];
+					[emailButton addTarget:self action:@selector(emailButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+					[emailButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
+					[emailButton setBackgroundImage:buttonN forState:UIControlStateNormal];
+					emailButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+					emailButton.showsTouchWhenHighlighted = highlightButton;
+					//emailButton.backgroundColor = [UIColor grayColor];
+					emailButton.exclusiveTouch = YES;
+
+					[self addSubview:emailButton]; titleWidth -= (iconButtonWidth + buttonSpacing);
+				}
 			}
 		}
 
-#endif // end of READER_ENABLE_MAIL Option
-
-#if (READER_ENABLE_PRINT == TRUE) // Option
-
-		if (document.password == nil) // We can only print documents without passwords
+		if ((document.canPrint == YES) && (document.password == nil)) // Document print enabled
 		{
 			Class printInteractionController = NSClassFromString(@"UIPrintInteractionController");
 
 			if ((printInteractionController != nil) && [printInteractionController isPrintingAvailable])
 			{
-				rightButtonX -= (iconButtonWidth + buttonSpacing);
+				rightButtonX -= (iconButtonWidth + buttonSpacing); // Next position
 
 				UIButton *printButton = [UIButton buttonWithType:UIButtonTypeCustom];
 				printButton.frame = CGRectMake(rightButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
@@ -215,26 +208,23 @@
 			}
 		}
 
-#endif // end of READER_ENABLE_PRINT Option
+		if (document.canExport == YES) // Document export enabled
+		{
+			rightButtonX -= (iconButtonWidth + buttonSpacing); // Next position
 
-#if (READER_ENABLE_EXPORT == TRUE) // Option
+			UIButton *exportButton = [UIButton buttonWithType:UIButtonTypeCustom];
+			exportButton.frame = CGRectMake(rightButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
+			[exportButton setImage:[UIImage imageNamed:@"Reader-Export"] forState:UIControlStateNormal];
+			[exportButton addTarget:self action:@selector(exportButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+			[exportButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
+			[exportButton setBackgroundImage:buttonN forState:UIControlStateNormal];
+			exportButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+			exportButton.showsTouchWhenHighlighted = highlightButton;
+			//exportButton.backgroundColor = [UIColor grayColor];
+			exportButton.exclusiveTouch = YES;
 
-		rightButtonX -= (iconButtonWidth + buttonSpacing);
-
-		UIButton *exportButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		exportButton.frame = CGRectMake(rightButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
-		[exportButton setImage:[UIImage imageNamed:@"Reader-Export"] forState:UIControlStateNormal];
-		[exportButton addTarget:self action:@selector(exportButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-		[exportButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
-		[exportButton setBackgroundImage:buttonN forState:UIControlStateNormal];
-		exportButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-		exportButton.showsTouchWhenHighlighted = highlightButton;
-		//exportButton.backgroundColor = [UIColor grayColor];
-		exportButton.exclusiveTouch = YES;
-
-		[self addSubview:exportButton]; titleWidth -= (iconButtonWidth + buttonSpacing);
-
-#endif // end of READER_ENABLE_EXPORT Option
+			[self addSubview:exportButton]; titleWidth -= (iconButtonWidth + buttonSpacing);
+		}
 
 		if (largeDevice == YES) // Show document filename in toolbar
 		{
@@ -247,12 +237,14 @@
 			titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 			titleLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
 			titleLabel.textColor = [UIColor colorWithWhite:0.0f alpha:1.0f];
-			titleLabel.shadowColor = [UIColor colorWithWhite:0.75f alpha:1.0f];
 			titleLabel.backgroundColor = [UIColor clearColor];
-			titleLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
 			titleLabel.adjustsFontSizeToFitWidth = YES;
 			titleLabel.minimumScaleFactor = 0.75f;
 			titleLabel.text = [document.fileName stringByDeletingPathExtension];
+#if (READER_FLAT_UI == FALSE) // Option
+			titleLabel.shadowColor = [UIColor colorWithWhite:0.75f alpha:1.0f];
+			titleLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
+#endif // end of READER_FLAT_UI Option
 
 			[self addSubview:titleLabel]; 
 		}

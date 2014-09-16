@@ -1,6 +1,13 @@
 
 ## History
 
+2014-09-16: Version 2.8.1
+
+	- Replaced READER_ENABLE_MAIL with a canEmail document property.
+	- Replaced READER_ENABLE_EXPORT with a canExport document property.
+	- Replaced READER_ENABLE_PRINT with a canPrint document property.
+	- Compile time READER_FLAT_UI option now flattens the toolbars.
+
 2014-09-14: Version 2.8.0
 
 	- Double-tap to zoom now centers the zoom on the location of the double-tap.

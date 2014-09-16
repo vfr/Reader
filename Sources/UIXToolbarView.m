@@ -1,6 +1,6 @@
 //
 //	UIXToolbarView.m
-//	Reader v2.8.0
+//	Reader v2.8.1
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
@@ -23,6 +23,7 @@
 //	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#import "ReaderConstants.h"
 #import "UIXToolbarView.h"
 
 #import <QuartzCore/QuartzCore.h>
@@ -37,7 +38,11 @@
 
 + (Class)layerClass
 {
+#if (READER_FLAT_UI == FALSE) // Option
 	return [CAGradientLayer class];
+#else
+	return [CALayer class];
+#endif // end of READER_FLAT_UI Option
 }
 
 #pragma mark - UIXToolbarView instance methods
@@ -50,18 +55,26 @@
 		self.userInteractionEnabled = YES;
 		self.contentMode = UIViewContentModeRedraw;
 		self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		self.backgroundColor = [UIColor clearColor];
 
-		CAGradientLayer *layer = (CAGradientLayer *)self.layer;
-		UIColor *liteColor = [UIColor colorWithWhite:0.92f alpha:0.8f];
-		UIColor *darkColor = [UIColor colorWithWhite:0.32f alpha:0.8f];
-		layer.colors = [NSArray arrayWithObjects:(id)liteColor.CGColor, (id)darkColor.CGColor, nil];
+		if ([self.layer isKindOfClass:[CAGradientLayer class]])
+		{
+			self.backgroundColor = [UIColor clearColor];
 
-		CGRect shadowRect = self.bounds; shadowRect.origin.y += shadowRect.size.height; shadowRect.size.height = SHADOW_HEIGHT;
+			CAGradientLayer *layer = (CAGradientLayer *)self.layer;
+			UIColor *liteColor = [UIColor colorWithWhite:0.92f alpha:0.8f];
+			UIColor *darkColor = [UIColor colorWithWhite:0.32f alpha:0.8f];
+			layer.colors = [NSArray arrayWithObjects:(id)liteColor.CGColor, (id)darkColor.CGColor, nil];
 
-		UIXToolbarShadow *shadowView = [[UIXToolbarShadow alloc] initWithFrame:shadowRect];
+			CGRect shadowRect = self.bounds; shadowRect.origin.y += shadowRect.size.height; shadowRect.size.height = SHADOW_HEIGHT;
 
-		[self addSubview:shadowView]; 
+			UIXToolbarShadow *shadowView = [[UIXToolbarShadow alloc] initWithFrame:shadowRect];
+
+			[self addSubview:shadowView]; // Add shadow to toolbar
+		}
+		else // Follow The Fuglyosity of Flat Fad
+		{
+			self.backgroundColor = [UIColor colorWithWhite:0.94f alpha:0.96f];
+		}
 	}
 
 	return self;

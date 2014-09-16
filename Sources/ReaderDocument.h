@@ -1,6 +1,6 @@
 //
 //	ReaderDocument.h
-//	Reader v2.8.0
+//	Reader v2.8.1
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
@@ -37,6 +37,10 @@
 @property (nonatomic, strong, readonly) NSString *fileName;
 @property (nonatomic, strong, readonly) NSString *password;
 @property (nonatomic, strong, readonly) NSURL *fileURL;
+
+@property (nonatomic, readonly) BOOL canEmail;
+@property (nonatomic, readonly) BOOL canExport;
+@property (nonatomic, readonly) BOOL canPrint;
 
 + (NSString *)documentsPath;
 

@@ -16,10 +16,10 @@ project template that you could start building from, or, just pull
 the required files into an existing project to enable PDF
 reading/viewing in your app(s).
 
-![iPod Page](http://i.imgur.com/wxC1B.png)<p></p>
-![iPod Thumbs](http://i.imgur.com/4VNyQ.png)<p></p>
-![iPad Page](http://i.imgur.com/T6nfI.png)<p></p>
-![iPad Thumbs](http://i.imgur.com/wxQRC.png)
+![iPod Page](http://i.imgur.com/GbjEQiC.png)<p></p>
+![iPod Thumbs](http://i.imgur.com/kE5B5mb.png)<p></p>
+![iPad Page](http://i.imgur.com/C7ULYUk.png)<p></p>
+![iPad Thumbs](http://i.imgur.com/jc5PWth.png)
 
 After launching the sample app, tap on the left hand side of the
 screen to go back a page. Tap on the right hand side to go to the
@@ -123,21 +123,13 @@ all of the following iOS frameworks are required:
 
 In ReaderConstants.h the following #define options are available:
 
-`READER_FLAT_UI` - If TRUE, does not show button borders.
+`READER_FLAT_UI` - If TRUE, follows the Fuglyosity of Flat Fad.
 
-`READER_BOOKMARKS` - If TRUE, enables page bookmark support.
+`READER_SHOW_SHADOWS` - If TRUE, a shadow is shown around each page
+and page thumbnail.
 
-`READER_ENABLE_MAIL` - If TRUE, an email button is added to the toolbar
-(if the device is properly configured for email support).
-
-`READER_ENABLE_PRINT` - If TRUE, a print button is added to the toolbar
-(if printing is supported and available on the device).
-
-`READER_ENABLE_THUMBS` - If TRUE, a thumbs button is added to the toolbar
-(enabling page thumbnail document navigation).
-
-`READER_ENABLE_EXPORT` - If TRUE, uses UIDocumentInteractionController
-to be able to open up the current PDF in other iOS applications.
+`READER_ENABLE_THUMBS` - If TRUE, a thumbs button is added to the main
+toolbar enabling page thumbnail document navigation.
 
 `READER_DISABLE_RETINA` - If TRUE, sets the CATiledLayer contentScale
 to 1.0f. This effectively disables retina support and results in
@@ -150,12 +142,11 @@ is displayed before the CATiledLayer starts to render the PDF page.
 `READER_DISABLE_IDLE` - If TRUE, the iOS idle timer is disabled while
 viewing a document (beware of battery drain).
 
-`READER_SHOW_SHADOWS` - If TRUE, a shadow is shown around each page
-and the page content is inset by a couple of extra points.
-
 `READER_STANDALONE` - If FALSE, a "Done" button is added to the toolbar
 and the -dismissReaderViewController: delegate method is messaged when
 it is tapped.
+
+`READER_BOOKMARKS` - If TRUE, enables page bookmark support.
 
 ### ReaderDocument Archiving
 
@@ -171,6 +162,8 @@ page thumb cache is kept.
 Website: [http://www.vfr.org/](http://www.vfr.org/)
 
 Email: joklamcak(at)gmail(dot)com
+
+Twitter: @joklamcak
 
 If you find this code useful, or wish to fund further development,
 you can use PayPal to donate to the vfr-Reader project:
