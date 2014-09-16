@@ -1,9 +1,9 @@
 //
 //	ReaderMainToolbar.m
-//	Reader v2.6.2
+//	Reader v2.8.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
-//	Copyright © 2011-2013 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -37,110 +37,124 @@
 	UIImage *markImageY;
 }
 
-#pragma mark Constants
+#pragma mark - Constants
 
 #define BUTTON_X 8.0f
 #define BUTTON_Y 8.0f
+
 #define BUTTON_SPACE 8.0f
 #define BUTTON_HEIGHT 30.0f
 
-#define DONE_BUTTON_WIDTH 56.0f
-#define THUMBS_BUTTON_WIDTH 40.0f
-#define PRINT_BUTTON_WIDTH 40.0f
-#define EMAIL_BUTTON_WIDTH 40.0f
-#define MARK_BUTTON_WIDTH 40.0f
+#define BUTTON_FONT_SIZE 15.0f
+#define TEXT_BUTTON_PADDING 24.0f
 
+#define ICON_BUTTON_WIDTH 40.0f
+
+#define TITLE_FONT_SIZE 19.0f
 #define TITLE_HEIGHT 28.0f
 
-#pragma mark Properties
+#pragma mark - Properties
 
 @synthesize delegate;
 
-#pragma mark ReaderMainToolbar instance methods
+#pragma mark - ReaderMainToolbar instance methods
 
-- (id)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame
 {
 	return [self initWithFrame:frame document:nil];
 }
 
-- (id)initWithFrame:(CGRect)frame document:(ReaderDocument *)object
+- (instancetype)initWithFrame:(CGRect)frame document:(ReaderDocument *)document
 {
-	assert(object != nil); // Must have a valid ReaderDocument
+	assert(document != nil); // Must have a valid ReaderDocument
 
 	if ((self = [super initWithFrame:frame]))
 	{
-		CGFloat viewWidth = self.bounds.size.width;
+		CGFloat viewWidth = self.bounds.size.width; // Toolbar view width
 
-		UIImage *imageH = [UIImage imageNamed:@"Reader-Button-H"];
-		UIImage *imageN = [UIImage imageNamed:@"Reader-Button-N"];
+#if (READER_FLAT_UI == TRUE) // Option
+		UIImage *buttonH = nil; UIImage *buttonN = nil; BOOL highlightButton = YES;
+#else
+		UIImage *buttonH = [[UIImage imageNamed:@"Reader-Button-H"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
+		UIImage *buttonN = [[UIImage imageNamed:@"Reader-Button-N"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
+		BOOL highlightButton = NO;
+#endif // end of READER_FLAT_UI Option
 
-		UIImage *buttonH = [imageH stretchableImageWithLeftCapWidth:5 topCapHeight:0];
-		UIImage *buttonN = [imageN stretchableImageWithLeftCapWidth:5 topCapHeight:0];
+		BOOL largeDevice = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad);
+
+		const CGFloat buttonSpacing = BUTTON_SPACE; const CGFloat iconButtonWidth = ICON_BUTTON_WIDTH;
 
 		CGFloat titleX = BUTTON_X; CGFloat titleWidth = (viewWidth - (titleX + titleX));
 
-		CGFloat leftButtonX = BUTTON_X; // Left button start X position
+		CGFloat leftButtonX = BUTTON_X; // Left-side button start X position
 
 #if (READER_STANDALONE == FALSE) // Option
 
-		UIButton *doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		UIFont *doneButtonFont = [UIFont systemFontOfSize:BUTTON_FONT_SIZE];
+		NSString *doneButtonText = NSLocalizedString(@"Done", @"button");
+		CGSize doneButtonSize = [doneButtonText sizeWithFont:doneButtonFont];
+		CGFloat doneButtonWidth = (doneButtonSize.width + TEXT_BUTTON_PADDING);
 
-		doneButton.frame = CGRectMake(leftButtonX, BUTTON_Y, DONE_BUTTON_WIDTH, BUTTON_HEIGHT);
-		[doneButton setTitle:NSLocalizedString(@"Done", @"button") forState:UIControlStateNormal];
+		UIButton *doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		doneButton.frame = CGRectMake(leftButtonX, BUTTON_Y, doneButtonWidth, BUTTON_HEIGHT);
 		[doneButton setTitleColor:[UIColor colorWithWhite:0.0f alpha:1.0f] forState:UIControlStateNormal];
 		[doneButton setTitleColor:[UIColor colorWithWhite:1.0f alpha:1.0f] forState:UIControlStateHighlighted];
+		[doneButton setTitle:doneButtonText forState:UIControlStateNormal]; doneButton.titleLabel.font = doneButtonFont;
 		[doneButton addTarget:self action:@selector(doneButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 		[doneButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
 		[doneButton setBackgroundImage:buttonN forState:UIControlStateNormal];
-		doneButton.titleLabel.font = [UIFont systemFontOfSize:14.0f];
-		doneButton.autoresizingMask = UIViewAutoresizingNone;
+		doneButton.autoresizingMask = UIViewAutoresizingNone; // Fixed
+		doneButton.showsTouchWhenHighlighted = highlightButton;
+		//doneButton.backgroundColor = [UIColor grayColor];
 		doneButton.exclusiveTouch = YES;
 
-		[self addSubview:doneButton]; leftButtonX += (DONE_BUTTON_WIDTH + BUTTON_SPACE);
+		[self addSubview:doneButton]; leftButtonX += (doneButtonWidth + buttonSpacing);
 
-		titleX += (DONE_BUTTON_WIDTH + BUTTON_SPACE); titleWidth -= (DONE_BUTTON_WIDTH + BUTTON_SPACE);
+		titleX += (doneButtonWidth + buttonSpacing); titleWidth -= (doneButtonWidth + buttonSpacing);
 
 #endif // end of READER_STANDALONE Option
 
 #if (READER_ENABLE_THUMBS == TRUE) // Option
 
 		UIButton *thumbsButton = [UIButton buttonWithType:UIButtonTypeCustom];
-
-		thumbsButton.frame = CGRectMake(leftButtonX, BUTTON_Y, THUMBS_BUTTON_WIDTH, BUTTON_HEIGHT);
+		thumbsButton.frame = CGRectMake(leftButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
 		[thumbsButton setImage:[UIImage imageNamed:@"Reader-Thumbs"] forState:UIControlStateNormal];
 		[thumbsButton addTarget:self action:@selector(thumbsButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 		[thumbsButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
 		[thumbsButton setBackgroundImage:buttonN forState:UIControlStateNormal];
-		thumbsButton.autoresizingMask = UIViewAutoresizingNone;
+		thumbsButton.autoresizingMask = UIViewAutoresizingNone; // Fixed
+		thumbsButton.showsTouchWhenHighlighted = highlightButton;
+		//thumbsButton.backgroundColor = [UIColor grayColor];
 		thumbsButton.exclusiveTouch = YES;
 
-		[self addSubview:thumbsButton]; //leftButtonX += (THUMBS_BUTTON_WIDTH + BUTTON_SPACE);
+		[self addSubview:thumbsButton]; //leftButtonX += (iconButtonWidth + buttonSpacing);
 
-		titleX += (THUMBS_BUTTON_WIDTH + BUTTON_SPACE); titleWidth -= (THUMBS_BUTTON_WIDTH + BUTTON_SPACE);
+		titleX += (iconButtonWidth + buttonSpacing); titleWidth -= (iconButtonWidth + buttonSpacing);
 
 #endif // end of READER_ENABLE_THUMBS Option
 
-#if (READER_BOOKMARKS == TRUE || READER_ENABLE_MAIL == TRUE || READER_ENABLE_PRINT == TRUE)
+#if (READER_BOOKMARKS == TRUE || READER_ENABLE_MAIL == TRUE || READER_ENABLE_PRINT == TRUE || READER_ENABLE_EXPORT == TRUE)
 
-		CGFloat rightButtonX = viewWidth; // Right button start X position
+		CGFloat rightButtonX = viewWidth; // Right-side buttons start X position
 
-#endif // end of READER_BOOKMARKS || READER_ENABLE_MAIL || READER_ENABLE_PRINT Options
+#endif // end of READER_BOOKMARKS || READER_ENABLE_MAIL || READER_ENABLE_PRINT || READER_ENABLE_EXPORT Options
 
 #if (READER_BOOKMARKS == TRUE) // Option
 
-		rightButtonX -= (MARK_BUTTON_WIDTH + BUTTON_SPACE);
+		rightButtonX -= (iconButtonWidth + buttonSpacing);
 
 		UIButton *flagButton = [UIButton buttonWithType:UIButtonTypeCustom];
-
-		flagButton.frame = CGRectMake(rightButtonX, BUTTON_Y, MARK_BUTTON_WIDTH, BUTTON_HEIGHT);
+		flagButton.frame = CGRectMake(rightButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
 		//[flagButton setImage:[UIImage imageNamed:@"Reader-Mark-N"] forState:UIControlStateNormal];
 		[flagButton addTarget:self action:@selector(markButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 		[flagButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
 		[flagButton setBackgroundImage:buttonN forState:UIControlStateNormal];
 		flagButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+		flagButton.showsTouchWhenHighlighted = highlightButton;
+		//flagButton.backgroundColor = [UIColor grayColor];
 		flagButton.exclusiveTouch = YES;
 
-		[self addSubview:flagButton]; titleWidth -= (MARK_BUTTON_WIDTH + BUTTON_SPACE);
+		[self addSubview:flagButton]; titleWidth -= (iconButtonWidth + buttonSpacing);
 
 		markButton = flagButton; markButton.enabled = NO; markButton.tag = NSIntegerMin;
 
@@ -153,23 +167,24 @@
 
 		if ([MFMailComposeViewController canSendMail] == YES) // Can email
 		{
-			unsigned long long fileSize = [object.fileSize unsignedLongLongValue];
+			unsigned long long fileSize = [document.fileSize unsignedLongLongValue];
 
-			if (fileSize < (unsigned long long)15728640) // Check attachment size limit (15MB)
+			if (fileSize < 15728640ull) // Check attachment size limit (15MB)
 			{
-				rightButtonX -= (EMAIL_BUTTON_WIDTH + BUTTON_SPACE);
+				rightButtonX -= (iconButtonWidth + buttonSpacing);
 
 				UIButton *emailButton = [UIButton buttonWithType:UIButtonTypeCustom];
-
-				emailButton.frame = CGRectMake(rightButtonX, BUTTON_Y, EMAIL_BUTTON_WIDTH, BUTTON_HEIGHT);
+				emailButton.frame = CGRectMake(rightButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
 				[emailButton setImage:[UIImage imageNamed:@"Reader-Email"] forState:UIControlStateNormal];
 				[emailButton addTarget:self action:@selector(emailButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 				[emailButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
 				[emailButton setBackgroundImage:buttonN forState:UIControlStateNormal];
 				emailButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+				emailButton.showsTouchWhenHighlighted = highlightButton;
+				//emailButton.backgroundColor = [UIColor grayColor];
 				emailButton.exclusiveTouch = YES;
 
-				[self addSubview:emailButton]; titleWidth -= (EMAIL_BUTTON_WIDTH + BUTTON_SPACE);
+				[self addSubview:emailButton]; titleWidth -= (iconButtonWidth + buttonSpacing);
 			}
 		}
 
@@ -177,47 +192,67 @@
 
 #if (READER_ENABLE_PRINT == TRUE) // Option
 
-		if (object.password == nil) // We can only print documents without passwords
+		if (document.password == nil) // We can only print documents without passwords
 		{
 			Class printInteractionController = NSClassFromString(@"UIPrintInteractionController");
 
 			if ((printInteractionController != nil) && [printInteractionController isPrintingAvailable])
 			{
-				rightButtonX -= (PRINT_BUTTON_WIDTH + BUTTON_SPACE);
+				rightButtonX -= (iconButtonWidth + buttonSpacing);
 
 				UIButton *printButton = [UIButton buttonWithType:UIButtonTypeCustom];
-
-				printButton.frame = CGRectMake(rightButtonX, BUTTON_Y, PRINT_BUTTON_WIDTH, BUTTON_HEIGHT);
+				printButton.frame = CGRectMake(rightButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
 				[printButton setImage:[UIImage imageNamed:@"Reader-Print"] forState:UIControlStateNormal];
 				[printButton addTarget:self action:@selector(printButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 				[printButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
 				[printButton setBackgroundImage:buttonN forState:UIControlStateNormal];
 				printButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+				printButton.showsTouchWhenHighlighted = highlightButton;
+				//printButton.backgroundColor = [UIColor grayColor];
 				printButton.exclusiveTouch = YES;
 
-				[self addSubview:printButton]; titleWidth -= (PRINT_BUTTON_WIDTH + BUTTON_SPACE);
+				[self addSubview:printButton]; titleWidth -= (iconButtonWidth + buttonSpacing);
 			}
 		}
 
 #endif // end of READER_ENABLE_PRINT Option
 
-		if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
+#if (READER_ENABLE_EXPORT == TRUE) // Option
+
+		rightButtonX -= (iconButtonWidth + buttonSpacing);
+
+		UIButton *exportButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		exportButton.frame = CGRectMake(rightButtonX, BUTTON_Y, iconButtonWidth, BUTTON_HEIGHT);
+		[exportButton setImage:[UIImage imageNamed:@"Reader-Export"] forState:UIControlStateNormal];
+		[exportButton addTarget:self action:@selector(exportButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+		[exportButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
+		[exportButton setBackgroundImage:buttonN forState:UIControlStateNormal];
+		exportButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+		exportButton.showsTouchWhenHighlighted = highlightButton;
+		//exportButton.backgroundColor = [UIColor grayColor];
+		exportButton.exclusiveTouch = YES;
+
+		[self addSubview:exportButton]; titleWidth -= (iconButtonWidth + buttonSpacing);
+
+#endif // end of READER_ENABLE_EXPORT Option
+
+		if (largeDevice == YES) // Show document filename in toolbar
 		{
 			CGRect titleRect = CGRectMake(titleX, BUTTON_Y, titleWidth, TITLE_HEIGHT);
 
 			UILabel *titleLabel = [[UILabel alloc] initWithFrame:titleRect];
 
 			titleLabel.textAlignment = NSTextAlignmentCenter;
-			titleLabel.font = [UIFont systemFontOfSize:19.0f];
+			titleLabel.font = [UIFont systemFontOfSize:TITLE_FONT_SIZE];
 			titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 			titleLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
 			titleLabel.textColor = [UIColor colorWithWhite:0.0f alpha:1.0f];
-			titleLabel.shadowColor = [UIColor colorWithWhite:0.65f alpha:1.0f];
+			titleLabel.shadowColor = [UIColor colorWithWhite:0.75f alpha:1.0f];
 			titleLabel.backgroundColor = [UIColor clearColor];
 			titleLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
 			titleLabel.adjustsFontSizeToFitWidth = YES;
 			titleLabel.minimumScaleFactor = 0.75f;
-			titleLabel.text = [object.fileName stringByDeletingPathExtension];
+			titleLabel.text = [document.fileName stringByDeletingPathExtension];
 
 			[self addSubview:titleLabel]; 
 		}
@@ -301,7 +336,7 @@
 	}
 }
 
-#pragma mark UIButton action methods
+#pragma mark - UIButton action methods
 
 - (void)doneButtonTapped:(UIButton *)button
 {
@@ -311,6 +346,11 @@
 - (void)thumbsButtonTapped:(UIButton *)button
 {
 	[delegate tappedInToolbar:self thumbsButton:button];
+}
+
+- (void)exportButtonTapped:(UIButton *)button
+{
+	[delegate tappedInToolbar:self exportButton:button];
 }
 
 - (void)printButtonTapped:(UIButton *)button

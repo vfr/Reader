@@ -1,6 +1,16 @@
 
 ## History
 
+2014-09-14: Version 2.8.0
+
+	- Double-tap to zoom now centers the zoom on the location of the double-tap.
+	- The toolbar Done button now adjusts its width based on the width of its localized text.
+	- Reworked handling of views in the ReaderViewController paging UIScrollView. You can now page as fast as the device can go.
+	- Added a READER_ENABLE_EXPORT compile time option. Uses UIDocumentInteractionController to export the current PDF to other applications.
+	- Added a READER_FLAT_UI compile time option that (for now only) disables button borders.
+	- Fixed crash under iOS 8 - please see the note in the ReaderDocument class file.
+	- Cleaned up 64-bit compiler warnings for various format strings.
+
 2013-11-19: Version 2.7.3
 
 	- Retina and zoom levels bug fixes.
@@ -41,7 +51,7 @@
 2012-04-10: Version 2.5.5
 
 	- Handles PDF web links without http:// as the prefix.
-	- Bug fix to PDF link handling with cropboxed PDF files.
+	- Bug fix to PDF link handling with crop-boxed PDF files.
 	- Some performance improvements on iPad 3rd generation.
 
 2012-01-14: Version 2.5.4

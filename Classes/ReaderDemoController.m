@@ -1,9 +1,9 @@
 //
 //	ReaderDemoController.m
-//	Reader v2.7.0
+//	Reader v2.8.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
-//	Copyright © 2011-2013 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -32,23 +32,30 @@
 
 @implementation ReaderDemoController
 
-#pragma mark Constants
+#pragma mark - Constants
 
 #define DEMO_VIEW_CONTROLLER_PUSH FALSE
 
-#pragma mark UIViewController methods
+#pragma mark - UIViewController methods
 
-/*
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
 	if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]))
 	{
-		// Custom initialization
+		NSFileManager *fileManager = [NSFileManager new]; NSString *documentsPath = [ReaderDocument documentsPath];
+
+		for (NSString *sourcePath in [[NSBundle mainBundle] pathsForResourcesOfType:@"pdf" inDirectory:nil]) // PDFs
+		{
+			NSString *targetPath = [documentsPath stringByAppendingPathComponent:[sourcePath lastPathComponent]];
+
+			//[fileManager removeItemAtPath:targetPath error:NULL]; // Delete target file
+
+			[fileManager copyItemAtPath:sourcePath toPath:targetPath error:NULL];
+		}
 	}
 
 	return self;
 }
-*/
 
 /*
 - (void)loadView
@@ -69,7 +76,7 @@
 
 	NSString *version = [infoDictionary objectForKey:@"CFBundleVersion"];
 
-	self.title = [NSString stringWithFormat:@"%@ v%@", name, version];
+	self.title = [[NSString alloc] initWithFormat:@"%@ v%@", name, version];
 
 	CGSize viewSize = self.view.bounds.size;
 
@@ -84,7 +91,7 @@
 	tapLabel.font = [UIFont systemFontOfSize:24.0f];
 	tapLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
 	tapLabel.autoresizingMask |= UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-	tapLabel.center = CGPointMake(viewSize.width / 2.0f, viewSize.height / 2.0f);
+	tapLabel.center = CGPointMake(viewSize.width * 0.5f, viewSize.height * 0.5f);
 
 	[self.view addSubview:tapLabel]; 
 
@@ -166,15 +173,19 @@
 	[super didReceiveMemoryWarning];
 }
 
-#pragma mark UIGestureRecognizer methods
+#pragma mark - UIGestureRecognizer methods
 
 - (void)handleSingleTap:(UITapGestureRecognizer *)recognizer
 {
 	NSString *phrase = nil; // Document password (for unlocking most encrypted PDF files)
 
-	NSArray *pdfs = [[NSBundle mainBundle] pathsForResourcesOfType:@"pdf" inDirectory:nil];
+	NSFileManager *fileManager = [NSFileManager new]; NSString *documentsPath = [ReaderDocument documentsPath];
 
-	NSString *filePath = [pdfs lastObject]; assert(filePath != nil); // Path to last PDF file
+	NSArray *fileList = [fileManager contentsOfDirectoryAtPath:documentsPath error:NULL];
+
+	NSString *fileName = [fileList firstObject]; // Presume that the first file is a PDF
+
+	NSString *filePath = [documentsPath stringByAppendingPathComponent:fileName];
 
 	ReaderDocument *document = [ReaderDocument withDocumentFilePath:filePath password:phrase];
 
@@ -197,9 +208,13 @@
 
 #endif // DEMO_VIEW_CONTROLLER_PUSH
 	}
+	else // Log the error so that we know that something went wrong
+	{
+		NSLog(@"%s [ReaderDocument withDocumentFilePath:'%@' password:'%@'] failed.", __FUNCTION__, filePath, phrase);
+	}
 }
 
-#pragma mark ReaderViewControllerDelegate methods
+#pragma mark - ReaderViewControllerDelegate methods
 
 - (void)dismissReaderViewController:(ReaderViewController *)viewController
 {

@@ -55,12 +55,7 @@ Supports:
 
 Version 2.x of the PDF reader code was originally developed
 and tested under Xcode 3.2.6, LLVM 1.7 and iOS 4 with current
-development and testing under Xcode 5.0, LLVM 5.0 and iOS 7.
-Please note that as of v2.6, the code was refactored to use ARC.
-
-Version 2.x of the PDF reader code was originally developed and
-tested under Xcode 3.2.6, LLVM 1.7, iOS 4.3.5 and iOS 4.2.1 with
-current development and testing under Xcode 5.0, LLVM 5.0, iOS 7.
+development and testing under Xcode 6.0, LLVM 6.0 and iOS 8.
 Please note that as of v2.6, the code was refactored to use ARC.
 
 The overall PDF reader functionality is encapsulated in the
@@ -79,8 +74,7 @@ Please note that since ReaderViewController implements its own
 toolbar, you need to hide the UINavigationController navigation
 bar before pushing it and then show the navigation bar after
 popping it. The ReaderDemoController class shows how this is
-done with a bundled PDF file. To create a 'book as an app',
-please see the ReaderBookDelegate class.
+done with a bundled PDF file.
 
 ### Required Files
 
@@ -110,6 +104,7 @@ reader into one of your projects:
 	Reader-Button-H.png, Reader-Button-H@2x.png
 	Reader-Button-N.png, Reader-Button-N@2x.png
 	Reader-Email.png, Reader-Email@2x.png
+	Reader-Export.png, Reader-Export@2x.png
 	Reader-Mark-N.png, Reader-Mark-N@2x.png
 	Reader-Mark-Y.png, Reader-Mark-Y@2x.png
 	Reader-Print.png, Reader-Print@2x.png
@@ -128,6 +123,8 @@ all of the following iOS frameworks are required:
 
 In ReaderConstants.h the following #define options are available:
 
+`READER_FLAT_UI` - If TRUE, does not show button borders.
+
 `READER_BOOKMARKS` - If TRUE, enables page bookmark support.
 
 `READER_ENABLE_MAIL` - If TRUE, an email button is added to the toolbar
@@ -139,6 +136,17 @@ In ReaderConstants.h the following #define options are available:
 `READER_ENABLE_THUMBS` - If TRUE, a thumbs button is added to the toolbar
 (enabling page thumbnail document navigation).
 
+`READER_ENABLE_EXPORT` - If TRUE, uses UIDocumentInteractionController
+to be able to open up the current PDF in other iOS applications.
+
+`READER_DISABLE_RETINA` - If TRUE, sets the CATiledLayer contentScale
+to 1.0f. This effectively disables retina support and results in
+non-retina device rendering speeds on retina display devices at
+the loss of retina display quality.
+
+`READER_ENABLE_PREVIEW` - If TRUE, a medium resolution page thumbnail
+is displayed before the CATiledLayer starts to render the PDF page.
+
 `READER_DISABLE_IDLE` - If TRUE, the iOS idle timer is disabled while
 viewing a document (beware of battery drain).
 
@@ -148,14 +156,6 @@ and the page content is inset by a couple of extra points.
 `READER_STANDALONE` - If FALSE, a "Done" button is added to the toolbar
 and the -dismissReaderViewController: delegate method is messaged when
 it is tapped.
-
-`READER_DISABLE_RETINA` - If TRUE, sets the CATiledLayer contentScale
-to 1.0f. This effectively disables retina support and results in
-non-retina device rendering speeds on retina display devices at
-the loss of retina display quality.
-
-`READER_ENABLE_PREVIEW` - If TRUE, a medium resolution page thumbnail
-is displayed before the CATiledLayer starts to render the PDF page.
 
 ### ReaderDocument Archiving
 

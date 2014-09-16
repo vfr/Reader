@@ -1,9 +1,9 @@
 //
 //	ReaderThumbQueue.m
-//	Reader v2.6.0
+//	Reader v2.8.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
-//	Copyright © 2011-2013 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,7 @@
 	NSOperationQueue *workQueue;
 }
 
-#pragma mark ReaderThumbQueue class methods
+#pragma mark - ReaderThumbQueue class methods
 
 + (ReaderThumbQueue *)sharedInstance
 {
@@ -45,9 +45,9 @@
 	return object; // ReaderThumbQueue singleton
 }
 
-#pragma mark ReaderThumbQueue instance methods
+#pragma mark - ReaderThumbQueue instance methods
 
-- (id)init
+- (instancetype)init
 {
 	if ((self = [super init])) // Initialize
 	{
@@ -126,9 +126,9 @@
 
 @synthesize guid = _guid;
 
-#pragma mark ReaderThumbOperation instance methods
+#pragma mark - ReaderThumbOperation instance methods
 
-- (id)initWithGUID:(NSString *)guid
+- (instancetype)initWithGUID:(NSString *)guid
 {
 	if ((self = [super init]))
 	{

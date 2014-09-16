@@ -1,9 +1,9 @@
 //
 //	ReaderThumbView.m
-//	Reader v2.6.1
+//	Reader v2.8.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
-//	Copyright © 2011-2013 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -32,14 +32,14 @@
 	NSUInteger _targetTag;
 }
 
-#pragma mark Properties
+#pragma mark - Properties
 
 @synthesize operation = _operation;
 @synthesize targetTag = _targetTag;
 
-#pragma mark ReaderThumbView instance methods
+#pragma mark - ReaderThumbView instance methods
 
-- (id)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame
 {
 	if ((self = [super initWithFrame:frame]))
 	{

@@ -1,9 +1,9 @@
 //
 //	ReaderThumbRender.m
-//	Reader v2.6.1
+//	Reader v2.8.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
-//	Copyright © 2011-2013 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -35,9 +35,9 @@
 	ReaderThumbRequest *request;
 }
 
-#pragma mark ReaderThumbRender instance methods
+#pragma mark - ReaderThumbRender instance methods
 
-- (id)initWithRequest:(ReaderThumbRequest *)options
+- (instancetype)initWithRequest:(ReaderThumbRequest *)options
 {
 	if ((self = [super initWithGUID:options.guid]))
 	{
@@ -66,7 +66,7 @@
 
 	[fileManager createDirectoryAtPath:cachePath withIntermediateDirectories:NO attributes:nil error:NULL];
 
-	NSString *fileName = [NSString stringWithFormat:@"%@.png", request.thumbName]; // Thumb file name
+	NSString *fileName = [[NSString alloc] initWithFormat:@"%@.png", request.thumbName]; // Thumb file name
 
 	return [NSURL fileURLWithPath:[cachePath stringByAppendingPathComponent:fileName]]; // File URL
 }
@@ -77,7 +77,7 @@
 
 	CGImageRef imageRef = NULL; CFURLRef fileURL = (__bridge CFURLRef)request.fileURL;
 
-	CGPDFDocumentRef thePDFDocRef = CGPDFDocumentCreateX(fileURL, password);
+	CGPDFDocumentRef thePDFDocRef = CGPDFDocumentCreateUsingUrl(fileURL, password);
 
 	if (thePDFDocRef != NULL) // Check for non-NULL CGPDFDocumentRef
 	{

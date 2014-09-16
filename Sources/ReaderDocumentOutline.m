@@ -1,9 +1,9 @@
 //
 //	ReaderDocumentOutline.m
-//	Reader v2.6.1
+//	Reader v2.8.0
 //
 //	Created by Julius Oklamcak on 2012-09-01.
-//	Copyright © 2011-2013 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -28,11 +28,11 @@
 
 @implementation ReaderDocumentOutline
 
-#pragma mark Build option flags
+#pragma mark - Build option flags
 
 #define HIERARCHICAL_OUTLINE TRUE
 
-#pragma mark ReaderDocumentOutline functions
+#pragma mark - ReaderDocumentOutline functions
 
 void logDictionaryEntry(const char *key, CGPDFObjectRef object, void *info)
 {
@@ -105,7 +105,7 @@ void logDictionaryEntry(const char *key, CGPDFObjectRef object, void *info)
 	}
 }
 
-#pragma mark ReaderDocumentOutline class methods
+#pragma mark - ReaderDocumentOutline class methods
 
 + (void)logDocumentOutlineArray:(NSArray *)array
 {
@@ -375,7 +375,7 @@ void logDictionaryEntry(const char *key, CGPDFObjectRef object, void *info)
 
 	if ((fileURL != nil) && [fileURL isFileURL]) // Check for valid file URL
 	{
-		CGPDFDocumentRef document = CGPDFDocumentCreateX((__bridge CFURLRef)fileURL, phrase);
+		CGPDFDocumentRef document = CGPDFDocumentCreateUsingUrl((__bridge CFURLRef)fileURL, phrase);
 
 		if (document != NULL) // Check for non-NULL CGPDFDocumentRef
 		{
@@ -431,23 +431,23 @@ void logDictionaryEntry(const char *key, CGPDFObjectRef object, void *info)
 	id _target;
 }
 
-#pragma mark Properties
+#pragma mark - Properties
 
 @synthesize level = _level;
 @synthesize children = _children;
 @synthesize target = _target;
 @synthesize title = _title;
 
-#pragma mark DocumentOutlineEntry class methods
+#pragma mark - DocumentOutlineEntry class methods
 
-+ (id)newWithTitle:(NSString *)title target:(id)target level:(NSInteger)level
++ (instancetype)newWithTitle:(NSString *)title target:(id)target level:(NSInteger)level
 {
 	return [[DocumentOutlineEntry alloc] initWithTitle:title target:target level:level];
 }
 
-#pragma mark DocumentOutlineEntry instance methods
+#pragma mark - DocumentOutlineEntry instance methods
 
-- (id)initWithTitle:(NSString *)title target:(id)target level:(NSInteger)level
+- (instancetype)initWithTitle:(NSString *)title target:(id)target level:(NSInteger)level
 {
 	if ((self = [super init]))
 	{
@@ -461,7 +461,7 @@ void logDictionaryEntry(const char *key, CGPDFObjectRef object, void *info)
 {
 	NSString *format = @"%@ Title = '%@', Target = '%@', Level = (%i)";
 
-	return [NSString stringWithFormat:format, [super description], _title, _target, _level];
+	return [[NSString alloc] initWithFormat:format, [super description], _title, _target, _level];
 }
 
 @end

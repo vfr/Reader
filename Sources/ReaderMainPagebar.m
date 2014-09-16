@@ -1,9 +1,9 @@
 //
 //	ReaderMainPagebar.m
-//	Reader v2.6.2
+//	Reader v2.8.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
-//	Copyright © 2011-2013 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -47,7 +47,7 @@
 	NSTimer *trackTimer;
 }
 
-#pragma mark Constants
+#pragma mark - Constants
 
 #define THUMB_SMALL_GAP 2
 #define THUMB_SMALL_WIDTH 22
@@ -58,22 +58,24 @@
 
 #define PAGE_NUMBER_WIDTH 96.0f
 #define PAGE_NUMBER_HEIGHT 30.0f
-#define PAGE_NUMBER_SPACE 20.0f
 
-#pragma mark Properties
+#define PAGE_NUMBER_SPACE_SMALL 16.0f
+#define PAGE_NUMBER_SPACE_LARGE 32.0f
+
+#pragma mark - Properties
 
 @synthesize delegate;
 
-#pragma mark ReaderMainPagebar class methods
+#pragma mark - ReaderMainPagebar class methods
 
 + (Class)layerClass
 {
 	return [CAGradientLayer class];
 }
 
-#pragma mark ReaderMainPagebar instance methods
+#pragma mark - ReaderMainPagebar instance methods
 
-- (id)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame
 {
 	return [self initWithFrame:frame document:nil];
 }
@@ -126,7 +128,7 @@
 
 		NSString *format = NSLocalizedString(@"%i of %i", @"format"); // Format
 
-		NSString *number = [NSString stringWithFormat:format, page, pages]; // Text
+		NSString *number = [[NSString alloc] initWithFormat:format, (int)page, (int)pages];
 
 		pageNumberLabel.text = number; // Update the page number label text
 
@@ -134,7 +136,7 @@
 	}
 }
 
-- (id)initWithFrame:(CGRect)frame document:(ReaderDocument *)object
+- (instancetype)initWithFrame:(CGRect)frame document:(ReaderDocument *)object
 {
 	assert(object != nil); // Must have a valid ReaderDocument
 
@@ -157,8 +159,8 @@
 
 		[self addSubview:shadowView]; // Add the shadow to the view
 
-		CGFloat numberY = (0.0f - (PAGE_NUMBER_HEIGHT + PAGE_NUMBER_SPACE));
-		CGFloat numberX = ((self.bounds.size.width - PAGE_NUMBER_WIDTH) / 2.0f);
+		CGFloat space = (([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) ? PAGE_NUMBER_SPACE_LARGE : PAGE_NUMBER_SPACE_SMALL);
+		CGFloat numberY = (0.0f - (PAGE_NUMBER_HEIGHT + space)); CGFloat numberX = ((self.bounds.size.width - PAGE_NUMBER_WIDTH) * 0.5f);
 		CGRect numberRect = CGRectMake(numberX, numberY, PAGE_NUMBER_WIDTH, PAGE_NUMBER_HEIGHT);
 
 		pageNumberView = [[UIView alloc] initWithFrame:numberRect]; // Page numbers view
@@ -236,7 +238,7 @@
 
 	CGFloat widthDelta = (self.bounds.size.width - controlWidth);
 
-	NSInteger X = (widthDelta / 2.0f); controlRect.origin.x = X;
+	NSInteger X = (widthDelta * 0.5f); controlRect.origin.x = X;
 
 	trackControl.frame = controlRect; // Update track control frame
 
@@ -244,7 +246,7 @@
 	{
 		CGFloat heightDelta = (controlRect.size.height - THUMB_LARGE_HEIGHT);
 
-		NSInteger thumbY = (heightDelta / 2.0f); NSInteger thumbX = 0; // Thumb X, Y
+		NSInteger thumbY = (heightDelta * 0.5f); NSInteger thumbX = 0; // Thumb X, Y
 
 		CGRect thumbRect = CGRectMake(thumbX, thumbY, THUMB_LARGE_WIDTH, THUMB_LARGE_HEIGHT);
 
@@ -263,7 +265,7 @@
 
 	CGFloat heightDelta = (controlRect.size.height - THUMB_SMALL_HEIGHT);
 
-	NSInteger thumbY = (heightDelta / 2.0f); NSInteger thumbX = 0; // Initial X, Y
+	NSInteger thumbY = (heightDelta * 0.5f); NSInteger thumbX = 0; // Initial X, Y
 
 	CGRect thumbRect = CGRectMake(thumbX, thumbY, THUMB_SMALL_WIDTH, THUMB_SMALL_HEIGHT);
 
@@ -367,7 +369,7 @@
 	}
 }
 
-#pragma mark ReaderTrackControl action methods
+#pragma mark - ReaderTrackControl action methods
 
 - (void)trackTimerFired:(NSTimer *)timer
 {
@@ -472,13 +474,13 @@
 	CGFloat _value;
 }
 
-#pragma mark Properties
+#pragma mark - Properties
 
 @synthesize value = _value;
 
-#pragma mark ReaderTrackControl instance methods
+#pragma mark - ReaderTrackControl instance methods
 
-- (id)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame
 {
 	if ((self = [super initWithFrame:frame]))
 	{
@@ -504,7 +506,7 @@
 	return valueX;
 }
 
-#pragma mark UIControl subclass methods
+#pragma mark - UIControl subclass methods
 
 - (BOOL)beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event
 {
@@ -549,14 +551,14 @@
 
 @implementation ReaderPagebarThumb
 
-#pragma mark ReaderPagebarThumb instance methods
+#pragma mark - ReaderPagebarThumb instance methods
 
-- (id)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame
 {
 	return [self initWithFrame:frame small:NO];
 }
 
-- (id)initWithFrame:(CGRect)frame small:(BOOL)small
+- (instancetype)initWithFrame:(CGRect)frame small:(BOOL)small
 {
 	if ((self = [super initWithFrame:frame])) // Superclass init
 	{
@@ -584,16 +586,16 @@
 
 @implementation ReaderPagebarShadow
 
-#pragma mark ReaderPagebarShadow class methods
+#pragma mark - ReaderPagebarShadow class methods
 
 + (Class)layerClass
 {
 	return [CAGradientLayer class];
 }
 
-#pragma mark ReaderPagebarShadow instance methods
+#pragma mark - ReaderPagebarShadow instance methods
 
-- (id)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame
 {
 	if ((self = [super initWithFrame:frame]))
 	{

@@ -1,9 +1,9 @@
 //
 //	ReaderBookDelegate.m
-//	Reader v2.7.0
+//	Reader v2.8.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
-//	Copyright © 2011-2013 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -37,7 +37,7 @@
 	ReaderViewController *readerViewController;
 }
 
-#pragma mark UIApplicationDelegate methods
+#pragma mark - UIApplicationDelegate methods
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
@@ -50,22 +50,22 @@
 
 	mainWindow.backgroundColor = [UIColor grayColor]; // Neutral gray window background color
 
-	NSString *phrase = nil; // Document password (for unlocking most encrypted PDF files)
-
-	NSArray *pdfs = [[NSBundle mainBundle] pathsForResourcesOfType:@"pdf" inDirectory:nil];
-
-	NSString *filePath = [pdfs lastObject]; assert(filePath != nil); // Path to last PDF file
-
-	ReaderDocument *document = [ReaderDocument withDocumentFilePath:filePath password:phrase];
-
-	if (document != nil) // Must have a valid ReaderDocument object in order to proceed
-	{
-		readerViewController = [[ReaderViewController alloc] initWithReaderDocument:document];
-
-		readerViewController.delegate = self; // Set the ReaderViewController delegate to self
-
-		mainWindow.rootViewController = readerViewController; // Set the root view controller
-	}
+//	NSString *phrase = nil; // Document password (for unlocking most encrypted PDF files)
+//
+//	NSArray *pdfs = [[NSBundle mainBundle] pathsForResourcesOfType:@"pdf" inDirectory:nil];
+//
+//	NSString *filePath = [pdfs lastObject]; assert(filePath != nil); // Path to last PDF file
+//
+//	ReaderDocument *document = [ReaderDocument withDocumentFilePath:filePath password:phrase];
+//
+//	if (document != nil) // Must have a valid ReaderDocument object in order to proceed
+//	{
+//		readerViewController = [[ReaderViewController alloc] initWithReaderDocument:document];
+//
+//		readerViewController.delegate = self; // Set the ReaderViewController delegate to self
+//
+//		mainWindow.rootViewController = readerViewController; // Set the root view controller
+//	}
 
 	[mainWindow makeKeyAndVisible];
 
@@ -111,7 +111,7 @@
 	// (or reloaded from disk) later.
 }
 
-#pragma mark ReaderViewControllerDelegate methods
+#pragma mark - ReaderViewControllerDelegate methods
 
 - (void)dismissReaderViewController:(ReaderViewController *)viewController
 {

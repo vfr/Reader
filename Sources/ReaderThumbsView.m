@@ -1,9 +1,9 @@
 //
 //	ReaderThumbsView.m
-//	Reader v2.6.0
+//	Reader v2.8.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
-//	Copyright © 2011-2013 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -48,13 +48,13 @@
 	BOOL canUpdate;
 }
 
-#pragma mark Properties
+#pragma mark - Properties
 
 @synthesize delegate;
 
-#pragma mark ReaderThumbsView instance methods
+#pragma mark - ReaderThumbsView instance methods
 
-- (id)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame
 {
 	if ((self = [super initWithFrame:frame]))
 	{
@@ -206,7 +206,7 @@
 		CGFloat th = (_thumbsY * _thumbSize.height);
 
 		if (tw < bw)
-			_thumbX = ((bw - tw) / 2.0f);
+			_thumbX = ((bw - tw) * 0.5f);
 		else
 			_thumbX = 0; // Reset
 
@@ -424,7 +424,7 @@
 	return insetContentOffset; // Adjusted content offset
 }
 
-#pragma mark UIGestureRecognizer action methods
+#pragma mark - UIGestureRecognizer action methods
 
 - (void)handleTapGesture:(UITapGestureRecognizer *)recognizer
 {
@@ -453,7 +453,7 @@
 	}
 }
 
-#pragma mark UIScrollViewDelegate methods
+#pragma mark - UIScrollViewDelegate methods
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
@@ -503,7 +503,7 @@
 	}
 }
 
-#pragma mark UIResponder instance methods
+#pragma mark - UIResponder instance methods
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {

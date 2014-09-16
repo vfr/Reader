@@ -1,9 +1,9 @@
 //
 //	ReaderConstants.h
-//	Reader v2.6.0
+//	Reader v2.8.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
-//	Copyright © 2011-2013 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -29,14 +29,14 @@
 
 #import <Foundation/Foundation.h>
 
+#define READER_FLAT_UI FALSE
 #define READER_BOOKMARKS TRUE
 #define READER_ENABLE_MAIL TRUE
 #define READER_ENABLE_PRINT TRUE
 #define READER_ENABLE_THUMBS TRUE
-#define READER_ENABLE_PREVIEW TRUE
+#define READER_ENABLE_EXPORT FALSE
 #define READER_DISABLE_RETINA FALSE
+#define READER_ENABLE_PREVIEW TRUE
 #define READER_DISABLE_IDLE FALSE
 #define READER_SHOW_SHADOWS TRUE
 #define READER_STANDALONE FALSE
-
-extern NSString *const kReaderCopyrightNotice;

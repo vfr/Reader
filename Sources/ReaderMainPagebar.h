@@ -1,9 +1,9 @@
 //
 //	ReaderMainPagebar.h
-//	Reader v2.7.1
+//	Reader v2.8.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
-//	Copyright © 2011-2013 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -44,7 +44,7 @@
 
 @property (nonatomic, weak, readwrite) id <ReaderMainPagebarDelegate> delegate;
 
-- (id)initWithFrame:(CGRect)frame document:(ReaderDocument *)object;
+- (instancetype)initWithFrame:(CGRect)frame document:(ReaderDocument *)object;
 
 - (void)updatePagebar;
 
@@ -73,7 +73,7 @@
 
 @interface ReaderPagebarThumb : ReaderThumbView
 
-- (id)initWithFrame:(CGRect)frame small:(BOOL)small;
+- (instancetype)initWithFrame:(CGRect)frame small:(BOOL)small;
 
 @end
 
