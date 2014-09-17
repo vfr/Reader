@@ -1,6 +1,10 @@
 
 ## History
 
+2014-09-17: Version 2.8.2
+
+	- Tweaked the flat toolbar look.
+
 2014-09-16: Version 2.8.1
 
 	- Replaced READER_ENABLE_MAIL with a canEmail document property.

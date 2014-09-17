@@ -1,6 +1,6 @@
 //
 //	ReaderMainToolbar.m
-//	Reader v2.8.1
+//	Reader v2.8.2
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
@@ -73,11 +73,10 @@
 		CGFloat viewWidth = self.bounds.size.width; // Toolbar view width
 
 #if (READER_FLAT_UI == TRUE) // Option
-		UIImage *buttonH = nil; UIImage *buttonN = nil; BOOL highlightButton = YES;
+		UIImage *buttonH = nil; UIImage *buttonN = nil;
 #else
 		UIImage *buttonH = [[UIImage imageNamed:@"Reader-Button-H"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
 		UIImage *buttonN = [[UIImage imageNamed:@"Reader-Button-N"] stretchableImageWithLeftCapWidth:5 topCapHeight:0];
-		BOOL highlightButton = NO;
 #endif // end of READER_FLAT_UI Option
 
 		BOOL largeDevice = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad);
@@ -103,8 +102,7 @@
 		[doneButton addTarget:self action:@selector(doneButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 		[doneButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
 		[doneButton setBackgroundImage:buttonN forState:UIControlStateNormal];
-		doneButton.autoresizingMask = UIViewAutoresizingNone; // Fixed
-		doneButton.showsTouchWhenHighlighted = highlightButton;
+		doneButton.autoresizingMask = UIViewAutoresizingNone;
 		//doneButton.backgroundColor = [UIColor grayColor];
 		doneButton.exclusiveTouch = YES;
 
@@ -122,8 +120,7 @@
 		[thumbsButton addTarget:self action:@selector(thumbsButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 		[thumbsButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
 		[thumbsButton setBackgroundImage:buttonN forState:UIControlStateNormal];
-		thumbsButton.autoresizingMask = UIViewAutoresizingNone; // Fixed
-		thumbsButton.showsTouchWhenHighlighted = highlightButton;
+		thumbsButton.autoresizingMask = UIViewAutoresizingNone;
 		//thumbsButton.backgroundColor = [UIColor grayColor];
 		thumbsButton.exclusiveTouch = YES;
 
@@ -146,7 +143,6 @@
 		[flagButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
 		[flagButton setBackgroundImage:buttonN forState:UIControlStateNormal];
 		flagButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-		flagButton.showsTouchWhenHighlighted = highlightButton;
 		//flagButton.backgroundColor = [UIColor grayColor];
 		flagButton.exclusiveTouch = YES;
 
@@ -176,7 +172,6 @@
 					[emailButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
 					[emailButton setBackgroundImage:buttonN forState:UIControlStateNormal];
 					emailButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-					emailButton.showsTouchWhenHighlighted = highlightButton;
 					//emailButton.backgroundColor = [UIColor grayColor];
 					emailButton.exclusiveTouch = YES;
 
@@ -200,7 +195,6 @@
 				[printButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
 				[printButton setBackgroundImage:buttonN forState:UIControlStateNormal];
 				printButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-				printButton.showsTouchWhenHighlighted = highlightButton;
 				//printButton.backgroundColor = [UIColor grayColor];
 				printButton.exclusiveTouch = YES;
 
@@ -219,7 +213,6 @@
 			[exportButton setBackgroundImage:buttonH forState:UIControlStateHighlighted];
 			[exportButton setBackgroundImage:buttonN forState:UIControlStateNormal];
 			exportButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-			exportButton.showsTouchWhenHighlighted = highlightButton;
 			//exportButton.backgroundColor = [UIColor grayColor];
 			exportButton.exclusiveTouch = YES;
 

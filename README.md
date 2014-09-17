@@ -16,10 +16,10 @@ project template that you could start building from, or, just pull
 the required files into an existing project to enable PDF
 reading/viewing in your app(s).
 
-![iPod Page](http://i.imgur.com/GbjEQiC.png)<p></p>
-![iPod Thumbs](http://i.imgur.com/kE5B5mb.png)<p></p>
-![iPad Page](http://i.imgur.com/C7ULYUk.png)<p></p>
-![iPad Thumbs](http://i.imgur.com/jc5PWth.png)
+![iPod Page](http://i.imgur.com/y8wWRDN.png)<p></p>
+![iPod Thumbs](http://i.imgur.com/nddT2RP.png)<p></p>
+![iPad Page](http://i.imgur.com/jaeCPz1.png)<p></p>
+![iPad Thumbs](http://i.imgur.com/1b4kY9s.png)<p></p>
 
 After launching the sample app, tap on the left hand side of the
 screen to go back a page. Tap on the right hand side to go to the
@@ -123,7 +123,8 @@ all of the following iOS frameworks are required:
 
 In ReaderConstants.h the following #define options are available:
 
-`READER_FLAT_UI` - If TRUE, follows the Fuglyosity of Flat Fad.
+`READER_FLAT_UI` - If TRUE, follows the Fuglyosity of Flat Fad
+(flattens the UI).
 
 `READER_SHOW_SHADOWS` - If TRUE, a shadow is shown around each page
 and page thumbnail.
@@ -163,7 +164,7 @@ Website: [http://www.vfr.org/](http://www.vfr.org/)
 
 Email: joklamcak(at)gmail(dot)com
 
-Twitter: @joklamcak
+Twitter: [@joklamcak](https://twitter.com/joklamcak)
 
 If you find this code useful, or wish to fund further development,
 you can use PayPal to donate to the vfr-Reader project:

@@ -1,6 +1,6 @@
 //
 //	UIXToolbarView.m
-//	Reader v2.8.1
+//	Reader v2.8.2
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
@@ -73,7 +73,17 @@
 		}
 		else // Follow The Fuglyosity of Flat Fad
 		{
-			self.backgroundColor = [UIColor colorWithWhite:0.94f alpha:0.96f];
+			self.backgroundColor = [UIColor colorWithWhite:0.94f alpha:0.94f];
+
+			CGRect lineRect = self.bounds; lineRect.origin.y += lineRect.size.height; lineRect.size.height = 1.0f;
+
+			UIView *lineView = [[UIView alloc] initWithFrame:lineRect];
+			lineView.autoresizesSubviews = NO;
+			lineView.userInteractionEnabled = NO;
+			lineView.contentMode = UIViewContentModeRedraw;
+			lineView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+			lineView.backgroundColor = [UIColor colorWithWhite:0.64f alpha:0.94f];
+			[self addSubview:lineView];
 		}
 	}
 
