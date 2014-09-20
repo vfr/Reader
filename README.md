@@ -16,10 +16,10 @@ project template that you could start building from, or, just pull
 the required files into an existing project to enable PDF
 reading/viewing in your app(s).
 
-![iPod Page](http://i.imgur.com/y8wWRDN.png)<p></p>
-![iPod Thumbs](http://i.imgur.com/nddT2RP.png)<p></p>
 ![iPad Page](http://i.imgur.com/jaeCPz1.png)<p></p>
 ![iPad Thumbs](http://i.imgur.com/1b4kY9s.png)<p></p>
+![iPod Page](http://i.imgur.com/y8wWRDN.png)<p></p>
+![iPod Thumbs](http://i.imgur.com/nddT2RP.png)<p></p>
 
 After launching the sample app, tap on the left hand side of the
 screen to go back a page. Tap on the right hand side to go to the

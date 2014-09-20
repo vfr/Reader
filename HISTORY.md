@@ -1,6 +1,10 @@
 
 ## History
 
+2014-09-20: Version 2.8.3
+
+	- Workaround for bug in 32-bit iOS UIScrollView when UIUserInterfaceIdiomPhone.
+
 2014-09-17: Version 2.8.2
 
 	- Tweaked the flat toolbar look.

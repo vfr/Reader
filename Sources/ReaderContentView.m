@@ -1,6 +1,6 @@
 //
 //	ReaderContentView.m
-//	Reader v2.8.1
+//	Reader v2.8.3
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
@@ -47,6 +47,8 @@
 	CGFloat realMaximumZoom;
 	CGFloat tempMaximumZoom;
 
+	CGFloat bugFixWidthInset;
+
 	BOOL zoomBounced;
 }
 
@@ -66,9 +68,9 @@ static void *ReaderContentViewContext = &ReaderContentViewContext;
 
 #pragma mark - ReaderContentView functions
 
-static inline CGFloat zoomScaleThatFits(CGSize target, CGSize source)
+static inline CGFloat zoomScaleThatFits(CGSize target, CGSize source, CGFloat bfwi)
 {
-	CGFloat w_scale = (target.width / source.width);
+	CGFloat w_scale = (target.width / (source.width + bfwi));
 
 	CGFloat h_scale = (target.height / source.height);
 
@@ -79,9 +81,9 @@ static inline CGFloat zoomScaleThatFits(CGSize target, CGSize source)
 
 - (void)updateMinimumMaximumZoom
 {
-	CGFloat zoomScale = zoomScaleThatFits(self.bounds.size, theContentPage.bounds.size);
+	CGFloat zoomScale = zoomScaleThatFits(self.bounds.size, theContentPage.bounds.size, bugFixWidthInset);
 
-	self.minimumZoomScale = zoomScale; self.maximumZoomScale = (zoomScale * ZOOM_MAXIMUM);
+	self.minimumZoomScale = zoomScale; self.maximumZoomScale = (zoomScale * ZOOM_MAXIMUM); // Limits
 
 	realMaximumZoom = self.maximumZoomScale; tempMaximumZoom = (realMaximumZoom * ZOOM_FACTOR);
 }
@@ -117,6 +119,13 @@ static inline CGFloat zoomScaleThatFits(CGSize target, CGSize source)
 		self.delegate = self;
 
 		userInterfaceIdiom = [UIDevice currentDevice].userInterfaceIdiom; // User interface idiom
+
+#ifndef __arm64__ // Only under 32-bit iOS
+		if (userInterfaceIdiom == UIUserInterfaceIdiomPhone) // UIScrollView bug in iOS 8.0 workaround
+		{
+			if ([[UIDevice currentDevice].systemVersion isEqualToString:@"8.0"]) bugFixWidthInset = 4.0f;
+		}
+#endif // End of only under 32-bit iOS code
 
 		theContentPage = [[ReaderContentPage alloc] initWithURL:fileURL page:page password:phrase];
 
