@@ -1,6 +1,6 @@
 //
 //	ReaderDocument.m
-//	Reader v2.8.1
+//	Reader v2.8.3
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
@@ -127,9 +127,9 @@
 
 	NSString *archivePath = [ReaderDocument applicationSupportPath]; // Application's "~/Library/Application Support" path
 
-	NSString *archiveName = [[filename stringByDeletingPathExtension] stringByAppendingPathExtension:@"plist"];
+	NSString *archiveName = [[filename stringByDeletingPathExtension] stringByAppendingPathExtension:@"plist1"];
 
-	return [archivePath stringByAppendingPathComponent:archiveName]; // "{archivePath}/'filename'.plist"
+	return [archivePath stringByAppendingPathComponent:archiveName]; // "{archivePath}/'filename'.plist1"
 }
 
 + (ReaderDocument *)unarchiveFromFileName:(NSString *)filename password:(NSString *)phrase
