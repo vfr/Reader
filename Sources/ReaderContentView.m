@@ -121,9 +121,14 @@ static inline CGFloat zoomScaleThatFits(CGSize target, CGSize source, CGFloat bf
 		userInterfaceIdiom = [UIDevice currentDevice].userInterfaceIdiom; // User interface idiom
 
 #ifndef __arm64__ // Only under 32-bit iOS
-		if (userInterfaceIdiom == UIUserInterfaceIdiomPhone) // UIScrollView bug in iOS 8.0 workaround
+		if (userInterfaceIdiom == UIUserInterfaceIdiomPhone) // iOS 8.0 UIScrollView bug workaround
 		{
-			if ([[UIDevice currentDevice].systemVersion isEqualToString:@"8.0"]) bugFixWidthInset = 4.0f;
+			NSString *iosVersion = [UIDevice currentDevice].systemVersion; // iOS version as a string
+
+			if ([@"8.0" compare:iosVersion options:NSNumericSearch] != NSOrderedDescending) // 8.0 and up
+			{
+				bugFixWidthInset = 4.0f; // Slightly reduce width of content view
+			}
 		}
 #endif // End of only under 32-bit iOS code
 
