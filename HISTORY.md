@@ -1,6 +1,10 @@
 
 ## History
 
+2014-10-18: Version 2.8.4
+
+	- Fixed a rather daft design decision in ReaderDocument.
+
 2014-09-20: Version 2.8.3
 
 	- Workaround for bug in 32-bit iOS UIScrollView when UIUserInterfaceIdiomPhone.

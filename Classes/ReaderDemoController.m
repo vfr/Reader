@@ -1,6 +1,6 @@
 //
 //	ReaderDemoController.m
-//	Reader v2.8.0
+//	Reader v2.8.4
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
@@ -38,24 +38,17 @@
 
 #pragma mark - UIViewController methods
 
+/*
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
 	if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]))
 	{
-		NSFileManager *fileManager = [NSFileManager new]; NSString *documentsPath = [ReaderDocument documentsPath];
-
-		for (NSString *sourcePath in [[NSBundle mainBundle] pathsForResourcesOfType:@"pdf" inDirectory:nil]) // PDFs
-		{
-			NSString *targetPath = [documentsPath stringByAppendingPathComponent:[sourcePath lastPathComponent]];
-
-			//[fileManager removeItemAtPath:targetPath error:NULL]; // Delete target file
-
-			[fileManager copyItemAtPath:sourcePath toPath:targetPath error:NULL];
-		}
+		// Custom initialization
 	}
 
 	return self;
 }
+*/
 
 /*
 - (void)loadView
@@ -179,13 +172,9 @@
 {
 	NSString *phrase = nil; // Document password (for unlocking most encrypted PDF files)
 
-	NSFileManager *fileManager = [NSFileManager new]; NSString *documentsPath = [ReaderDocument documentsPath];
+	NSArray *pdfs = [[NSBundle mainBundle] pathsForResourcesOfType:@"pdf" inDirectory:nil];
 
-	NSArray *fileList = [fileManager contentsOfDirectoryAtPath:documentsPath error:NULL];
-
-	NSString *fileName = [fileList firstObject]; // Presume that the first file is a PDF
-
-	NSString *filePath = [documentsPath stringByAppendingPathComponent:fileName];
+	NSString *filePath = [pdfs firstObject]; assert(filePath != nil); // Path to first PDF file
 
 	ReaderDocument *document = [ReaderDocument withDocumentFilePath:filePath password:phrase];
 
@@ -208,7 +197,7 @@
 
 #endif // DEMO_VIEW_CONTROLLER_PUSH
 	}
-	else // Log the error so that we know that something went wrong
+	else // Log an error so that we know that something went wrong
 	{
 		NSLog(@"%s [ReaderDocument withDocumentFilePath:'%@' password:'%@'] failed.", __FUNCTION__, filePath, phrase);
 	}

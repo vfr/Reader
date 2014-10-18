@@ -1,6 +1,6 @@
 //
 //	ReaderDocument.h
-//	Reader v2.8.1
+//	Reader v2.8.4
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
@@ -34,21 +34,19 @@
 @property (nonatomic, strong, readonly) NSNumber *pageCount;
 @property (nonatomic, strong, readwrite) NSNumber *pageNumber;
 @property (nonatomic, strong, readonly) NSMutableIndexSet *bookmarks;
-@property (nonatomic, strong, readonly) NSString *fileName;
 @property (nonatomic, strong, readonly) NSString *password;
+@property (nonatomic, strong, readonly) NSString *fileName;
 @property (nonatomic, strong, readonly) NSURL *fileURL;
 
 @property (nonatomic, readonly) BOOL canEmail;
 @property (nonatomic, readonly) BOOL canExport;
 @property (nonatomic, readonly) BOOL canPrint;
 
-+ (NSString *)documentsPath;
++ (ReaderDocument *)withDocumentFilePath:(NSString *)filePath password:(NSString *)phrase;
 
-+ (ReaderDocument *)withDocumentFilePath:(NSString *)filename password:(NSString *)phrase;
++ (ReaderDocument *)unarchiveFromFileName:(NSString *)filePath password:(NSString *)phrase;
 
-+ (ReaderDocument *)unarchiveFromFileName:(NSString *)filename password:(NSString *)phrase;
-
-- (instancetype)initWithFilePath:(NSString *)fullFilePath password:(NSString *)phrase;
+- (instancetype)initWithFilePath:(NSString *)filePath password:(NSString *)phrase;
 
 - (BOOL)archiveDocumentProperties;
 

@@ -1,6 +1,6 @@
 //
 //	ReaderBookDelegate.m
-//	Reader v2.8.0
+//	Reader v2.8.4
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
@@ -50,22 +50,22 @@
 
 	mainWindow.backgroundColor = [UIColor grayColor]; // Neutral gray window background color
 
-//	NSString *phrase = nil; // Document password (for unlocking most encrypted PDF files)
-//
-//	NSArray *pdfs = [[NSBundle mainBundle] pathsForResourcesOfType:@"pdf" inDirectory:nil];
-//
-//	NSString *filePath = [pdfs lastObject]; assert(filePath != nil); // Path to last PDF file
-//
-//	ReaderDocument *document = [ReaderDocument withDocumentFilePath:filePath password:phrase];
-//
-//	if (document != nil) // Must have a valid ReaderDocument object in order to proceed
-//	{
-//		readerViewController = [[ReaderViewController alloc] initWithReaderDocument:document];
-//
-//		readerViewController.delegate = self; // Set the ReaderViewController delegate to self
-//
-//		mainWindow.rootViewController = readerViewController; // Set the root view controller
-//	}
+	NSString *phrase = nil; // Document password (for unlocking most encrypted PDF files)
+
+	NSArray *pdfs = [[NSBundle mainBundle] pathsForResourcesOfType:@"pdf" inDirectory:nil];
+
+	NSString *filePath = [pdfs lastObject]; assert(filePath != nil); // Path to last PDF file
+
+	ReaderDocument *document = [ReaderDocument withDocumentFilePath:filePath password:phrase];
+
+	if (document != nil) // Must have a valid ReaderDocument object in order to proceed
+	{
+		readerViewController = [[ReaderViewController alloc] initWithReaderDocument:document];
+
+		readerViewController.delegate = self; // Set the ReaderViewController delegate to self
+
+		mainWindow.rootViewController = readerViewController; // Set the root view controller
+	}
 
 	[mainWindow makeKeyAndVisible];
 
