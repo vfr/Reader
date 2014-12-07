@@ -1,6 +1,6 @@
 //
 //	ReaderContentView.m
-//	Reader v2.8.3
+//	Reader v2.8.5
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2014 Julius Oklamcak. All rights reserved.
@@ -47,8 +47,6 @@
 	CGFloat realMaximumZoom;
 	CGFloat tempMaximumZoom;
 
-	CGFloat bugFixWidthInset;
-
 	BOOL zoomBounced;
 }
 
@@ -62,28 +60,51 @@
 
 static void *ReaderContentViewContext = &ReaderContentViewContext;
 
+static CGFloat g_BugFixWidthInset = 0.0f;
+
 #pragma mark - Properties
 
 @synthesize message;
 
 #pragma mark - ReaderContentView functions
 
-static inline CGFloat zoomScaleThatFits(CGSize target, CGSize source, CGFloat bfwi)
+static inline CGFloat zoomScaleThatFits(CGSize target, CGSize source)
 {
-	CGFloat w_scale = (target.width / (source.width + bfwi));
+	CGFloat w_scale = (target.width / (source.width + g_BugFixWidthInset));
 
 	CGFloat h_scale = (target.height / source.height);
 
 	return ((w_scale < h_scale) ? w_scale : h_scale);
 }
 
+#pragma mark - ReaderContentView class methods
+
++ (void)initialize
+{
+	if (self == [ReaderContentView self]) // Do once - iOS 8.0 UIScrollView bug workaround
+	{
+		if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) // Not iPads
+		{
+			NSString *iosVersion = [UIDevice currentDevice].systemVersion; // iOS version as a string
+
+			if ([@"8.0" compare:iosVersion options:NSNumericSearch] != NSOrderedDescending) // 8.0 and up
+			{
+				if ([@"8.1.1" compare:iosVersion options:NSNumericSearch] == NSOrderedDescending) // Below 8.1.1
+				{
+					g_BugFixWidthInset = 2.0f * [[UIScreen mainScreen] scale]; // Reduce width of content view
+				}
+			}
+		}
+	}
+}
+
 #pragma mark - ReaderContentView instance methods
 
 - (void)updateMinimumMaximumZoom
 {
-	CGFloat zoomScale = zoomScaleThatFits(self.bounds.size, theContentPage.bounds.size, bugFixWidthInset);
+	CGFloat zoomScale = zoomScaleThatFits(self.bounds.size, theContentPage.bounds.size);
 
-	self.minimumZoomScale = zoomScale; self.maximumZoomScale = (zoomScale * ZOOM_MAXIMUM); // Limits
+	self.minimumZoomScale = zoomScale; self.maximumZoomScale = (zoomScale * ZOOM_MAXIMUM);
 
 	realMaximumZoom = self.maximumZoomScale; tempMaximumZoom = (realMaximumZoom * ZOOM_FACTOR);
 }
@@ -119,18 +140,6 @@ static inline CGFloat zoomScaleThatFits(CGSize target, CGSize source, CGFloat bf
 		self.delegate = self;
 
 		userInterfaceIdiom = [UIDevice currentDevice].userInterfaceIdiom; // User interface idiom
-
-#ifndef __arm64__ // Only under 32-bit iOS
-		if (userInterfaceIdiom == UIUserInterfaceIdiomPhone) // iOS 8.0 UIScrollView bug workaround
-		{
-			NSString *iosVersion = [UIDevice currentDevice].systemVersion; // iOS version as a string
-
-			if ([@"8.0" compare:iosVersion options:NSNumericSearch] != NSOrderedDescending) // 8.0 and up
-			{
-				bugFixWidthInset = 4.0f; // Slightly reduce width of content view
-			}
-		}
-#endif // End of only under 32-bit iOS code
 
 		theContentPage = [[ReaderContentPage alloc] initWithURL:fileURL page:page password:phrase];
 

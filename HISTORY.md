@@ -1,6 +1,11 @@
 
 ## History
 
+2014-12-07: Version 2.8.5
+
+	- iPhone 6 and 6 Plus support - launch images and thumbnails.
+	- iOS 8 UIScrollView bug revisited - possibly fixed in 8.1.1?
+
 2014-10-18: Version 2.8.4
 
 	- Fixed a rather daft design decision in ReaderDocument.

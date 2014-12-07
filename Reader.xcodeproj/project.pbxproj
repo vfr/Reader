@@ -26,6 +26,8 @@
 		455C789E14268F6A0053D73B /* Reader-Button-H@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 455C789A14268F6A0053D73B /* Reader-Button-H@2x.png */; };
 		455C789F14268F6A0053D73B /* Reader-Button-N.png in Resources */ = {isa = PBXBuildFile; fileRef = 455C789B14268F6A0053D73B /* Reader-Button-N.png */; };
 		455C78A014268F6A0053D73B /* Reader-Button-N@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 455C789C14268F6A0053D73B /* Reader-Button-N@2x.png */; };
+		45699AB31A321F6100808606 /* Default-667h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45699AAF1A321F6100808606 /* Default-667h@2x.png */; };
+		45699AB41A321F6100808606 /* Default-736h@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45699AB01A321F6100808606 /* Default-736h@3x.png */; };
 		4583767F1533B0AC003CD230 /* AppIcon-144.png in Resources */ = {isa = PBXBuildFile; fileRef = 4583767E1533B0AC003CD230 /* AppIcon-144.png */; };
 		458DDFD7140D45FA00C5DA94 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 458DDFD6140D45FA00C5DA94 /* ImageIO.framework */; };
 		45AB72C6141FBFCA003524C3 /* AppIcon-057.png in Resources */ = {isa = PBXBuildFile; fileRef = 45AB72B9141FBFCA003524C3 /* AppIcon-057.png */; };
@@ -91,6 +93,8 @@
 		455C789A14268F6A0053D73B /* Reader-Button-H@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Reader-Button-H@2x.png"; path = "Graphics/Reader-Button-H@2x.png"; sourceTree = "<group>"; };
 		455C789B14268F6A0053D73B /* Reader-Button-N.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Reader-Button-N.png"; path = "Graphics/Reader-Button-N.png"; sourceTree = "<group>"; };
 		455C789C14268F6A0053D73B /* Reader-Button-N@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Reader-Button-N@2x.png"; path = "Graphics/Reader-Button-N@2x.png"; sourceTree = "<group>"; };
+		45699AAF1A321F6100808606 /* Default-667h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-667h@2x.png"; path = "Graphics/Default-667h@2x.png"; sourceTree = "<group>"; };
+		45699AB01A321F6100808606 /* Default-736h@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-736h@3x.png"; path = "Graphics/Default-736h@3x.png"; sourceTree = "<group>"; };
 		4583767E1533B0AC003CD230 /* AppIcon-144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon-144.png"; path = "Graphics/AppIcon-144.png"; sourceTree = "<group>"; };
 		458BF155143E077500CDF567 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = Resources/de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		458DDFD6140D45FA00C5DA94 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
@@ -275,6 +279,8 @@
 				4544394717FDD5E700781873 /* AppIcon-152.png */,
 				4513ACFA19C4A1FB004916D1 /* AppIcon-180.png */,
 				4544D87B1610A3C2003DB132 /* Default-568h@2x.png */,
+				45699AAF1A321F6100808606 /* Default-667h@2x.png */,
+				45699AB01A321F6100808606 /* Default-736h@3x.png */,
 			);
 			name = App;
 			sourceTree = "<group>";
@@ -407,6 +413,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4541A9D8122EA716001A5E60 /* Localizable.strings in Resources */,
+				45699AB31A321F6100808606 /* Default-667h@2x.png in Resources */,
 				45AB72C6141FBFCA003524C3 /* AppIcon-057.png in Resources */,
 				45AB72C7141FBFCA003524C3 /* AppIcon-072.png in Resources */,
 				45AB72C8141FBFCA003524C3 /* AppIcon-114.png in Resources */,
@@ -418,6 +425,7 @@
 				45AB72CE141FBFCA003524C3 /* Reader-Mark-Y@2x.png in Resources */,
 				45AB72CF141FBFCA003524C3 /* Reader-Print.png in Resources */,
 				45AB72D0141FBFCA003524C3 /* Reader-Print@2x.png in Resources */,
+				45699AB41A321F6100808606 /* Default-736h@3x.png in Resources */,
 				45AB72D1141FBFCA003524C3 /* Reader-Thumbs.png in Resources */,
 				45AB72D2141FBFCA003524C3 /* Reader-Thumbs@2x.png in Resources */,
 				4521AB4019C5EE6000B16688 /* Reader-Export@2x.png in Resources */,
