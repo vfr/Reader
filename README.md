@@ -55,7 +55,7 @@ Supports:
 
 Version 2.x of the PDF reader code was originally developed
 and tested under Xcode 3.2.6, LLVM 1.7 and iOS 4 with current
-development and testing under Xcode 6.0, LLVM 6.0 and iOS 8.
+development and testing under Xcode 6.2, LLVM 6.0 and iOS 8.2.
 Please note that as of v2.6, the code was refactored to use ARC.
 
 The overall PDF reader functionality is encapsulated in the

@@ -1,6 +1,10 @@
 
 ## History
 
+2015-03-23: Version 2.8.6
+
+	- iOS 8 UIScrollView bug revisited - again...
+
 2014-12-07: Version 2.8.5
 
 	- iPhone 6 and 6 Plus support - launch images and thumbnails.
