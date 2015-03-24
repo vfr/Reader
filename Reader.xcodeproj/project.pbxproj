@@ -98,6 +98,8 @@
 		4583767E1533B0AC003CD230 /* AppIcon-144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon-144.png"; path = "Graphics/AppIcon-144.png"; sourceTree = "<group>"; };
 		458BF155143E077500CDF567 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = Resources/de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		458DDFD6140D45FA00C5DA94 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		458F25911AC1D417000716F1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = Resources/fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		458F25921AC1D425000716F1 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = Resources/es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		45AB72B9141FBFCA003524C3 /* AppIcon-057.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon-057.png"; path = "Graphics/AppIcon-057.png"; sourceTree = "<group>"; };
 		45AB72BA141FBFCA003524C3 /* AppIcon-072.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon-072.png"; path = "Graphics/AppIcon-072.png"; sourceTree = "<group>"; };
 		45AB72BB141FBFCA003524C3 /* AppIcon-114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon-114.png"; path = "Graphics/AppIcon-114.png"; sourceTree = "<group>"; };
@@ -397,6 +399,8 @@
 			knownRegions = (
 				en,
 				de,
+				fr,
+				es,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
@@ -486,6 +490,8 @@
 			children = (
 				4541A9D5122EA686001A5E60 /* en */,
 				458BF155143E077500CDF567 /* de */,
+				458F25911AC1D417000716F1 /* fr */,
+				458F25921AC1D425000716F1 /* es */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

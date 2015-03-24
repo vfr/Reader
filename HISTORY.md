@@ -1,8 +1,9 @@
 
 ## History
 
-2015-03-23: Version 2.8.6
+2015-03-24: Version 2.8.6
 
+	- Added French and Spanish Localizable.strings
 	- iOS 8 UIScrollView bug revisited - again...
 
 2014-12-07: Version 2.8.5
