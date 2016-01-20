@@ -55,7 +55,7 @@ Supports:
 
 Version 2.x of the PDF reader code was originally developed
 and tested under Xcode 3.2.6, LLVM 1.7 and iOS 4 with current
-development and testing under Xcode 6.2, LLVM 6.0 and iOS 8.2.
+development and testing under Xcode 7.2, LLVM 7.0 and iOS 9.2.
 Please note that as of v2.6, the code was refactored to use ARC.
 
 The overall PDF reader functionality is encapsulated in the
@@ -101,14 +101,14 @@ reader into one of your projects:
 	ThumbsMainToolbar.h, ThumbsMainToolbar.m
 	UIXToolbarView.h, UIXToolbarView.m
 
-	Reader-Button-H.png, Reader-Button-H@2x.png
-	Reader-Button-N.png, Reader-Button-N@2x.png
-	Reader-Email.png, Reader-Email@2x.png
-	Reader-Export.png, Reader-Export@2x.png
-	Reader-Mark-N.png, Reader-Mark-N@2x.png
-	Reader-Mark-Y.png, Reader-Mark-Y@2x.png
-	Reader-Print.png, Reader-Print@2x.png
-	Reader-Thumbs.png, Reader-Thumbs@2x.png
+	Reader-Button-H.png, Reader-Button-H@2x.png, Reader-Button-H@3x.png
+	Reader-Button-N.png, Reader-Button-N@2x.png, Reader-Button-N@3x.png
+	Reader-Email.png, Reader-Email@2x.png, Reader-Email@3x.png
+	Reader-Export.png, Reader-Export@2x.png, Reader-Export@3x.png
+	Reader-Mark-N.png, Reader-Mark-N@2x.png, Reader-Mark-N@3x.png
+	Reader-Mark-Y.png, Reader-Mark-Y@2x.png, Reader-Mark-Y@3x.png
+	Reader-Print.png, Reader-Print@2x.png, Reader-Print@3x.png
+	Reader-Thumbs.png, Reader-Thumbs@2x.png, Reader-Thumbs@3x.png
 
 	Localizable.strings (UTF-16 encoding)
 

@@ -1,9 +1,9 @@
 //
 //	ReaderAppDelegate.m
-//	Reader v2.8.6
+//	Reader v2.8.7
 //
 //	Created by Julius Oklamcak on 2011-07-01.
-//	Copyright © 2011-2015 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2016 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -44,9 +44,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-	mainWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds]; // Main application window
+	//NSLog(@"%s %@ : @%gx", __FUNCTION__, NSStringFromCGSize([[UIScreen mainScreen] bounds].size), [[UIScreen mainScreen] scale]);
 
-	readerDemoController = [[ReaderDemoController alloc] initWithNibName:nil bundle:nil]; // Demo controller
+	mainWindow = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]]; // Main application window
+
+	readerDemoController = [[ReaderDemoController alloc] initWithNibName:nil bundle:nil]; // Demo view controller
 
 	navigationController = [[UINavigationController alloc] initWithRootViewController:readerDemoController];
 

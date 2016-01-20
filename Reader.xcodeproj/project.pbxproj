@@ -15,6 +15,8 @@
 		4513ACFB19C4A1FB004916D1 /* AppIcon-180.png in Resources */ = {isa = PBXBuildFile; fileRef = 4513ACFA19C4A1FB004916D1 /* AppIcon-180.png */; };
 		4521AB3F19C5EE6000B16688 /* Reader-Export.png in Resources */ = {isa = PBXBuildFile; fileRef = 4521AB3D19C5EE6000B16688 /* Reader-Export.png */; };
 		4521AB4019C5EE6000B16688 /* Reader-Export@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4521AB3E19C5EE6000B16688 /* Reader-Export@2x.png */; };
+		4524A6EE1C500F2F00D7DF7F /* AppIcon-167.png in Resources */ = {isa = PBXBuildFile; fileRef = 4524A6ED1C500F2F00D7DF7F /* AppIcon-167.png */; };
+		4524A6F01C5011D700D7DF7F /* Reader-App.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4524A6EF1C5011D700D7DF7F /* Reader-App.storyboard */; };
 		4541A9D8122EA716001A5E60 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4541A9D7122EA716001A5E60 /* Localizable.strings */; };
 		4544394817FDD5E700781873 /* AppIcon-076.png in Resources */ = {isa = PBXBuildFile; fileRef = 4544394517FDD5E700781873 /* AppIcon-076.png */; };
 		4544394917FDD5E700781873 /* AppIcon-120.png in Resources */ = {isa = PBXBuildFile; fileRef = 4544394617FDD5E700781873 /* AppIcon-120.png */; };
@@ -66,6 +68,14 @@
 		45AB7325141FC0B1003524C3 /* ThumbsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45AB7312141FC0B1003524C3 /* ThumbsViewController.m */; };
 		45BD5AFE13AE721A00D6FE97 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45BD5AFD13AE721A00D6FE97 /* MessageUI.framework */; };
 		45D5ADA31610EADD00706B9A /* ReaderDocumentOutline.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D5ADA21610EADC00706B9A /* ReaderDocumentOutline.m */; };
+		45D984371C501B0300ADFD5E /* Reader-Button-H@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45D9842F1C501B0300ADFD5E /* Reader-Button-H@3x.png */; };
+		45D984381C501B0300ADFD5E /* Reader-Button-N@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45D984301C501B0300ADFD5E /* Reader-Button-N@3x.png */; };
+		45D984391C501B0300ADFD5E /* Reader-Email@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45D984311C501B0300ADFD5E /* Reader-Email@3x.png */; };
+		45D9843A1C501B0300ADFD5E /* Reader-Export@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45D984321C501B0300ADFD5E /* Reader-Export@3x.png */; };
+		45D9843B1C501B0300ADFD5E /* Reader-Mark-N@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45D984331C501B0300ADFD5E /* Reader-Mark-N@3x.png */; };
+		45D9843C1C501B0300ADFD5E /* Reader-Mark-Y@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45D984341C501B0300ADFD5E /* Reader-Mark-Y@3x.png */; };
+		45D9843D1C501B0300ADFD5E /* Reader-Print@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45D984351C501B0300ADFD5E /* Reader-Print@3x.png */; };
+		45D9843E1C501B0300ADFD5E /* Reader-Thumbs@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45D984361C501B0300ADFD5E /* Reader-Thumbs@3x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -80,6 +90,8 @@
 		4513ACFC19C4A636004916D1 /* Todo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Todo.txt; sourceTree = "<group>"; };
 		4521AB3D19C5EE6000B16688 /* Reader-Export.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Reader-Export.png"; path = "Graphics/Reader-Export.png"; sourceTree = "<group>"; };
 		4521AB3E19C5EE6000B16688 /* Reader-Export@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Reader-Export@2x.png"; path = "Graphics/Reader-Export@2x.png"; sourceTree = "<group>"; };
+		4524A6ED1C500F2F00D7DF7F /* AppIcon-167.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon-167.png"; path = "Graphics/AppIcon-167.png"; sourceTree = "<group>"; };
+		4524A6EF1C5011D700D7DF7F /* Reader-App.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = "Reader-App.storyboard"; path = "Resources/Reader-App.storyboard"; sourceTree = "<group>"; };
 		4541A9D5122EA686001A5E60 /* en */ = {isa = PBXFileReference; fileEncoding = 10; indentWidth = 4; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/Localizable.strings; sourceTree = "<group>"; tabWidth = 4; };
 		4544394517FDD5E700781873 /* AppIcon-076.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon-076.png"; path = "Graphics/AppIcon-076.png"; sourceTree = "<group>"; };
 		4544394617FDD5E700781873 /* AppIcon-120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon-120.png"; path = "Graphics/AppIcon-120.png"; sourceTree = "<group>"; };
@@ -160,6 +172,14 @@
 		45D5AD9E1610E66B00706B9A /* HISTORY.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = HISTORY.md; sourceTree = "<group>"; };
 		45D5ADA11610EADC00706B9A /* ReaderDocumentOutline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReaderDocumentOutline.h; path = Sources/ReaderDocumentOutline.h; sourceTree = "<group>"; };
 		45D5ADA21610EADC00706B9A /* ReaderDocumentOutline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReaderDocumentOutline.m; path = Sources/ReaderDocumentOutline.m; sourceTree = "<group>"; };
+		45D9842F1C501B0300ADFD5E /* Reader-Button-H@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Reader-Button-H@3x.png"; path = "Graphics/Reader-Button-H@3x.png"; sourceTree = "<group>"; };
+		45D984301C501B0300ADFD5E /* Reader-Button-N@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Reader-Button-N@3x.png"; path = "Graphics/Reader-Button-N@3x.png"; sourceTree = "<group>"; };
+		45D984311C501B0300ADFD5E /* Reader-Email@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Reader-Email@3x.png"; path = "Graphics/Reader-Email@3x.png"; sourceTree = "<group>"; };
+		45D984321C501B0300ADFD5E /* Reader-Export@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Reader-Export@3x.png"; path = "Graphics/Reader-Export@3x.png"; sourceTree = "<group>"; };
+		45D984331C501B0300ADFD5E /* Reader-Mark-N@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Reader-Mark-N@3x.png"; path = "Graphics/Reader-Mark-N@3x.png"; sourceTree = "<group>"; };
+		45D984341C501B0300ADFD5E /* Reader-Mark-Y@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Reader-Mark-Y@3x.png"; path = "Graphics/Reader-Mark-Y@3x.png"; sourceTree = "<group>"; };
+		45D984351C501B0300ADFD5E /* Reader-Print@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Reader-Print@3x.png"; path = "Graphics/Reader-Print@3x.png"; sourceTree = "<group>"; };
+		45D984361C501B0300ADFD5E /* Reader-Thumbs@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Reader-Thumbs@3x.png"; path = "Graphics/Reader-Thumbs@3x.png"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Reader-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Reader-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -230,6 +250,7 @@
 			isa = PBXGroup;
 			children = (
 				4541A9D7122EA716001A5E60 /* Localizable.strings */,
+				4524A6EF1C5011D700D7DF7F /* Reader-App.storyboard */,
 				45AB72DF141FC04B003524C3 /* README.md */,
 				45D5AD9E1610E66B00706B9A /* HISTORY.md */,
 				45AB72DD141FC043003524C3 /* LICENSE.md */,
@@ -279,6 +300,7 @@
 				4544394617FDD5E700781873 /* AppIcon-120.png */,
 				4583767E1533B0AC003CD230 /* AppIcon-144.png */,
 				4544394717FDD5E700781873 /* AppIcon-152.png */,
+				4524A6ED1C500F2F00D7DF7F /* AppIcon-167.png */,
 				4513ACFA19C4A1FB004916D1 /* AppIcon-180.png */,
 				4544D87B1610A3C2003DB132 /* Default-568h@2x.png */,
 				45699AAF1A321F6100808606 /* Default-667h@2x.png */,
@@ -292,20 +314,28 @@
 			children = (
 				455C789914268F6A0053D73B /* Reader-Button-H.png */,
 				455C789A14268F6A0053D73B /* Reader-Button-H@2x.png */,
+				45D9842F1C501B0300ADFD5E /* Reader-Button-H@3x.png */,
 				455C789B14268F6A0053D73B /* Reader-Button-N.png */,
 				455C789C14268F6A0053D73B /* Reader-Button-N@2x.png */,
+				45D984301C501B0300ADFD5E /* Reader-Button-N@3x.png */,
 				45AB72BC141FBFCA003524C3 /* Reader-Email.png */,
 				45AB72BD141FBFCA003524C3 /* Reader-Email@2x.png */,
+				45D984311C501B0300ADFD5E /* Reader-Email@3x.png */,
 				4521AB3D19C5EE6000B16688 /* Reader-Export.png */,
 				4521AB3E19C5EE6000B16688 /* Reader-Export@2x.png */,
+				45D984321C501B0300ADFD5E /* Reader-Export@3x.png */,
 				45AB72BE141FBFCA003524C3 /* Reader-Mark-N.png */,
 				45AB72BF141FBFCA003524C3 /* Reader-Mark-N@2x.png */,
+				45D984331C501B0300ADFD5E /* Reader-Mark-N@3x.png */,
 				45AB72C0141FBFCA003524C3 /* Reader-Mark-Y.png */,
 				45AB72C1141FBFCA003524C3 /* Reader-Mark-Y@2x.png */,
+				45D984341C501B0300ADFD5E /* Reader-Mark-Y@3x.png */,
 				45AB72C2141FBFCA003524C3 /* Reader-Print.png */,
 				45AB72C3141FBFCA003524C3 /* Reader-Print@2x.png */,
+				45D984351C501B0300ADFD5E /* Reader-Print@3x.png */,
 				45AB72C4141FBFCA003524C3 /* Reader-Thumbs.png */,
 				45AB72C5141FBFCA003524C3 /* Reader-Thumbs@2x.png */,
+				45D984361C501B0300ADFD5E /* Reader-Thumbs@3x.png */,
 			);
 			name = Reader;
 			sourceTree = "<group>";
@@ -390,7 +420,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastUpgradeCheck = 0720;
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Reader" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -419,12 +449,16 @@
 				4541A9D8122EA716001A5E60 /* Localizable.strings in Resources */,
 				45699AB31A321F6100808606 /* Default-667h@2x.png in Resources */,
 				45AB72C6141FBFCA003524C3 /* AppIcon-057.png in Resources */,
+				45D984391C501B0300ADFD5E /* Reader-Email@3x.png in Resources */,
 				45AB72C7141FBFCA003524C3 /* AppIcon-072.png in Resources */,
 				45AB72C8141FBFCA003524C3 /* AppIcon-114.png in Resources */,
+				45D984371C501B0300ADFD5E /* Reader-Button-H@3x.png in Resources */,
+				4524A6EE1C500F2F00D7DF7F /* AppIcon-167.png in Resources */,
 				45AB72C9141FBFCA003524C3 /* Reader-Email.png in Resources */,
 				45AB72CA141FBFCA003524C3 /* Reader-Email@2x.png in Resources */,
 				45AB72CB141FBFCA003524C3 /* Reader-Mark-N.png in Resources */,
 				45AB72CC141FBFCA003524C3 /* Reader-Mark-N@2x.png in Resources */,
+				45D9843E1C501B0300ADFD5E /* Reader-Thumbs@3x.png in Resources */,
 				45AB72CD141FBFCA003524C3 /* Reader-Mark-Y.png in Resources */,
 				45AB72CE141FBFCA003524C3 /* Reader-Mark-Y@2x.png in Resources */,
 				45AB72CF141FBFCA003524C3 /* Reader-Print.png in Resources */,
@@ -432,13 +466,19 @@
 				45699AB41A321F6100808606 /* Default-736h@3x.png in Resources */,
 				45AB72D1141FBFCA003524C3 /* Reader-Thumbs.png in Resources */,
 				45AB72D2141FBFCA003524C3 /* Reader-Thumbs@2x.png in Resources */,
+				45D984381C501B0300ADFD5E /* Reader-Button-N@3x.png in Resources */,
 				4521AB4019C5EE6000B16688 /* Reader-Export@2x.png in Resources */,
 				4513ACFB19C4A1FB004916D1 /* AppIcon-180.png in Resources */,
 				45AB72DC141FC039003524C3 /* Reader.pdf in Resources */,
+				45D9843A1C501B0300ADFD5E /* Reader-Export@3x.png in Resources */,
+				45D9843B1C501B0300ADFD5E /* Reader-Mark-N@3x.png in Resources */,
 				455C789D14268F6A0053D73B /* Reader-Button-H.png in Resources */,
 				455C789E14268F6A0053D73B /* Reader-Button-H@2x.png in Resources */,
 				455C789F14268F6A0053D73B /* Reader-Button-N.png in Resources */,
+				4524A6F01C5011D700D7DF7F /* Reader-App.storyboard in Resources */,
 				455C78A014268F6A0053D73B /* Reader-Button-N@2x.png in Resources */,
+				45D9843D1C501B0300ADFD5E /* Reader-Print@3x.png in Resources */,
+				45D9843C1C501B0300ADFD5E /* Reader-Mark-Y@3x.png in Resources */,
 				4583767F1533B0AC003CD230 /* AppIcon-144.png in Resources */,
 				4544394917FDD5E700781873 /* AppIcon-120.png in Resources */,
 				4544D87C1610A3C2003DB132 /* Default-568h@2x.png in Resources */,

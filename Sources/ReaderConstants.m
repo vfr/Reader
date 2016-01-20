@@ -1,9 +1,9 @@
 //
 //	ReaderConstants.m
-//	Reader v2.8.6
+//	Reader v2.8.7
 //
 //	Created by Julius Oklamcak on 2011-07-01.
-//	Copyright © 2011-2015 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2016 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -25,4 +25,4 @@
 
 #import "ReaderConstants.h"
 
-static NSString *const kReaderCopyrightNotice = @"Reader v2.x.y • Copyright © 2011-2015 Julius Oklamcak. All rights reserved.";
+static NSString *const kReaderCopyrightNotice = @"Reader v2.x.y • Copyright © 2011-2016 Julius Oklamcak. All rights reserved.";

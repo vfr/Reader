@@ -9,6 +9,7 @@
 	<key>CFBundleIconFiles</key>
 	<array>
 		<string>AppIcon-180.png</string>
+		<string>AppIcon-167.png</string>
 		<string>AppIcon-152.png</string>
 		<string>AppIcon-144.png</string>
 		<string>AppIcon-120.png</string>
@@ -30,12 +31,14 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>2.8.6</string>
+	<string>2.8.7</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.8.6</string>
+	<string>2.8.7</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIPrerenderedIcon</key>
+	<true/>
+	<key>UIRequiresFullScreen</key>
 	<true/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
@@ -44,6 +47,8 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>Reader-App</string>
 	<key>UILaunchImages</key>
 	<array>
 		<dict>

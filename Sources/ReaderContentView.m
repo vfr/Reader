@@ -1,9 +1,9 @@
 //
 //	ReaderContentView.m
-//	Reader v2.8.6
+//	Reader v2.8.7
 //
 //	Created by Julius Oklamcak on 2011-07-01.
-//	Copyright © 2011-2015 Julius Oklamcak. All rights reserved.
+//	Copyright © 2011-2016 Julius Oklamcak. All rights reserved.
 //
 //	Permission is hereby granted, free of charge, to any person obtaining a copy
 //	of this software and associated documentation files (the "Software"), to deal
@@ -55,8 +55,8 @@
 #define ZOOM_FACTOR 2.0f
 #define ZOOM_MAXIMUM 16.0f
 
-#define PAGE_THUMB_LARGE 240
 #define PAGE_THUMB_SMALL 144
+#define PAGE_THUMB_LARGE 240
 
 static void *ReaderContentViewContext = &ReaderContentViewContext;
 
@@ -89,10 +89,10 @@ static inline CGFloat zoomScaleThatFits(CGSize target, CGSize source)
 
 			if ([@"8.0" compare:iosVersion options:NSNumericSearch] != NSOrderedDescending) // 8.0 and up
 			{
-				if ([@"8.2" compare:iosVersion options:NSNumericSearch] == NSOrderedDescending) // Below 8.2
-				{
+//				if ([@"8.2" compare:iosVersion options:NSNumericSearch] == NSOrderedDescending) // Below 8.2
+//				{
 					g_BugFixWidthInset = 2.0f * [[UIScreen mainScreen] scale]; // Reduce width of content view
-				}
+//				}
 			}
 		}
 	}

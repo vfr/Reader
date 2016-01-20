@@ -1,6 +1,12 @@
 
 ## History
 
+2016-01-20: Version 2.8.7
+
+	- Added iOS 9 and iPad Pro support.
+	- iPhone 6 Plus and iPhone 6S Plus @3x graphics.
+	- Sticky paging on iPod/iPhone workaround fix.
+
 2015-03-24: Version 2.8.6
 
 	- Added French and Spanish Localizable.strings
