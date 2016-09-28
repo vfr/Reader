@@ -1,6 +1,6 @@
 //
 //	ReaderDemoController.m
-//	Reader v2.8.6
+//	Reader v2.9.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2015 Julius Oklamcak. All rights reserved.
@@ -77,7 +77,7 @@
 
 	UILabel *tapLabel = [[UILabel alloc] initWithFrame:labelRect];
 
-	tapLabel.text = @"Tap";
+	tapLabel.text = NSLocalizedString(@"Tap", @"text");
 	tapLabel.textColor = [UIColor whiteColor];
 	tapLabel.textAlignment = NSTextAlignmentCenter;
 	tapLabel.backgroundColor = [UIColor clearColor];

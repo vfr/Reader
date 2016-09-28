@@ -1,6 +1,10 @@
 
 ## History
 
+2016-09-28: Version 2.8.8
+
+	- iOS deployment target is now 8.0
+
 2016-01-20: Version 2.8.7
 
 	- Added iOS 9 and iPad Pro support.

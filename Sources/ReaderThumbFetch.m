@@ -1,6 +1,6 @@
 //
 //	ReaderThumbFetch.m
-//	Reader v2.8.6
+//	Reader v2.9.0
 //
 //	Created by Julius Oklamcak on 2011-09-01.
 //	Copyright © 2011-2015 Julius Oklamcak. All rights reserved.
@@ -83,7 +83,7 @@
 	{
 		ReaderThumbRender *thumbRender = [[ReaderThumbRender alloc] initWithRequest:request]; // Create a thumb render operation
 
-		[thumbRender setQueuePriority:self.queuePriority]; [thumbRender setThreadPriority:(self.threadPriority - 0.1)]; // Priority
+		[thumbRender setQueuePriority:self.queuePriority]; //[thumbRender setThreadPriority:(self.threadPriority - 0.1)]; // Priority
 
 		if (self.isCancelled == NO) // We're not cancelled - so update things and add the render operation to the work queue
 		{

@@ -1,6 +1,6 @@
 //
 //	ReaderMainToolbar.m
-//	Reader v2.8.6
+//	Reader v2.9.0
 //
 //	Created by Julius Oklamcak on 2011-07-01.
 //	Copyright © 2011-2015 Julius Oklamcak. All rights reserved.
@@ -90,9 +90,9 @@
 #if (READER_STANDALONE == FALSE) // Option
 
 		UIFont *doneButtonFont = [UIFont systemFontOfSize:BUTTON_FONT_SIZE];
-		NSString *doneButtonText = NSLocalizedString(@"Done", @"button");
-		CGSize doneButtonSize = [doneButtonText sizeWithFont:doneButtonFont];
-		CGFloat doneButtonWidth = (doneButtonSize.width + TEXT_BUTTON_PADDING);
+		NSString *doneButtonText = NSLocalizedString(@"Done", @"button text");
+		CGSize doneButtonSize = [doneButtonText sizeWithAttributes:@{NSFontAttributeName : doneButtonFont}];
+		CGFloat doneButtonWidth = (ceil(doneButtonSize.width) + TEXT_BUTTON_PADDING);
 
 		UIButton *doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		doneButton.frame = CGRectMake(leftButtonX, BUTTON_Y, doneButtonWidth, BUTTON_HEIGHT);
