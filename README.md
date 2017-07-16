@@ -2,7 +2,7 @@
 ### PDF Reader Core for iOS
 ---
 
-*This project is now deprecated - it will no longer be maintained and will only be kept around for a short time.
+*This project is now deprecated - it will no longer be maintained and will only be kept around for historical reasons.
 Please see the [UXReader PDF Framework for iOS](https://github.com/vfr/UXReader-iOS) project for its replacement.*
 
 ---
